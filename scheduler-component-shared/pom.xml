@@ -71,7 +71,7 @@
         </includes>
       </resource>
       <resource>
-        <directory>src/java</directory>
+        <directory>src/</directory>
         <includes>
           <include>**/*.xml</include>
           <include>**/*.properties</include>
