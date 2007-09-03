@@ -12,10 +12,8 @@
   <artifactId>uctjobs-base</artifactId>
   <packaging>pom</packaging>
   <modules>
-    <module>scheduler-api</module>
     <module>scheduler-component</module>
     <module>scheduler-component-shared</module>
-    <module>scheduler-tool</module>
-    <module>scheduler-shared-deploy</module>
+   
   </modules>
 </project>
