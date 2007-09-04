@@ -226,4 +226,31 @@
       </property>
    </bean>
 
+
+<!--  check site quota's -->
+<bean id="setQuotas" class="org.sakaiproject.component.app.scheduler.jobs.IncreaseQuotas">
+			<property name="sessionManager">
+				<ref bean="org.sakaiproject.tool.api.SessionManager"/>
+			</property>
+			<property name="siteService">
+				<ref bean="org.sakaiproject.site.api.SiteService"/>
+			</property>
+			<property name="minQuota"><value>1048576</value></property>
+	 </bean>
+
+   <bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerSetQuotas"
+      class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+      singleton="true" init-method="init">
+      <property name="beanId">
+         <value>setQuotas</value>
+      </property>
+      <property name="jobName">
+         <value>set site Quotas</value>
+      </property>
+      <property name="schedulerManager">
+         <ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+      </property>
+   </bean>
+
+
 </beans>

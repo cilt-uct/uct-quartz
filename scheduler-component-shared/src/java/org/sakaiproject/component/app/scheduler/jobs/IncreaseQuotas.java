@@ -37,7 +37,7 @@ public class IncreaseQuotas implements Job {
 		this.sessionManager = s;
 	}
 	
-	private long minQuota = 1024;
+	private long minQuota = 1024*1024;
 	public void setMinQuota(long q) {
 		minQuota = q;
 	}
@@ -57,44 +57,56 @@ public class IncreaseQuotas implements Job {
 	    sakaiSession.setUserEid("admin");
 	    List sites = siteService.getSites(SiteService.SelectionType.NON_USER, "course", null, null, SortType.NONE, null);
 		Long totalCollectionSize = new Long(0);
+		StringBuffer sb = new StringBuffer();
 	    for (int i =0 ; i< sites.size(); i++ ) {
 			Site s = (Site)sites.get(i);
-			LOG.debug("got site " + s.getTitle());
 			if (s.getType()!= null && s.getType().equals("course")) {
-				try {
-				ContentCollectionEdit collection = contentHostingService.editCollection(s.getId());
-				Long collectionSize = collection.getBodySizeK();
-				totalCollectionSize = new Long(totalCollectionSize.longValue() + collectionSize.longValue() );
-				ResourceProperties properties = collection.getProperties();
-				long quota = (long) properties.getLongProperty(ResourceProperties.PROP_COLLECTION_BODY_QUOTA);
-				LOG.debug("got quota of " + quota);
-				if (quota > minQuota) {
-					properties.removeProperty(ResourceProperties.PROP_COLLECTION_BODY_QUOTA);
-					properties.addProperty(ResourceProperties.PROP_COLLECTION_BODY_QUOTA, Long.toString(minQuota));
-					contentHostingService.commitCollection(collection);
-				}
+				ResourceProperties sp = s.getProperties();
+				String term = sp.getProperty("term");
+				if (term != null ) {
+					term = term.trim();
+					LOG.debug("site is in term: " + term);
+					if (term.equals("2007")) {
+						LOG.debug("got site " + s.getTitle());
+						try {
+							ContentCollectionEdit collection = contentHostingService.editCollection(s.getId());
+							//Long collectionSize = collection.getBodySizeK();
+							//	totalCollectionSize = new Long(totalCollectionSize.longValue() + collectionSize.longValue() );
+							ResourceProperties properties = collection.getProperties();
+							long quota = (long) properties.getLongProperty(ResourceProperties.PROP_COLLECTION_BODY_QUOTA);
+							LOG.debug("got quota of " + quota);
+							if (quota < minQuota) {
+								properties.removeProperty(ResourceProperties.PROP_COLLECTION_BODY_QUOTA);
+								properties.addProperty(ResourceProperties.PROP_COLLECTION_BODY_QUOTA, Long.toString(minQuota));
+								LOG.debug("setting new quota for site");
+								contentHostingService.commitCollection(collection);
+							} else if (quota <= (quota - 1024)) {
+								sb.append(s.getId());
+								LOG.warn("Site is close to quota");
+							}
 				
 				
-				} catch (IdUnusedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (TypeException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (PermissionException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (EntityPropertyNotDefinedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (EntityPropertyTypeException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (InUseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+						} catch (IdUnusedException e) {
+							//TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (TypeException e) {
+							//TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (PermissionException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (EntityPropertyNotDefinedException e) {
+							// 	TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (EntityPropertyTypeException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (InUseException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
 				}
-		
 				
 			}
 		}
