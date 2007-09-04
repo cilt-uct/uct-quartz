@@ -55,13 +55,13 @@ public class UCTSaveRealms implements Job {
 	List sites = siteService.getSites(SiteService.SelectionType.NON_USER, "course", null, null, SortType.NONE, null);
 	for (int i =0 ; i< sites.size(); i++ ) {
 		Site s = (Site)sites.get(i);
-		LOG.info("got site " + s.getTitle());
+		LOG.debug("got site " + s.getTitle());
 		if (s.getType()!= null && s.getType().equals("course")) {
 			ResourceProperties sp = s.getProperties();
 			String term = sp.getProperty("term");
 			if (term != null ) {
 				term = term.trim();
-				LOG.info("site is in term: " + term);
+				LOG.debug("site is in term: " + term);
 				if (term.equals("2007")) {
 					try {
 					AuthzGroup group = authzGroupService.getAuthzGroup("/site/" + s.getId());
@@ -77,9 +77,9 @@ public class UCTSaveRealms implements Job {
 							for  (String thisId: pIds) {
 								String role = groupProvider.getRole(thisId, m.getUserEid());
 								if (role!= null && role.length()>0) {
-									LOG.info("Found external role of " + role + " internal role is: " + m.getRole().getId());
+									LOG.debug("Found external role of " + role + " internal role is: " + m.getRole().getId());
 									if (role.equals(m.getRole().getId())) {
-									LOG.info("Seting user: " + m.getUserEid() + " to provided");
+									LOG.debug("Seting user: " + m.getUserEid() + " to provided");
 									group.removeMember(m.getUserId());
 
 									}
