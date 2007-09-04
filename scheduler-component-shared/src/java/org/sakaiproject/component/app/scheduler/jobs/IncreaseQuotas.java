@@ -98,8 +98,19 @@ public class IncreaseQuotas implements Job {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						} catch (EntityPropertyNotDefinedException e) {
-							// 	TODO Auto-generated catch block
-							e.printStackTrace();
+							LOG.warn("Property is not set");
+							try {
+							ContentCollectionEdit collectionEdit = contentHostingService.editCollection(contentHostingService.getSiteCollection(s.getId()));
+							ResourceProperties properties = collectionEdit.getProperties();
+							properties.removeProperty(ResourceProperties.PROP_COLLECTION_BODY_QUOTA);
+							properties.addProperty(ResourceProperties.PROP_COLLECTION_BODY_QUOTA, Long.toString(minQuota));
+							LOG.debug("setting new quota for site");
+							contentHostingService.commitCollection(collectionEdit);
+							}
+							catch (Exception ec) {
+								LOG.error("Exception in catch block!");
+								e.printStackTrace();
+							}
 						} catch (EntityPropertyTypeException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
