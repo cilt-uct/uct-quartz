@@ -69,18 +69,20 @@ public class IncreaseQuotas implements Job {
 					if (term.equals("2007")) {
 						LOG.debug("got site " + s.getTitle());
 						try {
-							ContentCollectionEdit collection = contentHostingService.editCollection(s.getId());
+							ContentCollection collection = contentHostingService.getCollection(contentHostingService.getSiteCollection(s.getId()));
 							//Long collectionSize = collection.getBodySizeK();
 							//	totalCollectionSize = new Long(totalCollectionSize.longValue() + collectionSize.longValue() );
+							Long collectionSize = new Long(0);
 							ResourceProperties properties = collection.getProperties();
 							long quota = (long) properties.getLongProperty(ResourceProperties.PROP_COLLECTION_BODY_QUOTA);
 							LOG.debug("got quota of " + quota);
 							if (quota < minQuota) {
+								ContentCollectionEdit collectionEdit = contentHostingService.editCollection(collection.getId());
 								properties.removeProperty(ResourceProperties.PROP_COLLECTION_BODY_QUOTA);
 								properties.addProperty(ResourceProperties.PROP_COLLECTION_BODY_QUOTA, Long.toString(minQuota));
 								LOG.debug("setting new quota for site");
-								contentHostingService.commitCollection(collection);
-							} else if (quota <= (quota - 1024)) {
+								contentHostingService.commitCollection(collectionEdit);
+							} else if (collectionSize.longValue() <= (quota - 1024)) {
 								sb.append(s.getId());
 								LOG.warn("Site is close to quota");
 							}
