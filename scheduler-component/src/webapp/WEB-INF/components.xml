@@ -235,6 +235,9 @@
 			<property name="siteService">
 				<ref bean="org.sakaiproject.site.api.SiteService"/>
 			</property>
+			<property name="contentHostingService">
+				<ref bean="org.sakaiproject.content.api.ContentHostingService"/>
+			</property>
 			<property name="minQuota"><value>1048576</value></property>
 	 </bean>
 
