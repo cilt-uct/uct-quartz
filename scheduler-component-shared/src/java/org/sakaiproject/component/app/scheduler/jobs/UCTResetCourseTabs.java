@@ -57,7 +57,7 @@ public class UCTResetCourseTabs implements Job {
 	    Session sakaiSession = sessionManager.getCurrentSession();
 	    sakaiSession.setUserId(ADMIN);
 	    sakaiSession.setUserEid(ADMIN);
-		List users = userDirectoryService.getUsers();
+		List users = userDirectoryService.getUsers(0,1000000);
 		for (int i= 0; i < users.size(); i++ ){
 			User u = (User)users.get(i);
 			LOG.info("GOT User " + u.getId());
