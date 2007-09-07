@@ -51,9 +51,9 @@ public class FixEmails implements Job {
 		for (int i= 0; i < users.size(); i++ ){
 			User u = (User)users.get(i);
 			String type = u.getType();
-			if (type.equals("student") && (u.getEmail() == null || u.getEmail().equals(""))) {
+			if (type.equals("student") && (u.getEmail() == null || u.getEmail().equals("") || !isValidEmail(u.getEmail()))) {
 				//we need to set this users email
-				LOG.info("Found: " + u.getId() + " (" + u.getEid()+") with empty email");
+				LOG.info("Found: " + u.getId() + " (" + u.getEid()+") with ivalid email" + u.getEmail());
 				try {
 					SakaiPerson systemP = personManager.getSakaiPerson(u.getId(), personManager.getSystemMutableType());
 					String mail = null;
@@ -90,5 +90,34 @@ public class FixEmails implements Job {
 		}
 		
 	}
+	
+	/**
+	 * Is this a valid email the service will recognize
+	 * @param email
+	 * @return
+	 */
+	private boolean isValidEmail(String email) {
+		
+		// TODO: Use a generic Sakai utility class (when a suitable one exists)
+		
+		if (email == null || email.equals(""))
+			return false;
+		
+		email = email.trim();
+		//must contain @
+		if (email.indexOf("@") == -1)
+			return false;
+		
+		//an email can't contain spaces
+		if (email.indexOf(" ") > 0)
+			return false;
+		
+		//"^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*$" 
+		if (email.matches("^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*$")) 
+			return true;
+	
+		return false;
+	}
+	
 
 }
