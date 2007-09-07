@@ -39,6 +39,8 @@ public class FixEmails implements Job {
 		personManager = spm;
 	}
 	
+	private static final int MAX_BUNCH = 1000;
+	
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		// TODO Auto-generated method stub
 
@@ -47,28 +49,40 @@ public class FixEmails implements Job {
 	    Session sakaiSession = sessionManager.getCurrentSession();
 	    sakaiSession.setUserId(ADMIN);
 	    sakaiSession.setUserEid(ADMIN);
-		List users = userDirectoryService.getUsers(0,Integer.MAX_VALUE);
+		List users = userDirectoryService.getUsers();
 		for (int i= 0; i < users.size(); i++ ){
 			User u = (User)users.get(i);
 			String type = u.getType();
-			if (type.equals("student") && (u.getEmail() == null || u.getEmail().equals("") || !isValidEmail(u.getEmail()))) {
+			if (type != null &&type.equals("student") && (u.getEmail() == null || u.getEmail().equals("") || !isValidEmail(u.getEmail()))) {
 				//we need to set this users email
 				LOG.info("Found: " + u.getId() + " (" + u.getEid()+") with ivalid email" + u.getEmail());
 				try {
 					SakaiPerson systemP = personManager.getSakaiPerson(u.getId(), personManager.getSystemMutableType());
 					String mail = null;
-					if (systemP.getMail() == null || systemP.getMail().equals(""))
+					if (systemP != null) {
+						if (systemP.getMail() == null || systemP.getMail().equals(""))
+							mail = u.getEid() + "@uct.ac.za";
+						else 
+							mail = systemP.getMail();
+					} else {
+						LOG.warn("User " + u.getEid() +" has no system Profile");
 						mail = u.getEid() + "@uct.ac.za";
-					else 
-						mail = systemP.getMail();
+					}
 					
 					UserEdit ue = userDirectoryService.editUser(u.getId());
 					ue.setEmail(mail);
 					userDirectoryService.commitEdit(ue);
 					
+					
 					SakaiPerson sp = personManager.getSakaiPerson(u.getId(), personManager.getUserMutableType());
-					sp.setMail(mail);
-					personManager.save(sp);
+					if (sp != null) {
+						sp.setMail(mail);
+						sakaiSession.setUserId(u.getId());
+					    sakaiSession.setUserEid(u.getEid());
+						personManager.save(sp);
+						sakaiSession.setUserId(ADMIN);
+						sakaiSession.setUserEid(ADMIN);
+					}
 					
 				} catch (UserNotDefinedException e) {
 					// TODO Auto-generated catch block
