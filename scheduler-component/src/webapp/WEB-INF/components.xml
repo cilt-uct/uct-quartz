@@ -254,6 +254,31 @@
          <ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
       </property>
    </bean>
+   
+<!-- Reset blank emails -->
+<bean id="fixEmails" class="org.sakaiproject.component.app.scheduler.jobs.FixEmails">
+			<property name="sessionManager">
+				<ref bean="org.sakaiproject.tool.api.SessionManager"/>
+			</property>
+			<property name="userDirectoryService">
+				<ref bean="org.sakaiproject.user.api.UserDirectoryService"/>
+			</property>
+			<property name="personManager">
+				<ref bean="org.sakaiproject.api.common.edu.person.SakaiPersonManager"/>
+			</property>
+	 </bean>
 
-
+   <bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerFixEmails"
+      class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+      singleton="true" init-method="init">
+      <property name="beanId">
+         <value>fixEmails</value>
+      </property>
+      <property name="jobName">
+         <value>fix user emails</value>
+      </property>
+      <property name="schedulerManager">
+         <ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+      </property>
+   </bean>
 </beans>

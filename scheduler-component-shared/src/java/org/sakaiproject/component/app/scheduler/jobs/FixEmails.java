@@ -53,6 +53,7 @@ public class FixEmails implements Job {
 			String type = u.getType();
 			if (type.equals("student") && (u.getEmail() == null || u.getEmail().equals(""))) {
 				//we need to set this users email
+				LOG.info("Found: " + u.getId() + " (" + u.getEid()+") with empty email");
 				try {
 					SakaiPerson systemP = personManager.getSakaiPerson(u.getId(), personManager.getSystemMutableType());
 					String mail = null;
