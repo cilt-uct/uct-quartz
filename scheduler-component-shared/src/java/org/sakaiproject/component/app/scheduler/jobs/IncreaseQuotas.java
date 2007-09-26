@@ -79,16 +79,19 @@ public class IncreaseQuotas implements Job {
 							long quota = (long) properties.getLongProperty(ResourceProperties.PROP_COLLECTION_BODY_QUOTA);
 							LOG.debug("got quota of " + quota);
 							if (quota != 0 && quota < minQuota) {
+								LOG.info("setting new quota for site: " + s.getId());
 								ContentCollectionEdit collectionEdit = contentHostingService.editCollection(collection.getId());
 								properties.removeProperty(ResourceProperties.PROP_COLLECTION_BODY_QUOTA);
 								properties.addProperty(ResourceProperties.PROP_COLLECTION_BODY_QUOTA, Long.toString(minQuota));
-								LOG.debug("setting new quota for site");
 								contentHostingService.commitCollection(collectionEdit);
-							} else if (collectionSize.longValue() <= (quota - 1024)) {
+							} 
+							
+							/*
+							else if (collectionSize.longValue() <= (quota - 1024)) {
 								sb.append(s.getId());
-								LOG.warn("Site is close to quota");
+								LOG.debug("Site is close to quota");
 							}
-				
+							 */
 				
 						} catch (IdUnusedException e) {
 							//TODO Auto-generated catch block
