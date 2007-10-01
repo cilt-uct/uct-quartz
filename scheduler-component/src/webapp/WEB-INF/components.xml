@@ -242,4 +242,36 @@
          <ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
       </property>
    </bean>
+   
+   <!-- Import New course metadata-->
+   <bean id="importCourses"
+   	class="org.sakaiproject.component.app.scheduler.jobs.UCTImportCourses">
+   	<property name="sessionManager">
+   		<ref bean="org.sakaiproject.tool.api.SessionManager" />
+   	</property>
+   	<property name="courseManagementService">
+   		<ref
+   			bean="org.sakaiproject.coursemanagement.api.CourseManagementService" />
+   	</property>
+   	<property name="courseManagementAdministration">
+   		<ref
+   			bean="org.sakaiproject.coursemanagement.api.CourseManagementAdministration" />
+   	</property>
+	<property name="term"><value>2008</value></property>
+	<property name="filePath"><value>/data/sakai/import/200_courses.csv</value></property>
+   </bean>
+
+   <bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerImportCourses"
+      class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+      singleton="true" init-method="init">
+      <property name="beanId">
+         <value>importCourses</value>
+      </property>
+      <property name="jobName">
+         <value>Import New Course Data</value>
+      </property>
+      <property name="schedulerManager">
+         <ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+      </property>
+   </bean>
 </beans>
