@@ -170,7 +170,7 @@ public class UpdateTiiAssignments implements Job {
 				try {
 					ContentReviewItem c = new ContentReviewItem();
 					c.setSiteId(result.getString(1));
-					c.setTaskId(result.getString(1));
+					c.setTaskId(result.getString(2));
 					return c;
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
@@ -381,7 +381,6 @@ public class UpdateTiiAssignments implements Job {
 			Reference ref = entityManager.newReference(taskId);
 			log.debug("got ref " + ref + " of type: " + ref.getType());
 			EntityProducer ep = ref.getEntityProducer();
-
 			Entity ent = ep.getEntity(ref);
 			log.debug("got entity " + ent);
 			if (ent instanceof Assignment) {
