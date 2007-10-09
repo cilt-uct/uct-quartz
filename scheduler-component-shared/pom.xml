@@ -101,10 +101,15 @@
       <artifactId>sakai-coursemanagement-api</artifactId>
       <version>${sakai.version}</version>
     </dependency>
-<dependency>
-      <groupId>org.sakaiproject</groupId>
-      <artifactId>sakai-util-api</artifactId>
-      <version>${sakai.version}</version>
+    <dependency>
+    	<groupId>org.sakaiproject</groupId>
+    	<artifactId>sakai-util-api</artifactId>
+    	<version>${sakai.version}</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.sakaiproject</groupId>
+    	<artifactId>sakai-assignment-api</artifactId>
+    	<version>${sakai.version}</version>
     </dependency>
     <dependency>
       <groupId>org.sakaiproject</groupId>

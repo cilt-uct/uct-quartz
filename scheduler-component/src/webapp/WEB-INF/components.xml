@@ -2,276 +2,338 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 
 <beans>
- <!-- course site owners -->
+	<!-- course site owners -->
 
- <bean id="UCTCourseSiteOwners" class="org.sakaiproject.component.app.scheduler.jobs.UCTCourseSiteOwners">
-			<property name="emailService">
-				<ref bean="org.sakaiproject.email.api.EmailService"/>
-			</property>
-			<property name="userDirectoryService">
-				<ref bean="org.sakaiproject.user.api.UserDirectoryService"/>
-			</property>
-			<property name="siteService">
-				<ref bean="org.sakaiproject.site.api.SiteService"/>
-			</property>
-			<property name="authzGroupService">
-				<ref bean="org.sakaiproject.authz.api.AuthzGroupService"/>
-			</property>
-			<property name="sessionManager">
-				<ref bean="org.sakaiproject.tool.api.SessionManager"/>
-			</property>
- </bean>
+	<bean id="UCTCourseSiteOwners"
+		class="org.sakaiproject.component.app.scheduler.jobs.UCTCourseSiteOwners">
+		<property name="emailService">
+			<ref bean="org.sakaiproject.email.api.EmailService" />
+		</property>
+		<property name="userDirectoryService">
+			<ref bean="org.sakaiproject.user.api.UserDirectoryService" />
+		</property>
+		<property name="siteService">
+			<ref bean="org.sakaiproject.site.api.SiteService" />
+		</property>
+		<property name="authzGroupService">
+			<ref bean="org.sakaiproject.authz.api.AuthzGroupService" />
+		</property>
+		<property name="sessionManager">
+			<ref bean="org.sakaiproject.tool.api.SessionManager" />
+		</property>
+	</bean>
 
-   <bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerUCTCourseSiteOwners"
-      class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-      singleton="true" init-method="init">
-      <property name="beanId">
-         <value>UCTCourseSiteOwners</value>
-      </property>
-      <property name="jobName">
-         <value>UCT CourseSite Owners</value>
-      </property>
-      <property name="schedulerManager">
-         <ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
-      </property>
-   </bean>
+	<bean
+		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerUCTCourseSiteOwners"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		singleton="true" init-method="init">
+		<property name="beanId">
+			<value>UCTCourseSiteOwners</value>
+		</property>
+		<property name="jobName">
+			<value>UCT CourseSite Owners</value>
+		</property>
+		<property name="schedulerManager">
+			<ref
+				bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+	</bean>
 
 
-<!--migrate CM -->
- <bean id="UCTMigrateCourseInfo" class="org.sakaiproject.component.app.scheduler.jobs.UCTMigrateCourseInfo">
-			<property name="sqlService">
-				<ref bean="org.sakaiproject.db.api.SqlService"/>
-			</property>
-			<property name="courseManagementService">
-				<ref bean="org.sakaiproject.coursemanagement.api.CourseManagementService"/>
-			</property>
-			<property name="courseManagementAdministration">
-				<ref bean="org.sakaiproject.coursemanagement.api.CourseManagementAdministration"/>
-			</property>
-			<property name="sessionManager">
-				<ref bean="org.sakaiproject.tool.api.SessionManager"/>
-			</property>
-			<property name="users">
-			  <map>
-  			  <!-- Dept of Chemical Engineering
+	<!--migrate CM -->
+	<bean id="UCTMigrateCourseInfo"
+		class="org.sakaiproject.component.app.scheduler.jobs.UCTMigrateCourseInfo">
+		<property name="sqlService">
+			<ref bean="org.sakaiproject.db.api.SqlService" />
+		</property>
+		<property name="courseManagementService">
+			<ref
+				bean="org.sakaiproject.coursemanagement.api.CourseManagementService" />
+		</property>
+		<property name="courseManagementAdministration">
+			<ref
+				bean="org.sakaiproject.coursemanagement.api.CourseManagementAdministration" />
+		</property>
+		<property name="sessionManager">
+			<ref bean="org.sakaiproject.tool.api.SessionManager" />
+		</property>
+		<property name="users">
+			<map>
+				<!-- Dept of Chemical Engineering
 					Anastacia Haddon
 					staff number: 01374828 
 					Authorization Recieved-->
-					<entry key="01374828"><value>CHE</value></entry>
-			  <!--colleen SAN "01360522"
-			  <entry key="01360522">
-			  	<value>SAN</value>
-			 </entry>-->
-			 <!-- robyn FAM 01407627
-			<entry key="01407627">
-				<value>FAM</value>
-			</entry> -->
-			 <!-- petros FAM 01373614 -->
-			<!-- Rowen CRJ law courses  01365463 -->
-			<!-- Mandy Bedin and Paula RDL law courses 01027808 and 01349732 --> 
-			<!-- Dorothy for CML courses (01048554) -->
-			 <!-- Ken HS -->
-			 <!-- Freda HS -->
-			 <!--  Nanette might for the APG courses (01301365) -->
-			 <!--  Marilyn Solomons for AHS courses  (01368342) ?? -->
-			 <!-- Yoemna for IS courses-->
-			  </map>
-			</property>
-			
- </bean>
+				<entry key="01374828">
+					<value>CHE</value>
+				</entry>
+				<!--colleen SAN "01360522"
+					<entry key="01360522">
+					<value>SAN</value>
+					</entry>-->
+				<!-- robyn FAM 01407627
+					<entry key="01407627">
+					<value>FAM</value>
+					</entry> -->
+				<!-- petros FAM 01373614 -->
+				<!-- Rowen CRJ law courses  01365463 -->
+				<!-- Mandy Bedin and Paula RDL law courses 01027808 and 01349732 -->
+				<!-- Dorothy for CML courses (01048554) -->
+				<!-- Ken HS -->
+				<!-- Freda HS -->
+				<!--  Nanette might for the APG courses (01301365) -->
+				<!--  Marilyn Solomons for AHS courses  (01368342) ?? -->
+				<!-- Yoemna for IS courses-->
+			</map>
+		</property>
 
-   <bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerUCTMigrateCourseInfo"
-      class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-      singleton="true" init-method="init">
-      <property name="beanId">
-         <value>UCTMigrateCourseInfo</value>
-      </property>
-      <property name="jobName">
-         <value>UCT migrate course info</value>
-      </property>
-      <property name="schedulerManager">
-         <ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
-      </property>
-   </bean>
+	</bean>
 
-
-
-
-<!-- Redo Tabs--> 
-<bean id="courseTabs" class="org.sakaiproject.component.app.scheduler.jobs.UCTResetCourseTabs">
-			<property name="userDirectoryService">
-				<ref bean="org.sakaiproject.user.api.UserDirectoryService"/>
-			</property>
-			<property name="preferencesService">
-				<ref bean="org.sakaiproject.user.api.PreferencesService"/>
-			</property>
-			<property name="sessionManager">
-				<ref bean="org.sakaiproject.tool.api.SessionManager"/>
-			</property>
-			<property name="siteService">
-				<ref bean="org.sakaiproject.site.api.SiteService"/>
-			</property>
-	 </bean>
-
-   <bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerCourseTabs"
-      class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-      singleton="true" init-method="init">
-      <property name="beanId">
-         <value>courseTabs</value>
-      </property>
-      <property name="jobName">
-         <value>Redo Course Tabs</value>
-      </property>
-      <property name="schedulerManager">
-         <ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
-      </property>
-   </bean>
-
-<!-- Save Realms  -->
-<bean id="saveRealms" class="org.sakaiproject.component.app.scheduler.jobs.UCTSaveRealms">
-			<property name="sessionManager">
-				<ref bean="org.sakaiproject.tool.api.SessionManager"/>
-			</property>
-			<property name="siteService">
-				<ref bean="org.sakaiproject.site.api.SiteService"/>
-			</property>
-			<property name="authzGroupService">
-				<ref bean="org.sakaiproject.authz.api.AuthzGroupService"/>
-			</property>			
-			<property name="groupProvider">
-				<ref bean="org.sakaiproject.authz.api.GroupProvider" />
-			</property>
-	 </bean>
-
-   <bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerSaveRealms"
-      class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-      singleton="true" init-method="init">
-      <property name="beanId">
-         <value>saveRealms</value>
-      </property>
-      <property name="jobName">
-         <value>save course Realms</value>
-      </property>
-      <property name="schedulerManager">
-         <ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
-      </property>
-   </bean>
-
-<!-- Save Realms  For upgrade-->
-<bean id="saveRealmsUpdate" class="org.sakaiproject.component.app.scheduler.jobs.UCTSaveRealmsUpdate">
-			<property name="sessionManager">
-				<ref bean="org.sakaiproject.tool.api.SessionManager"/>
-			</property>
-			<property name="siteService">
-				<ref bean="org.sakaiproject.site.api.SiteService"/>
-			</property>
-			<property name="authzGroupService">
-				<ref bean="org.sakaiproject.authz.api.AuthzGroupService"/>
-			</property>			
-			<property name="groupProvider">
-				<ref bean="org.sakaiproject.authz.api.GroupProvider" />
-			</property>
-	 </bean>
-
-   <bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerSaveRealmsUpdate"
-      class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-      singleton="true" init-method="init">
-      <property name="beanId">
-         <value>saveRealmsUpdate</value>
-      </property>
-      <property name="jobName">
-         <value>save course Realms for Update</value>
-      </property>
-      <property name="schedulerManager">
-         <ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
-      </property>
-   </bean>
+	<bean
+		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerUCTMigrateCourseInfo"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		singleton="true" init-method="init">
+		<property name="beanId">
+			<value>UCTMigrateCourseInfo</value>
+		</property>
+		<property name="jobName">
+			<value>UCT migrate course info</value>
+		</property>
+		<property name="schedulerManager">
+			<ref
+				bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+	</bean>
 
 
-<!--  check site quota's -->
-<bean id="setQuotas" class="org.sakaiproject.component.app.scheduler.jobs.IncreaseQuotas">
-			<property name="sessionManager">
-				<ref bean="org.sakaiproject.tool.api.SessionManager"/>
-			</property>
-			<property name="siteService">
-				<ref bean="org.sakaiproject.site.api.SiteService"/>
-			</property>
-			<property name="contentHostingService">
-				<ref bean="org.sakaiproject.content.api.ContentHostingService"/>
-			</property>
-			<property name="minQuota"><value>1048576</value></property>
-	 </bean>
 
-   <bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerSetQuotas"
-      class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-      singleton="true" init-method="init">
-      <property name="beanId">
-         <value>setQuotas</value>
-      </property>
-      <property name="jobName">
-         <value>set site Quotas</value>
-      </property>
-      <property name="schedulerManager">
-         <ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
-      </property>
-   </bean>
-   
-<!-- Reset blank emails -->
-<bean id="fixEmails" class="org.sakaiproject.component.app.scheduler.jobs.FixEmails">
-			<property name="sessionManager">
-				<ref bean="org.sakaiproject.tool.api.SessionManager"/>
-			</property>
-			<property name="userDirectoryService">
-				<ref bean="org.sakaiproject.user.api.UserDirectoryService"/>
-			</property>
-			<property name="personManager">
-				<ref bean="org.sakaiproject.api.common.edu.person.SakaiPersonManager"/>
-			</property>
-	 </bean>
 
-   <bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerFixEmails"
-      class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-      singleton="true" init-method="init">
-      <property name="beanId">
-         <value>fixEmails</value>
-      </property>
-      <property name="jobName">
-         <value>fix user emails</value>
-      </property>
-      <property name="schedulerManager">
-         <ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
-      </property>
-   </bean>
-   
-   <!-- Import New course metadata-->
-   <bean id="importCourses"
-   	class="org.sakaiproject.component.app.scheduler.jobs.UCTImportCourses">
-   	<property name="sessionManager">
-   		<ref bean="org.sakaiproject.tool.api.SessionManager" />
-   	</property>
-   	<property name="courseManagementService">
-   		<ref
-   			bean="org.sakaiproject.coursemanagement.api.CourseManagementService" />
-   	</property>
-   	<property name="courseManagementAdministration">
-   		<ref
-   			bean="org.sakaiproject.coursemanagement.api.CourseManagementAdministration" />
-   	</property>
-	<property name="term"><value>2008</value></property>
-	<property name="filePath"><value>/data/sakai/import/200_courses.csv</value></property>
-   </bean>
+	<!-- Redo Tabs-->
+	<bean id="courseTabs"
+		class="org.sakaiproject.component.app.scheduler.jobs.UCTResetCourseTabs">
+		<property name="userDirectoryService">
+			<ref bean="org.sakaiproject.user.api.UserDirectoryService" />
+		</property>
+		<property name="preferencesService">
+			<ref bean="org.sakaiproject.user.api.PreferencesService" />
+		</property>
+		<property name="sessionManager">
+			<ref bean="org.sakaiproject.tool.api.SessionManager" />
+		</property>
+		<property name="siteService">
+			<ref bean="org.sakaiproject.site.api.SiteService" />
+		</property>
+	</bean>
 
-   <bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerImportCourses"
-      class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-      singleton="true" init-method="init">
-      <property name="beanId">
-         <value>importCourses</value>
-      </property>
-      <property name="jobName">
-         <value>Import New Course Data</value>
-      </property>
-      <property name="schedulerManager">
-         <ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
-      </property>
-   </bean>
+	<bean
+		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerCourseTabs"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		singleton="true" init-method="init">
+		<property name="beanId">
+			<value>courseTabs</value>
+		</property>
+		<property name="jobName">
+			<value>Redo Course Tabs</value>
+		</property>
+		<property name="schedulerManager">
+			<ref
+				bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+	</bean>
+
+	<!-- Save Realms  -->
+	<bean id="saveRealms"
+		class="org.sakaiproject.component.app.scheduler.jobs.UCTSaveRealms">
+		<property name="sessionManager">
+			<ref bean="org.sakaiproject.tool.api.SessionManager" />
+		</property>
+		<property name="siteService">
+			<ref bean="org.sakaiproject.site.api.SiteService" />
+		</property>
+		<property name="authzGroupService">
+			<ref bean="org.sakaiproject.authz.api.AuthzGroupService" />
+		</property>
+		<property name="groupProvider">
+			<ref bean="org.sakaiproject.authz.api.GroupProvider" />
+		</property>
+	</bean>
+
+	<bean
+		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerSaveRealms"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		singleton="true" init-method="init">
+		<property name="beanId">
+			<value>saveRealms</value>
+		</property>
+		<property name="jobName">
+			<value>save course Realms</value>
+		</property>
+		<property name="schedulerManager">
+			<ref
+				bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+	</bean>
+
+	<!-- Save Realms  For upgrade-->
+	<bean id="saveRealmsUpdate"
+		class="org.sakaiproject.component.app.scheduler.jobs.UCTSaveRealmsUpdate">
+		<property name="sessionManager">
+			<ref bean="org.sakaiproject.tool.api.SessionManager" />
+		</property>
+		<property name="siteService">
+			<ref bean="org.sakaiproject.site.api.SiteService" />
+		</property>
+		<property name="authzGroupService">
+			<ref bean="org.sakaiproject.authz.api.AuthzGroupService" />
+		</property>
+		<property name="groupProvider">
+			<ref bean="org.sakaiproject.authz.api.GroupProvider" />
+		</property>
+	</bean>
+
+	<bean
+		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerSaveRealmsUpdate"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		singleton="true" init-method="init">
+		<property name="beanId">
+			<value>saveRealmsUpdate</value>
+		</property>
+		<property name="jobName">
+			<value>save course Realms for Update</value>
+		</property>
+		<property name="schedulerManager">
+			<ref
+				bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+	</bean>
+
+
+	<!--  check site quota's -->
+	<bean id="setQuotas"
+		class="org.sakaiproject.component.app.scheduler.jobs.IncreaseQuotas">
+		<property name="sessionManager">
+			<ref bean="org.sakaiproject.tool.api.SessionManager" />
+		</property>
+		<property name="siteService">
+			<ref bean="org.sakaiproject.site.api.SiteService" />
+		</property>
+		<property name="contentHostingService">
+			<ref
+				bean="org.sakaiproject.content.api.ContentHostingService" />
+		</property>
+		<property name="minQuota">
+			<value>1048576</value>
+		</property>
+	</bean>
+
+	<bean
+		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerSetQuotas"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		singleton="true" init-method="init">
+		<property name="beanId">
+			<value>setQuotas</value>
+		</property>
+		<property name="jobName">
+			<value>set site Quotas</value>
+		</property>
+		<property name="schedulerManager">
+			<ref
+				bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+	</bean>
+
+	<!-- Reset blank emails -->
+	<bean id="fixEmails"
+		class="org.sakaiproject.component.app.scheduler.jobs.FixEmails">
+		<property name="sessionManager">
+			<ref bean="org.sakaiproject.tool.api.SessionManager" />
+		</property>
+		<property name="userDirectoryService">
+			<ref bean="org.sakaiproject.user.api.UserDirectoryService" />
+		</property>
+		<property name="personManager">
+			<ref
+				bean="org.sakaiproject.api.common.edu.person.SakaiPersonManager" />
+		</property>
+	</bean>
+
+	<bean
+		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerFixEmails"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		singleton="true" init-method="init">
+		<property name="beanId">
+			<value>fixEmails</value>
+		</property>
+		<property name="jobName">
+			<value>fix user emails</value>
+		</property>
+		<property name="schedulerManager">
+			<ref
+				bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+	</bean>
+
+	<!-- Import New course metadata-->
+	<bean id="importCourses"
+		class="org.sakaiproject.component.app.scheduler.jobs.UCTImportCourses">
+		<property name="sessionManager">
+			<ref bean="org.sakaiproject.tool.api.SessionManager" />
+		</property>
+		<property name="courseManagementService">
+			<ref
+				bean="org.sakaiproject.coursemanagement.api.CourseManagementService" />
+		</property>
+		<property name="courseManagementAdministration">
+			<ref
+				bean="org.sakaiproject.coursemanagement.api.CourseManagementAdministration" />
+		</property>
+		<property name="term">
+			<value>2008</value>
+		</property>
+		<property name="filePath">
+			<value>/data/sakai/import/200_courses.csv</value>
+		</property>
+	</bean>
+
+	<bean
+		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerImportCourses"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		singleton="true" init-method="init">
+		<property name="beanId">
+			<value>importCourses</value>
+		</property>
+		<property name="jobName">
+			<value>Import New Course Data</value>
+		</property>
+		<property name="schedulerManager">
+			<ref
+				bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+	</bean>
+	
+	
+	<!-- Update Turnitin Courses-->
+	<bean id="updateTii"
+		class="org.sakaiproject.component.app.scheduler.jobs.UpdateTiiAssignments">
+		<property name="entityManager" 
+			ref="org.sakaiproject.entity.api.EntityManager" />
+					<property name="serverConfigurationService"
+			ref="org.sakaiproject.component.api.ServerConfigurationService" />
+			<property name="sqlService" ref="org.sakaiproject.db.api.SqlService"/>
+	</bean>
+
+	<bean
+		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerUpdateTiiAssign"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		singleton="true" init-method="init">
+		<property name="beanId">
+			<value>updateTii</value>
+		</property>
+		<property name="jobName">
+			<value>Update tii assignemnts</value>
+		</property>
+		<property name="schedulerManager">
+			<ref
+				bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+	</bean>	
 </beans>
