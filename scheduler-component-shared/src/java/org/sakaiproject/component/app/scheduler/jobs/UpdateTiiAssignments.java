@@ -162,7 +162,7 @@ public class UpdateTiiAssignments implements Job {
 	}
 
 	private void doAssignments() {
-		String statement = "Select siteid,taskid from CONTENTREVIEW_ITEM goup by siteid,taskid";
+		String statement = "Select siteid,taskid from CONTENTREVIEW_ITEM group by siteid,taskid";
 		Object[] fields = new Object[0];
 		List objects = sqlService.dbRead(statement, fields, new SqlReader(){
 			public Object readSqlResultRecord(ResultSet result)
