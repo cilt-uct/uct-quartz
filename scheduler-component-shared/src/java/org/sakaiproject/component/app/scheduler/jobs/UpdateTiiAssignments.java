@@ -158,6 +158,7 @@ public class UpdateTiiAssignments implements Job {
 		maxRetry = new Long(serverConfigurationService.getInt("turnitin.maxRetry",100));
 
 		TII_MAX_FILE_SIZE = serverConfigurationService.getInt("turnitin.maxFileSize",10995116);
+		doAssignments();
 	}
 
 	private void doAssignments() {
