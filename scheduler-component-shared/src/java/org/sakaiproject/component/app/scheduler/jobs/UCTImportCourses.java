@@ -119,15 +119,16 @@ public class UCTImportCourses implements Job {
 		 
 		EnrollmentSet enrolmentSet = null; 
 		if (! courseManagementService.isEnrollmentSetDefined(courseEid))
-			enrolmentSet = courseAdmin.createEnrollmentSet(courseEid, "title", "description", "category", "defaultEnrollmentCredits", courseEid, null);
+			enrolmentSet = courseAdmin.createEnrollmentSet(courseEid, descr, descr, "category", "defaultEnrollmentCredits", courseEid, null);
 		else
 			enrolmentSet = courseManagementService.getEnrollmentSet(courseEid);
 		
 		if(! courseManagementService.isSectionDefined(courseEid)) {
-			courseAdmin.createSection(courseEid, courseEid, "description", "category", null, courseEid, enrolmentSet.getEid());
+			courseAdmin.createSection(courseEid, courseEid, descr, "course", null, courseEid, enrolmentSet.getEid());
 		} else {
 			Section section = courseManagementService.getSection(courseEid);
 			section.setEnrollmentSet(enrolmentSet);
+			section.setCategory("course");
 		}
 		
 		} catch (ParseException e) {
