@@ -16,6 +16,8 @@ import org.quartz.JobExecutionException;
 import org.sakaiproject.content.api.ContentHostingService;
 import org.sakaiproject.coursemanagement.api.CourseManagementAdministration;
 import org.sakaiproject.coursemanagement.api.CourseManagementService;
+import org.sakaiproject.coursemanagement.api.EnrollmentSet;
+import org.sakaiproject.coursemanagement.api.Section;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
 
@@ -115,12 +117,18 @@ public class UCTImportCourses implements Job {
 		}
 		 
 		 
+		EnrollmentSet enrolmentSet = null; 
 		if (! courseManagementService.isEnrollmentSetDefined(courseEid))
-			courseAdmin.createEnrollmentSet(courseEid, "title", "description", "category", "defaultEnrollmentCredits", courseEid, null);
+			enrolmentSet = courseAdmin.createEnrollmentSet(courseEid, "title", "description", "category", "defaultEnrollmentCredits", courseEid, null);
+		else
+			enrolmentSet = courseManagementService.getEnrollmentSet(courseEid);
 		
-		if(! courseManagementService.isSectionDefined(courseEid))
-			courseAdmin.createSection(courseEid, courseEid, "description", "category", null, courseEid, null);
-		
+		if(! courseManagementService.isSectionDefined(courseEid)) {
+			courseAdmin.createSection(courseEid, courseEid, "description", "category", null, courseEid, enrolmentSet.getEid());
+		} else {
+			Section section = courseManagementService.getSection(courseEid);
+			section.setEnrollmentSet(enrolmentSet);
+		}
 		
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
