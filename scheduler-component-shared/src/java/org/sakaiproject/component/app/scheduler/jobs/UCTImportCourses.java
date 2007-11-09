@@ -74,7 +74,7 @@ public class UCTImportCourses implements Job {
 
 	    		 */
 	    		record = record.trim();
-	    		if (record.equals("")
+	    		if (record.equals(""))
 	    				continue;
 	    		String[] data = record.split(",");
 	    		this.createCourse(data[7] + data[8], term, data[10], data[7]);
