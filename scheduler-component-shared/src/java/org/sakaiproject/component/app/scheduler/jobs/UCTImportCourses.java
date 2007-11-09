@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.commons.logging.Log;
@@ -66,12 +67,15 @@ public class UCTImportCourses implements Job {
 	    	FileReader fr = new FileReader(filePath);
 	    	BufferedReader br = new BufferedReader(fr);
 	    	String record = null;  
-	    	while ( (record=br.readLine()) != null ) { 
+	    	while ( (record=br.readLine()) != null) { 
 	    		/*
 	    		 * this should be a record of the format:
 	    		 * Course ID	Offer Nbr	Term	Session	Sect	Institution	Acad Group	Subject	Catalog	Career	Descr	Class Nbr	Component
 
 	    		 */
+	    		record = record.trim();
+	    		if (record.equals("")
+	    				continue;
 	    		String[] data = record.split(",");
 	    		this.createCourse(data[7] + data[8], term, data[10], data[7]);
 	    	} 
@@ -98,7 +102,23 @@ public class UCTImportCourses implements Job {
 		SimpleDateFormat yearf = new SimpleDateFormat("yyyy");
 		String thisYear = yearf.format(new Date());
 		
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.YEAR, new Integer(term).intValue());
+		cal.set(Calendar.MONTH, Calendar.JANUARY);
+		cal.set(Calendar.DAY_OF_MONTH, 1);
+		
+		Date yearStart = cal.getTime();
+		
+		cal.set(Calendar.MONTH, Calendar.DECEMBER);
+		cal.set(Calendar.DAY_OF_MONTH, 31);
+		
+		Date yearEnd = cal.getTime();
+		
 		SimpleDateFormat dateForm = new SimpleDateFormat("yyyy-mm-dd");
+		
+		//does the accademic session exist
+		if (!courseManagementService.isAcademicSessionDefined(term))
+			courseAdmin.createAcademicSession(term, term,term + " academic year", new Date(), yearEnd);
 		
 		//does the course set exist?
 		if (!courseManagementService.isCourseSetDefined(setId)) 
@@ -113,7 +133,7 @@ public class UCTImportCourses implements Job {
 		 	LOG.info("creating course offering for " + courseCode + " in year " + term);
 		 	Date startDate = dateForm.parse(term + "-01-01");
 		 	Date endDate = dateForm.parse(term + "-12-31");
-			courseAdmin.createCourseOffering(courseEid, descr, descr, "active", term, courseCode, startDate, endDate);
+			courseAdmin.createCourseOffering(courseEid, descr, descr, "active", term, courseCode, new Date(), yearEnd);
 		}
 		 
 		 
