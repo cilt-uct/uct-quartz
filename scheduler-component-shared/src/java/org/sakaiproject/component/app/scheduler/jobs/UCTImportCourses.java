@@ -134,6 +134,7 @@ public class UCTImportCourses implements Job {
 		 	Date startDate = dateForm.parse(term + "-01-01");
 		 	Date endDate = dateForm.parse(term + "-12-31");
 			courseAdmin.createCourseOffering(courseEid, descr, descr, "active", term, courseCode, new Date(), yearEnd);
+			courseAdmin.addCourseOfferingToCourseSet(setId, courseEid);
 		}
 		 
 		 
