@@ -310,30 +310,39 @@
 		</property>
 	</bean>
 	
-	
-	<!-- Update Turnitin Courses-->
-	<bean id="updateTii"
-		class="org.sakaiproject.component.app.scheduler.jobs.UpdateTiiAssignments">
-		<property name="entityManager" 
-			ref="org.sakaiproject.entity.api.EntityManager" />
-					<property name="serverConfigurationService"
-			ref="org.sakaiproject.component.api.ServerConfigurationService" />
-			<property name="sqlService" ref="org.sakaiproject.db.api.SqlService"/>
+	<bean id="cleanUpCourses"
+		class="org.sakaiproject.component.app.scheduler.jobs.CleanUpCmData">
+		<property name="sessionManager">
+			<ref bean="org.sakaiproject.tool.api.SessionManager" />
+		</property>
+		<property name="courseManagementService">
+			<ref
+				bean="org.sakaiproject.coursemanagement.api.CourseManagementService" />
+		</property>
+		<property name="courseManagementAdministration">
+			<ref
+				bean="org.sakaiproject.coursemanagement.api.CourseManagementAdministration" />
+		</property>
+		<property name="term">
+			<value>2008</value>
+		</property>
 	</bean>
 
 	<bean
-		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerUpdateTiiAssign"
+		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerCleanCourses"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
 		singleton="true" init-method="init">
 		<property name="beanId">
-			<value>updateTii</value>
+			<value>cleanUpCourses</value>
 		</property>
 		<property name="jobName">
-			<value>Update tii assignemnts</value>
+			<value>Clean up course data</value>
 		</property>
 		<property name="schedulerManager">
 			<ref
 				bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
 		</property>
-	</bean>	
+	</bean>
+	
+
 </beans>

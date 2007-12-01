@@ -21,5 +21,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/content-api"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/profile"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/assignment-api"/>
+	<classpathentry kind="var" path="M2_REPO/org/hibernate/hibernate/3.2.5.ga/hibernate-3.2.5.ga.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
