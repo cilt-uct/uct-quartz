@@ -54,12 +54,14 @@ public class UpdateOrgNames implements Job {
 			CourseSet thisSet = (CourseSet)sets.get(i);
 			
 			String descr = this.getOrgNameByEid(thisSet.getEid());
-			thisSet.setTitle(thisSet.getEid() + " - " + descr);
-			//if the name contains "residence" change the type"
-			if (descr.indexOf("Residence")>-1)
-				thisSet.setCategory("Residence");
-			
-			cmAdminService.updateCourseSet(thisSet);
+			if (descr != null && descr.length() > 0 ) {
+				thisSet.setTitle(thisSet.getEid() + " - " + descr);
+				//if the name contains "residence" change the type"
+				if (descr.indexOf("Residence")>-1)
+					thisSet.setCategory("Residence");
+
+				cmAdminService.updateCourseSet(thisSet);
+			}
 			
 		}
  
@@ -75,7 +77,7 @@ public class UpdateOrgNames implements Job {
 			LOG.info("got org unit of " + (String)result.get(0));
 			return (String)result.get(0);
 		} else {
-			LOG.warn("Unkon or code of " + modOrgUnit + " recieved" );
+			LOG.warn("Unknown or code of " + modOrgUnit + " recieved" );
 		}
 				
 		return null;
