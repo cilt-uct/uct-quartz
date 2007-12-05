@@ -343,6 +343,39 @@
 				bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
 		</property>
 	</bean>
-	
+<!-- update course sets -->
+	<bean id="updateCoursesSets"
+		class="org.sakaiproject.component.app.scheduler.jobs.UpdateOrgNames">
+		<property name="sessionManager">
+			<ref bean="org.sakaiproject.tool.api.SessionManager" />
+		</property>
+		<property name="courseManagementService">
+			<ref
+				bean="org.sakaiproject.coursemanagement.api.CourseManagementService" />
+		</property>
+		<property name="courseManagementAdministration">
+			<ref
+				bean="org.sakaiproject.coursemanagement.api.CourseManagementAdministration" />
+		</property>
+		<property name="term">
+			<value>2008</value>
+		</property>
+	</bean>
+
+	<bean
+		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerCleanCourses"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		singleton="true" init-method="init">
+		<property name="beanId">
+			<value>updateCoursesSets</value>
+		</property>
+		<property name="jobName">
+			<value>update uct course set names</value>
+		</property>
+		<property name="schedulerManager">
+			<ref
+				bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+	</bean>	
 
 </beans>
