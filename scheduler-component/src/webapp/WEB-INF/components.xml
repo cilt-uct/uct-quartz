@@ -343,6 +343,7 @@
 				bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
 		</property>
 	</bean>
+	
 <!-- update course sets -->
 	<bean id="updateCoursesSets"
 		class="org.sakaiproject.component.app.scheduler.jobs.UpdateOrgNames">
