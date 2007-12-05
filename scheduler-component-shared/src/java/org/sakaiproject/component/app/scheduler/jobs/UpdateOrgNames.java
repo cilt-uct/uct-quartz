@@ -68,8 +68,8 @@ public class UpdateOrgNames implements Job {
 	
 	
 	private String getOrgNameByEid(String modOrgUnit) {
-		String statement = "Select Description from UCT_ORG where ORG_UNIT = " + modOrgUnit;
 		
+		String statement = "Select Description from UCT_ORG where ORG_UNIT = '" + modOrgUnit + ""'";
 		List result = sqlService.dbRead(statement);
 		if (result.size()>0) {
 			LOG.info("got org unit of " + (String)result.get(0));

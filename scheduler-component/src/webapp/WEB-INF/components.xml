@@ -358,6 +358,8 @@
 			<ref
 				bean="org.sakaiproject.coursemanagement.api.CourseManagementAdministration" />
 		</property>
+		<property name="sqlService" 
+			ref="org.sakaiproject.db.api.SqlService"/>
 	</bean>
 
 	<bean
