@@ -70,8 +70,10 @@ public class CleanUpCmData implements Job {
 	    			String fullEid = eid + "," + term;
 	    			//we only need to remove at this level
 	    			//course offering
+	    			/* this should not be needed
 	    			if (courseManagementService.isCourseOfferingDefined(fullEid)) 
 	    				courseAdmin.removeCourseOffering(fullEid);
+	    				*/
 	    			//canon course
 	    			courseAdmin.removeCanonicalCourse(eid);
 	    		}
