@@ -95,7 +95,9 @@ public class IncreaseQuotas implements Job {
 				
 						} catch (IdUnusedException e) {
 							//TODO Auto-generated catch block
-							e.printStackTrace();
+							LOG.info("IdUnused: " + s.getId());
+							if (LOG.isDebugEnabled())
+								e.printStackTrace();
 						} catch (TypeException e) {
 							//TODO Auto-generated catch block
 							e.printStackTrace();
