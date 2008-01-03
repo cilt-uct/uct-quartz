@@ -73,8 +73,8 @@ public class CleanUpCmData implements Job {
 	    			Set courseSets = course.getCourseSetEids();
 	    			Iterator ita = courseSets.iterator();
 	    			while (ita.hasNext()) {
-	    				CourseSet set = (CourseSet)ita.next();
-	    				courseAdmin.removeCanonicalCourseFromCourseSet(set.getEid(), eid);
+	    				String set = (String)ita.next();
+	    				courseAdmin.removeCanonicalCourseFromCourseSet(set, eid);
 	    			}
 	    			
 	    			//course offering
