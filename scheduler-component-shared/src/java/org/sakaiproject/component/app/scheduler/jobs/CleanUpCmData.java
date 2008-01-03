@@ -69,6 +69,14 @@ public class CleanUpCmData implements Job {
 	    			log.warn("Found course to delete: " + eid);
 	    			String fullEid = eid + "," + term;
 	    			//we only need to remove at this level
+	    			//we need to remove the course offering from its course set
+	    			Set courseSets = course.getCourseSetEids();
+	    			Iterator ita = courseSets.iterator();
+	    			while (ita.hasNext()) {
+	    				CourseSet set = (CourseSet)ita.next();
+	    				courseAdmin.removeCanonicalCourseFromCourseSet(set.getEid(), eid);
+	    			}
+	    			
 	    			//course offering
 	    			/* this should not be needed
 	    			if (courseManagementService.isCourseOfferingDefined(fullEid)) 
