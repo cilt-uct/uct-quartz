@@ -78,10 +78,9 @@ public class CleanUpCmData implements Job {
 	    			}
 	    			
 	    			//course offering
-	    			/* this should not be needed
 	    			if (courseManagementService.isCourseOfferingDefined(fullEid)) 
 	    				courseAdmin.removeCourseOffering(fullEid);
-	    				*/
+	    				
 	    			//canon course
 	    			courseAdmin.removeCanonicalCourse(eid);
 	    		}
