@@ -85,7 +85,7 @@ public class CleanUpCmData implements Job {
 	    				Iterator itb = sets.iterator();
 	    				while (itb.hasNext()) {
 	    					String set = (String)itb.next();
-	    					courseAdmin.removeCourseOfferingFromCourseSet(fullEid, set);
+	    					courseAdmin.removeCourseOfferingFromCourseSet(set, fullEid);
 	    				}
 	    				courseAdmin.removeCourseOffering(fullEid);
 	    				
