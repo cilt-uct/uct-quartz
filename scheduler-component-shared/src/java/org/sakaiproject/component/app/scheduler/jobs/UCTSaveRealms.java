@@ -44,6 +44,11 @@ public class UCTSaveRealms implements Job {
 	public void setGroupProvider(GroupProvider gp){
 		groupProvider =gp;
 	}
+	
+	String term = "2008";
+	public void setTerm(String t) {
+		term = t;
+	}
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		// TODO Auto-generated method stub
 
@@ -62,7 +67,7 @@ public class UCTSaveRealms implements Job {
 			if (term != null ) {
 				term = term.trim();
 				LOG.debug("site is in term: " + term);
-				if (term.equals("2007")) {
+				if (term.equals(term)) {
 					try {
 					AuthzGroup group = authzGroupService.getAuthzGroup("/site/" + s.getId());
 					if (group.getProviderGroupId() != null && group.getProviderGroupId().length()>0 && FIX_USERS) {

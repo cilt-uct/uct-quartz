@@ -155,6 +155,7 @@
 		<property name="groupProvider">
 			<ref bean="org.sakaiproject.authz.api.GroupProvider" />
 		</property>
+		<property name="term"><value>2008</value></property>
 	</bean>
 
 	<bean
@@ -188,6 +189,7 @@
 		<property name="groupProvider">
 			<ref bean="org.sakaiproject.authz.api.GroupProvider" />
 		</property>
+		
 	</bean>
 
 	<bean
