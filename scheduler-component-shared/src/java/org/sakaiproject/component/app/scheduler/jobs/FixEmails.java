@@ -53,7 +53,7 @@ public class FixEmails implements Job {
 		for (int i= 0; i < users.size(); i++ ){
 			User u = (User)users.get(i);
 			String type = u.getType();
-			if (type != null && (type.equals("student") || type.equals("staff")) && (u.getEmail() == null || u.getEmail().equals(""))) {
+			if (type != null && (type.equals("student") || type.equals("staff") || type.equals("thirdparty")) && (u.getEmail() == null || u.getEmail().equals(""))) {
 				//we need to set this users email
 				LOG.info("Found: " + u.getId() + " (" + u.getEid()+") with ivalid email" + u.getEmail());
 				try {
