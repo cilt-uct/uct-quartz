@@ -66,7 +66,7 @@ public class IncreaseQuotas implements Job {
 				if (term != null ) {
 					term = term.trim();
 					LOG.debug("site is in term: " + term);
-					if (term.equals("2007")) {
+					if (term.equals("2008")) {
 						LOG.debug("got site " + s.getTitle());
 						try {
 							
