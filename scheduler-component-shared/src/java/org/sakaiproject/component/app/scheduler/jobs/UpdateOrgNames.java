@@ -77,7 +77,7 @@ public class UpdateOrgNames implements Job {
 			LOG.info("got org unit of " + (String)result.get(0));
 			return (String)result.get(0);
 		} else {
-			LOG.warn("Unknown or code of " + modOrgUnit + " recieved" );
+			LOG.info("Unknown org code of " + modOrgUnit + " received" );
 		}
 				
 		return null;
