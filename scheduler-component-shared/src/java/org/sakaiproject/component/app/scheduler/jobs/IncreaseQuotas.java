@@ -105,7 +105,7 @@ public class IncreaseQuotas implements Job {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						} catch (EntityPropertyNotDefinedException e) {
-							LOG.warn("Property is not set");
+							LOG.info("Quota property is not set: " + s.getId());
 							try {
 							ContentCollectionEdit collectionEdit = contentHostingService.editCollection(contentHostingService.getSiteCollection(s.getId()));
 							ResourceProperties properties = collectionEdit.getProperties();
