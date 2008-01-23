@@ -67,6 +67,7 @@ public class MarkMessagesRead implements Job {
 	private void markAllRead(String contextId) {
 		
 		Area area = areaManager.getDiscussionArea(contextId);
+		LOG.info("got area: " + area.getContextId());
 		List fora = area.getDiscussionForums();
 		for (int i = 0; i < fora.size(); i ++) {
 			DiscussionForum forum = (DiscussionForum)fora.get(i);
