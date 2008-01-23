@@ -1,5 +1,6 @@
 package org.sakaiproject.component.app.scheduler.jobs;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -30,7 +31,7 @@ public class MarkMessagesRead implements Job {
 	private AreaManager areaManager;
 	private Date migrateDate = new Date();
 	private Set siteUsers;
-	private List sites;
+	private List sites = new ArrayList();
 	private AuthzGroupService authzGroupService;
 	private MessageForumsMessageManager messageForumsMessageManager;
 	

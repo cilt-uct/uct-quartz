@@ -386,7 +386,7 @@
 		<property name="areaManager" ref="org.sakaiproject.api.app.messageforums.AreaManager"/>
 		<property name="authzGroupService" ref="org.sakaiproject.authz.api.AuthzGroupService" />
 		<property name="messageForumsMessageManager" ref="org.sakaiproject.api.app.messageforums.MessageForumsMessageManager" />
-		<property name="migrateDate"><value>2008/01/01</value></property>
+		<!-- <property name="migrateDate"><value>2008/01/01</value></property> -->
 		<!-- <property name="sites"></property>-->
 	</bean>
 
