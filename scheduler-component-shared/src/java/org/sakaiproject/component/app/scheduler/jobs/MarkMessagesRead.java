@@ -44,6 +44,7 @@ public class MarkMessagesRead implements Job {
 		
 		for(int i =0; i < sites.size(); i++) {
 			//first update the user list
+			LOG.info("Doing site: " + (String)sites.get(i));
 			try {
 				AuthzGroup group = authzGroupService.getAuthzGroup("/site/" + (String)sites.get(i));
 				siteUsers = group.getMembers();
