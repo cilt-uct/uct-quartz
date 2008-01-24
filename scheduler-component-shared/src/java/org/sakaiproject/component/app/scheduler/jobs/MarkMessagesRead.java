@@ -1,6 +1,7 @@
 package org.sakaiproject.component.app.scheduler.jobs;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -43,7 +44,15 @@ public class MarkMessagesRead implements Job {
 		//test with this one
 		//f2d0210c-1a7a-4fe7-00c0-40e37f8891d4
 		sites.add("f2d0210c-1a7a-4fe7-00c0-40e37f8891d4");
+		//on my build
+		//sites.add("8dbdcec6-18a1-4584-a199-d5b891d55347");
 		
+		
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.YEAR, 2008);
+		cal.set(Calendar.MONTH, 1);
+		cal.set(Calendar.DAY_OF_MONTH, 1);
+		migrateDate = cal.getTime();
 		
 		for(int i =0; i < sites.size(); i++) {
 			//first update the user list
@@ -73,14 +82,16 @@ public class MarkMessagesRead implements Job {
 		LOG.info("got area: " + area.getContextId());
 		//lazy init error here
 		List fora = area.getDiscussionForums();
-		
+		LOG.info("got a list of: " + fora.size() + " forums");
 		//list fora = messageForumsForumManager.getForumByTypeAndContextWithTopicsAllAttachments(typeUuid)
 		for (int i = 0; i < fora.size(); i ++) {
 			DiscussionForum forum = (DiscussionForum)fora.get(i);
 			List topics = forum.getTopics();
+			LOG.info("Got a list of: " + topics.size() + " topics");
 			for (int q=0; q < topics.size(); q ++) {
 				Topic topic = (Topic)topics.get(q);
 				List messages = topic.getMessages();
+				LOG.info("got a list of: " + messages.size() + " messages");
 				for (int r =0; r < messages.size(); r ++) {
 					Message message = (Message)messages.get(r);
 					if (message.getCreated().before(migrateDate)) {
