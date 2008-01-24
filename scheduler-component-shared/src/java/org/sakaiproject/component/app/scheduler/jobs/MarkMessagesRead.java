@@ -15,6 +15,7 @@ import org.sakaiproject.api.app.messageforums.Area;
 import org.sakaiproject.api.app.messageforums.AreaManager;
 import org.sakaiproject.api.app.messageforums.DiscussionForum;
 import org.sakaiproject.api.app.messageforums.Message;
+import org.sakaiproject.api.app.messageforums.MessageForumsForumManager;
 import org.sakaiproject.api.app.messageforums.MessageForumsMessageManager;
 import org.sakaiproject.api.app.messageforums.Topic;
 import org.sakaiproject.api.common.type.Type;
@@ -34,6 +35,7 @@ public class MarkMessagesRead implements Job {
 	private List sites = new ArrayList();
 	private AuthzGroupService authzGroupService;
 	private MessageForumsMessageManager messageForumsMessageManager;
+	private MessageForumsForumManager messageForumsForumManager;
 	
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		// TODO Auto-generated method stub
@@ -69,7 +71,10 @@ public class MarkMessagesRead implements Job {
 		
 		Area area = areaManager.getDiscussionArea(contextId);
 		LOG.info("got area: " + area.getContextId());
+		//lazy init error here
 		List fora = area.getDiscussionForums();
+		
+		//list fora = messageForumsForumManager.getForumByTypeAndContextWithTopicsAllAttachments(typeUuid)
 		for (int i = 0; i < fora.size(); i ++) {
 			DiscussionForum forum = (DiscussionForum)fora.get(i);
 			List topics = forum.getTopics();
