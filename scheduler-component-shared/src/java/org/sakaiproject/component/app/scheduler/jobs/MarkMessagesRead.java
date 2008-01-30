@@ -102,7 +102,7 @@ public class MarkMessagesRead implements Job {
 						while (it.hasNext()) {
 							Member member = (Member)it.next();
 							messageForumsMessageManager.markMessageReadForUser(topic.getId(), message.getId(), true, member.getUserId());
-
+							LOG.info("marking message: " + message.getId() + " read for user: " + member.getUserId());
 						}
 						
 					}
