@@ -44,6 +44,7 @@ public class MarkMessagesRead implements Job {
 		//test with this one
 		//f2d0210c-1a7a-4fe7-00c0-40e37f8891d4
 		sites.add("f2d0210c-1a7a-4fe7-00c0-40e37f8891d4");
+		sites.add("e5e7e315-35d5-40d3-8071-1ae7ccc2a247");
 		//on my build
 		//sites.add("8dbdcec6-18a1-4584-a199-d5b891d55347");
 		
@@ -95,7 +96,7 @@ public class MarkMessagesRead implements Job {
 				for (int r =0; r < messages.size(); r ++) {
 					Message message = (Message)messages.get(r);
 					if (message.getCreated().before(migrateDate)) {
-						LOG.info("Message " + message.getTitle() + "befre migrate date");
+						LOG.info("Message " + message.getTitle() + " before migrate date");
 						//now mark for each user
 						Iterator it = siteUsers.iterator();
 						while (it.hasNext()) {
