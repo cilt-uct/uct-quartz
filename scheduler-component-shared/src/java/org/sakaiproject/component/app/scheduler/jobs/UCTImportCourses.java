@@ -96,6 +96,8 @@ public class UCTImportCourses implements Job {
 	
 	private void createCourse(String courseCode, String term, String descr, String setId) {
 		LOG.info("createCourse(" + courseCode + "," + term + "," + descr + "," + setId );
+		
+		//TODO if this course ends in SUP or EWA don't do this
 		try {
 		String setCategory = "Department";
 		String courseEid = courseCode +","+term;
