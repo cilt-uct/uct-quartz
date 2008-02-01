@@ -136,13 +136,13 @@ public class UCTImportCourses implements Job {
 		 	LOG.info("creating course offering for " + courseCode + " in year " + term);
 		 	Date startDate = dateForm.parse(term + "-01-01");
 		 	Date endDate = dateForm.parse(term + "-12-31");
-			courseAdmin.createCourseOffering(courseEid, courseEid + " - " + descr, courseEid + " - " + descr, "active", term, courseCode, new Date(), yearEnd);
+			courseAdmin.createCourseOffering(courseEid, courseCode + " - " + descr, courseEid + " - " + descr, "active", term, courseCode, new Date(), yearEnd);
 			
 		} else {
 			//update the name
 			CourseOffering co = courseManagementService.getCourseOffering(courseEid);
 			co.setTitle(courseEid + " - " + descr);
-			co.setDescription(courseEid + " - " + descr);
+			co.setDescription(courseCode + " - " + descr);
 			courseAdmin.updateCourseOffering(co);
 			
 		}
