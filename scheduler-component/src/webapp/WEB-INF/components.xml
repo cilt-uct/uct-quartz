@@ -222,6 +222,7 @@
 			<ref
 				bean="org.sakaiproject.content.api.ContentHostingService" />
 		</property>
+		<property name="emailService" ref="org.sakaiproject.email.api.EmailService"/>
 		<property name="minQuota">
 			<value>1048576</value>
 		</property>

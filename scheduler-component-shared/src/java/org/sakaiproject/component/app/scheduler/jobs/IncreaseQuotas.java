@@ -10,6 +10,7 @@ import org.quartz.JobExecutionException;
 import org.sakaiproject.content.api.ContentCollection;
 import org.sakaiproject.content.api.ContentCollectionEdit;
 import org.sakaiproject.content.api.ContentHostingService;
+import org.sakaiproject.email.api.EmailService;
 import org.sakaiproject.entity.api.EntityPropertyNotDefinedException;
 import org.sakaiproject.entity.api.EntityPropertyTypeException;
 import org.sakaiproject.entity.api.ResourceProperties;
@@ -46,7 +47,10 @@ public class IncreaseQuotas implements Job {
 	public void setContentHostingService(ContentHostingService chs) {
 		contentHostingService = chs;
 	}
-	
+	private EmailService emailService; 
+	public void setEmailService(EmailService emailService) {
+		this.emailService = emailService;
+	}
 	
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		// TODO Auto-generated method stub
@@ -72,9 +76,9 @@ public class IncreaseQuotas implements Job {
 							
 							String siteColl = contentHostingService.getSiteCollection(s.getId());
 							ContentCollection collection = contentHostingService.getCollection(siteColl);
-							//Long collectionSize = collection.getBodySizeK();
+							Long collectionSize = collection.getBodySizeK();
 							//	totalCollectionSize = new Long(totalCollectionSize.longValue() + collectionSize.longValue() );
-							Long collectionSize = new Long(0);
+							//Long collectionSize = new Long(0);
 							ResourceProperties properties = collection.getProperties();
 							long quota = (long) properties.getLongProperty(ResourceProperties.PROP_COLLECTION_BODY_QUOTA);
 							LOG.debug("got quota of " + quota);
@@ -86,13 +90,12 @@ public class IncreaseQuotas implements Job {
 								contentHostingService.commitCollection(collectionEdit);
 							} 
 							
-							/*
-							else if (collectionSize.longValue() <= (quota - 1024)) {
-								sb.append(s.getId());
+							
+							else if (collectionSize.longValue() >= (quota - 1024)) {
+								sb.append(s.getId() + " (" + collectionSize.toString() + "/" + quota + ")\n");
 								LOG.debug("Site is close to quota");
 							}
-							 */
-				
+							 				
 						} catch (IdUnusedException e) {
 							//TODO Auto-generated catch block
 							LOG.info("IdUnused: " + s.getId());
@@ -127,6 +130,14 @@ public class IncreaseQuotas implements Job {
 						} catch (Exception ex) {
 							ex.printStackTrace();
 						}
+						
+						//we have some sites in the Stringbuffer
+						if (sb.length() > 0) {
+							emailService.send("help@vula.uct.ac.za", "help@vula.uct.ac.za", "Sites Close to Quota", sb.toString(),null,null, null);							
+							
+							
+						}
+						
 					}
 				}
 				
@@ -134,5 +145,7 @@ public class IncreaseQuotas implements Job {
 		}
 		
 	}
+
+	
 
 }
