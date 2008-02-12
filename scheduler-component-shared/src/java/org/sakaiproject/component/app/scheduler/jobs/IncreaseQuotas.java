@@ -89,7 +89,7 @@ public class IncreaseQuotas implements Job {
 								properties.addProperty(ResourceProperties.PROP_COLLECTION_BODY_QUOTA, Long.toString(minQuota));
 								contentHostingService.commitCollection(collectionEdit);
 							} else if (quota != 0 && (collectionSize.longValue() >= (quota - 1024))) {
-								sb.append(s.getId() + " (" + collectionSize.toString() + "/" + quota + ")\n");
+								sb.append(s.getId() +" " + s.getTitle() + " (" + collectionSize.toString() + "/" + quota + ")\n");
 								LOG.debug("Site is close to quota");
 							}
 							 				
