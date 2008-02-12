@@ -88,10 +88,7 @@ public class IncreaseQuotas implements Job {
 								properties.removeProperty(ResourceProperties.PROP_COLLECTION_BODY_QUOTA);
 								properties.addProperty(ResourceProperties.PROP_COLLECTION_BODY_QUOTA, Long.toString(minQuota));
 								contentHostingService.commitCollection(collectionEdit);
-							} 
-							
-							
-							else if (collectionSize.longValue() >= (quota - 1024)) {
+							} else if (quota != 0 && (collectionSize.longValue() >= (quota - 1024))) {
 								sb.append(s.getId() + " (" + collectionSize.toString() + "/" + quota + ")\n");
 								LOG.debug("Site is close to quota");
 							}
@@ -130,20 +127,19 @@ public class IncreaseQuotas implements Job {
 						} catch (Exception ex) {
 							ex.printStackTrace();
 						}
-						
-						//we have some sites in the Stringbuffer
-						if (sb.length() > 0) {
-							emailService.send("help@vula.uct.ac.za", "help@vula.uct.ac.za", "Sites Close to Quota", sb.toString(),null,null, null);							
-							
-							
-						}
+
 						
 					}
 				}
 				
 			}
 		}
-		
+		//we have some sites in the Stringbuffer
+		if (sb.length() > 0) {
+			emailService.send("help@vula.uct.ac.za", "help@vula.uct.ac.za", "Sites Close to Quota", sb.toString(),null,null, null);							
+			
+			
+		}
 	}
 
 	
