@@ -110,14 +110,11 @@ public class UCTResetCourseTabs implements Job {
 								//anything not 2008 moves down
 								ResourceProperties sp = s.getProperties();
 								String term = sp.getProperty("term");
-								if (term != null ) {
-									term = term.trim();
+								term = term.trim();
+								if (term != null && !term.equals("2008") ) {
 									LOG.info("site is in term: " + term);
-									if (!term.equals("2008")) {
-										bottom.add(value);
-									}
-
-
+									LOG.info("adding term to bottom list");
+									bottom.add(value);
 								} else {
 									top.add(value);
 								}
