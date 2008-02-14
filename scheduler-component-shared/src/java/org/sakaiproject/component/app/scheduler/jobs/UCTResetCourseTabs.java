@@ -126,10 +126,10 @@ public class UCTResetCourseTabs implements Job {
 						}
 						rp.removeProperty("order");
 						
-						for (int q =0; i < top.size(); q++) {
+						for (int q =0; q < top.size(); q++) {
 							rp.addPropertyToList("order", (String)top.get(q));
 						}
-						for (int q =0; i < bottom.size(); q++) {
+						for (int q =0; q < bottom.size(); q++) {
 							rp.addPropertyToList("order", (String)bottom.get(q));
 						}
 						
