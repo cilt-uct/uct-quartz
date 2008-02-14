@@ -22,6 +22,7 @@ import org.sakaiproject.site.api.SiteService.SortType;
 import org.sakaiproject.site.api.Site;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Collection;
 import java.util.Iterator;
@@ -84,47 +85,61 @@ public class UCTResetCourseTabs implements Job {
 			}
 			if (p!= null) {
 //				the key we need is sakai:portal:sitenav
+				sakaiSession.setUserId(u.getId());
+				sakaiSession.setUserEid(u.getEid());
 				ResourcePropertiesEdit rp = p.getPropertiesEdit("sakai:portal:sitenav");
 //				name is exclude
-				/* no tneeded
-				List ex = null;
+				List order = null;
+				List top = new ArrayList();
+				List bottom =  new ArrayList();
 				if (rp != null ){
 					//we need this list so we don't loose sites later
-					ex = rp.getPropertyList("exclude");
-					if (ex != null ) {
-					for (int q =0;q < ex.size();q++){
-						String value = (String) ex.get(q);
-						LOG.info("got a vaulue of " + value);
-					}
-					}
+					order = rp.getPropertyList("order");
+					if (order != null ) {
+						for (int q =0;q < order.size();q++){
+							String value = (String) order.get(q);
+							LOG.info("got a vaulue of " + value);
+							Site s = null;
+							try {
+								s = siteService.getSite(value);
+							} catch (IdUnusedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							if (s != null && s.getType()!= null && s.getType().equals("course")) {
+								//anything not 2008 moves down
+								ResourceProperties sp = s.getProperties();
+								String term = sp.getProperty("term");
+								if (term != null ) {
+									term = term.trim();
+									LOG.info("site is in term: " + term);
+									if (!term.equals("2008")) {
+										bottom.add(value);
+									}
+
+
+								} else {
+									top.add(value);
+								}
+
+							}
+						}
+						rp.removeProperty("order");
+						
+						for (int q =0; i < top.size(); q++) {
+							rp.addPropertyToList("order", (String)top.get(q));
+						}
+						for (int q =0; i < bottom.size(); q++) {
+							rp.addPropertyToList("order", (String)bottom.get(q));
+						}
+						
 				} else {
 					LOG.warn("resourceProperites is null");
 				}
-				*/
-			    sakaiSession.setUserId(u.getId());
-			    sakaiSession.setUserEid(u.getEid());
+				
+			  
 			    
-				List allSites = siteService.getSites(SelectionType.ACCESS, null, null,
-						  null, SortType.TITLE_ASC, null);
-				List moreSites = siteService.getSites(SelectionType.UPDATE, null, null,
-							null, SortType.TITLE_ASC, null);
-				allSites.addAll(moreSites);
-				 for (int q = 0; q < allSites.size();q++) {
-					 Site s = (Site)allSites.get(q);
-					 LOG.info("got site " + s.getTitle());
-					 if (s.getType()!= null && s.getType().equals("course")) {
-						 ResourceProperties sp = s.getProperties();
-						 String term = sp.getProperty("term");
-						 if (term != null ) {
-							 term = term.trim();
-							 LOG.info("site is in term: " + term);
-							 if (term.equals("2006")) {
-								 LOG.warn("addding this site to the excludes list");
-								 rp.addPropertyToList("exclude", s.getId()); 
-								 
-							 }
-						 }
-					 }
+
 				 }
 				
 				
