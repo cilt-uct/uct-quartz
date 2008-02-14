@@ -119,6 +119,8 @@ public class UCTResetCourseTabs implements Job {
 									top.add(value);
 								}
 
+							} else {
+								top.add(value);
 							}
 						}
 						rp.removeProperty("order");
