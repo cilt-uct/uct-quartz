@@ -57,6 +57,7 @@ public class AddPageToMyWorkspace implements Job {
 				page.setTitle("LearnOnline");
 				siteService.save(userSite);
 				ToolConfiguration tool = page.addTool("sakai.iframe");
+				tool.setTitle("LearnOnline");
 				tool.getPlacementConfig().setProperty(
 						"source", "https://vula.uct.ac.za/web/learnonline/ekp/index.htm");
 				
