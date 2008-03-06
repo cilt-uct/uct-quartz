@@ -64,7 +64,8 @@ public class AddPageToMyWorkspace implements Job {
 				
 			} catch (IdUnusedException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				//e.printStackTrace();
+				LOG.info("user has no workspace!: " + u.getId());
 			} catch (PermissionException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
