@@ -54,7 +54,7 @@ public class AddPageToMyWorkspace implements Job {
 	    	try {
 				Site userSite = siteService.getSite(siteService.getUserSiteId(u.getId()));
 				SitePage page = userSite.addPage();
-				page.setTitle("LearnOnLine");
+				page.setTitle("LearnOnline");
 				siteService.save(userSite);
 				ToolConfiguration tool = page.addTool("sakai.iframe");
 				tool.getPlacementConfig().setProperty(
