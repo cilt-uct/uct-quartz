@@ -39,7 +39,7 @@ public class AddPageToMyWorkspace implements Job {
 	
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		// TODO Auto-generated method stub
-
+		
 		//set the user information into the current session
 	    Session sakaiSession = sessionManager.getCurrentSession();
 	    sakaiSession.setUserId("admin");
@@ -50,10 +50,12 @@ public class AddPageToMyWorkspace implements Job {
 	    	User u = (User) users.get(i);
 	    	
 	    	if (u.getType() != null && (u.getType().equals("student") || u.getType().equals("staff") || u.getType().equals("thirdparty")))
+	    		LOG.info("going to add page to: " + u.getEid());
 	    	try {
 				Site userSite = siteService.getSite(siteService.getUserSiteId(u.getId()));
 				SitePage page = userSite.addPage();
 				page.setTitle("LearnOnLine");
+				siteService.save(userSite);
 				ToolConfiguration tool = page.addTool("sakai.iframe");
 				tool.getPlacementConfig().setProperty(
 						"source", "https://vula.uct.ac.za/web/learnonline/ekp/index.htm");
