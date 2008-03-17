@@ -11,6 +11,7 @@ public class UCTTestJob implements StatefulJob {
 	
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		// TODO Auto-generated method stub
+		LOG.info("This job is stateful?: " +arg0.getJobDetail().isStateful());
 		LOG.info("UCTTestJob fired");
 		try {
 			Thread.sleep(120*1000);
