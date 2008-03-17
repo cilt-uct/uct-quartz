@@ -436,5 +436,25 @@
 		</property>
 	</bean>
 	
+		<!--  Stefeul test job -->
+	<bean id="statefulTesJob"
+		class="org.sakaiproject.component.app.scheduler.jobs.UCTTestJob">
+	</bean>
 
+	<bean
+		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerStatefulTestJob"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		singleton="true" init-method="init">
+		<property name="beanId">
+			<value>statefulTesJob</value>
+		</property>
+		<property name="jobName">
+			<value>test staful job</value>
+		</property>
+		<property name="schedulerManager">
+			<ref
+				bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+	</bean>
+	
 </beans>
