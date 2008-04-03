@@ -4,8 +4,8 @@
   <parent>
     <artifactId>base</artifactId>
     <groupId>org.sakaiproject</groupId>
-    <version>M2</version>
-    <relativePath>../pom.xml</relativePath>
+    <version>2.5.0</version>
+    
   </parent>
   <name>Sakai JobScheduler Project</name>
   <groupId>org.sakaiproject</groupId>

@@ -77,6 +77,8 @@ public class UCTCheckAccounts implements Job {
 			if (doThisUser(u)) {
 				if (!userExists(u.getEid())) {
 					LOG.warn("user: " + u.getEid() + "does not exist in auth tree" );
+				} else {
+					LOG.info("user: " + u.getEid() + "is in ldap");
 				}
 					
 				
