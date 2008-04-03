@@ -22,5 +22,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/profile"/>
 	<classpathentry kind="var" path="M2_REPO/org/hibernate/hibernate/3.2.5.ga/hibernate-3.2.5.ga.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/messageforums"/>
+	<classpathentry kind="var" path="M2_REPO/openldap/ldap/2005.03.29/ldap-2005.03.29.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
