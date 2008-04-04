@@ -438,9 +438,9 @@
 	
 	
 			<!--  check if users are in auth tree -->
-			<!-- 
+			 
 	<bean id="checkUsersExist"
-		class="org.sakaiproject.component.app.scheduler.jobs.UCTCheckAccounts">
+		class="org.sakaiproject.component.app.scheduler.jobs.UCTCheckAccounts2">
 		<property name="sessionManager">
 			<ref bean="org.sakaiproject.tool.api.SessionManager" />
 		</property>
@@ -466,7 +466,7 @@
 				bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
 		</property>
 	</bean>
-	-->
+	
 		<!--  Stefeul test job -->
 	<bean id="statefulTestJob"
 		class="org.sakaiproject.component.app.scheduler.jobs.UCTTestJob">
