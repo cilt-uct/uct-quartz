@@ -80,7 +80,8 @@ public class UCTCheckAccounts implements Job {
 		for (int i= 0; i < users.size(); i++ ){
 			User u = (User)users.get(i);
 			if (doThisUser(u)) {
-				if (!userDirectoryProvider.userExists(u.getEid())) {
+				//if (!userDirectoryProvider.userExists(u.getEid())) {
+				if (1 == 1) {
 					LOG.warn("user: " + u.getEid() + "does not exist in auth tree" );
 				} else {
 					LOG.info("user: " + u.getEid() + "is in ldap");
