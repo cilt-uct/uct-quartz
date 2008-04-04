@@ -10,6 +10,7 @@ import org.quartz.JobExecutionException;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
 import org.sakaiproject.user.api.User;
+import org.sakaiproject.user.api.UserDirectoryProvider;
 import org.sakaiproject.user.api.UserDirectoryService;
 
 import com.novell.ldap.LDAPConnection;
@@ -29,6 +30,14 @@ public class UCTCheckAccounts implements Job {
 	public void setUserDirectoryService(UserDirectoryService s) {
 		this.userDirectoryService = s;
 	}
+
+	private UserDirectoryProvider userDirectoryProvider;
+
+	public void setUserDirectoryProvider(UserDirectoryProvider userDirectoryProvider) {
+		this.userDirectoryProvider = userDirectoryProvider;
+	}
+
+	
 	
 	private SessionManager sessionManager;
 	public void setSessionManager(SessionManager s) {
@@ -75,7 +84,7 @@ public class UCTCheckAccounts implements Job {
 		for (int i= 0; i < users.size(); i++ ){
 			User u = (User)users.get(i);
 			if (doThisUser(u)) {
-				if (!userExists(u.getEid())) {
+				if (!userDirectoryProvider.(u.getEid())) {
 					LOG.warn("user: " + u.getEid() + "does not exist in auth tree" );
 				} else {
 					LOG.info("user: " + u.getEid() + "is in ldap");
@@ -143,6 +152,7 @@ public class UCTCheckAccounts implements Job {
 
 		return nextEntry;
 	}
+
 
 
 }
