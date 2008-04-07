@@ -10,8 +10,13 @@ import org.quartz.JobExecutionException;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
 import org.sakaiproject.user.api.User;
+import org.sakaiproject.user.api.UserAlreadyDefinedException;
 import org.sakaiproject.user.api.UserDirectoryProvider;
 import org.sakaiproject.user.api.UserDirectoryService;
+import org.sakaiproject.user.api.UserEdit;
+import org.sakaiproject.user.api.UserLockedException;
+import org.sakaiproject.user.api.UserNotDefinedException;
+import org.sakaiproject.user.api.UserPermissionException;
 
 import com.novell.ldap.LDAPConnection;
 import com.novell.ldap.LDAPEntry;
@@ -25,7 +30,7 @@ import com.novell.ldap.LDAPSocketFactory;
 
 public class UCTCheckAccounts2 implements Job {
 
-	
+	private static final String NOT_FOUND_TYPE = "ldapNotFound";
 	private UserDirectoryService userDirectoryService;
 	public void setUserDirectoryService(UserDirectoryService s) {
 		this.userDirectoryService = s;
@@ -86,6 +91,25 @@ public class UCTCheckAccounts2 implements Job {
 			if (doThisUser(u)) {
 				if (!userExists(u.getEid())) {
 					LOG.warn("user: " + u.getEid() + "does not exist in auth tree" );
+					try {
+						UserEdit ue = userDirectoryService.editUser(u.getId());
+						ue.setType(NOT_FOUND_TYPE);
+						userDirectoryService.commitEdit(ue);
+						
+					} catch (UserNotDefinedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (UserPermissionException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (UserLockedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (UserAlreadyDefinedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
 				} else {
 					LOG.info("user: " + u.getEid() + "is in ldap");
 				}
