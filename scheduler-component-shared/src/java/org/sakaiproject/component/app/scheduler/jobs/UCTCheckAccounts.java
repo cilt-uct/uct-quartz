@@ -12,6 +12,10 @@ import org.sakaiproject.tool.api.SessionManager;
 import org.sakaiproject.user.api.User;
 import org.sakaiproject.user.api.UserDirectoryProvider;
 import org.sakaiproject.user.api.UserDirectoryService;
+import org.sakaiproject.user.api.UserEdit;
+import org.sakaiproject.user.api.UserLockedException;
+import org.sakaiproject.user.api.UserNotDefinedException;
+import org.sakaiproject.user.api.UserPermissionException;
 
 import com.novell.ldap.LDAPConnection;
 import com.novell.ldap.LDAPJSSESecureSocketFactory;
@@ -40,6 +44,8 @@ public class UCTCheckAccounts implements Job {
 		this.sessionManager = s;
 	}
 	private static final Log LOG = LogFactory.getLog(UCTCheckAccounts.class);
+	
+	private static final String NOT_FOUND_TYPE = "ldapNotFound";
 	private static final String ADMIN = "admin";
 	
 	private String ldapHost = ""; //address of ldap server
@@ -83,6 +89,22 @@ public class UCTCheckAccounts implements Job {
 				//if (!userDirectoryProvider.userExists(u.getEid())) {
 				if (1 == 1) {
 					LOG.warn("user: " + u.getEid() + "does not exist in auth tree" );
+					try {
+						UserEdit ue = userDirectoryService.editUser(u.getId());
+						ue.setType(NOT_FOUND_TYPE);
+						userDirectoryService.commitEdit(ue));
+						
+					} catch (UserNotDefinedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (UserPermissionException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (UserLockedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
 				} else {
 					LOG.info("user: " + u.getEid() + "is in ldap");
 				}

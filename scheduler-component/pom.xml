@@ -20,6 +20,11 @@
     <deploy.target>components</deploy.target>
   </properties>
   <dependencies>
+  	<dependency>
+  	<groupId>org.sakaiproject</groupId>
+	<artifactId>uctsakai-comp-shared-scheduler</artifactId>
+	<version>${sakai.version}</version>
+  	</dependency>
       <dependency>
       <groupId>openldap</groupId>
       <artifactId>ldap</artifactId>
