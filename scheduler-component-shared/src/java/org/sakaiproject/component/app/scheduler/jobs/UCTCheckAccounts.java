@@ -111,7 +111,7 @@ public class UCTCheckAccounts implements Job {
 					}
 					
 				} else {
-					LOG.info("user: " + u.getEid() + "is in ldap");
+					LOG.info("user: " + u.getEid() + " is in ldap");
 				}
 					
 				
@@ -145,9 +145,12 @@ public class UCTCheckAccounts implements Job {
 			//this will fail if user does not exist	
 			LDAPEntry userEntry = getEntryFromDirectory(sFilter,attrList,conn);			
 			conn.disconnect();
+			if (userEntry == null)
+				return false;
 		}
 		catch(Exception e)
 		{
+			
 			return false;	
 		}		
 		return true;
