@@ -10,6 +10,7 @@ import org.quartz.JobExecutionException;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
 import org.sakaiproject.user.api.User;
+import org.sakaiproject.user.api.UserAlreadyDefinedException;
 import org.sakaiproject.user.api.UserDirectoryProvider;
 import org.sakaiproject.user.api.UserDirectoryService;
 import org.sakaiproject.user.api.UserEdit;
@@ -92,7 +93,7 @@ public class UCTCheckAccounts implements Job {
 					try {
 						UserEdit ue = userDirectoryService.editUser(u.getId());
 						ue.setType(NOT_FOUND_TYPE);
-						userDirectoryService.commitEdit(ue));
+						userDirectoryService.commitEdit(ue);
 						
 					} catch (UserNotDefinedException e) {
 						// TODO Auto-generated catch block
@@ -101,6 +102,9 @@ public class UCTCheckAccounts implements Job {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} catch (UserLockedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (UserAlreadyDefinedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
