@@ -28,7 +28,7 @@ import com.novell.ldap.LDAPSocketFactory;
 
 
 
-public class UCTCheckAccounts2 implements Job {
+public class UCTCheckAccounts implements Job {
 
 	private static final String NOT_FOUND_TYPE = "ldapNotFound";
 	private UserDirectoryService userDirectoryService;
@@ -48,7 +48,7 @@ public class UCTCheckAccounts2 implements Job {
 	public void setSessionManager(SessionManager s) {
 		this.sessionManager = s;
 	}
-	private static final Log LOG = LogFactory.getLog(UCTCheckAccounts2.class);
+	private static final Log LOG = LogFactory.getLog(UCTCheckAccounts.class);
 	private static final String ADMIN = "admin";
 	
 	private String ldapHost = ""; //address of ldap server

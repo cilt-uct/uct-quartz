@@ -440,7 +440,7 @@
 			<!--  check if users are in auth tree -->
 			 
 	<bean id="checkUsersExist"
-		class="org.sakaiproject.component.app.scheduler.jobs.UCTCheckAccounts2">
+		class="org.sakaiproject.component.app.scheduler.jobs.UCTCheckAccounts">
 		<property name="sessionManager">
 			<ref bean="org.sakaiproject.tool.api.SessionManager" />
 		</property>
