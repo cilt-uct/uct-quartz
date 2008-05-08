@@ -160,7 +160,7 @@
 
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerSaveRealms"
-		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringStatefulJobBeanWrapper"
 		singleton="true" init-method="init">
 		<property name="beanId">
 			<value>saveRealms</value>

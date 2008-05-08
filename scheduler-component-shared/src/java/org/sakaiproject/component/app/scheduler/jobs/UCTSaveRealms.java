@@ -5,6 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import org.quartz.StatefulJob;
 import org.sakaiproject.authz.api.AuthzGroupService;
 import org.sakaiproject.authz.api.AuthzGroup;
 import org.sakaiproject.entity.api.ResourceProperties;
@@ -23,7 +24,7 @@ import java.util.Set;
 import java.util.Iterator;
 import java.util.List;
 
-public class UCTSaveRealms implements Job {
+public class UCTSaveRealms implements StatefulJob {
 	
 	private static boolean FIX_USERS = false;
 	private static final Log LOG = LogFactory.getLog(UCTSaveRealms.class);
