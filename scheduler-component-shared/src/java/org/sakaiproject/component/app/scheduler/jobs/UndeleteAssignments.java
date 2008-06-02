@@ -8,10 +8,15 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.sakaiproject.assignment.api.Assignment;
+import org.sakaiproject.assignment.api.AssignmentEdit;
 import org.sakaiproject.assignment.api.AssignmentService;
 import org.sakaiproject.entity.api.EntityPropertyNotDefinedException;
 import org.sakaiproject.entity.api.EntityPropertyTypeException;
 import org.sakaiproject.entity.api.ResourceProperties;
+import org.sakaiproject.entity.api.ResourcePropertiesEdit;
+import org.sakaiproject.exception.IdUnusedException;
+import org.sakaiproject.exception.InUseException;
+import org.sakaiproject.exception.PermissionException;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
 
@@ -38,15 +43,27 @@ public class UndeleteAssignments implements Job {
 			
 			try {
 				if (rp.getBooleanProperty("CHEF:assignment_deleted")) {
+					AssignmentEdit ae = assignmentService.editAssignment(ass.getId());
+					ResourcePropertiesEdit rpe = ae.getPropertiesEdit();
 					LOG.info("undeleting" + ass.getTitle());
-					rp.removeProperty("CHEF:assignment_deleted");
-					rp.addProperty("CHEF:assignment_deleted", "fasle");
+					rpe.removeProperty("CHEF:assignment_deleted");
+					rpe.addProperty("CHEF:assignment_deleted", "fasle");
+					assignmentService.commitEdit(ae);
 					
 				}
 			} catch (EntityPropertyNotDefinedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (EntityPropertyTypeException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IdUnusedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (PermissionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InUseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
