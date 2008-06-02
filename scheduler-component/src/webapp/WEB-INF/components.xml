@@ -382,13 +382,12 @@
 	</bean>	
 	
 	<!-- mark messages as read -->
-		<bean id="markMessagesRead"
+	<!-- 	<bean id="markMessagesRead"
 		class="org.sakaiproject.component.app.scheduler.jobs.MarkMessagesRead">
 		<property name="areaManager" ref="org.sakaiproject.api.app.messageforums.AreaManager"/>
 		<property name="authzGroupService" ref="org.sakaiproject.authz.api.AuthzGroupService" />
 		<property name="messageForumsMessageManager" ref="org.sakaiproject.api.app.messageforums.MessageForumsMessageManager" />
-		<!-- <property name="migrateDate"><value>2008/01/01</value></property> -->
-		<!-- <property name="sites"></property>-->
+		
 	</bean>
 
 	<bean
@@ -406,7 +405,7 @@
 				bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
 		</property>
 	</bean>	
-	
+	 -->
 	
 		<!--  check site quota's -->
 	<bean id="addToolUserSite"
@@ -493,14 +492,14 @@
 	<!--  Undelete assignemnts -->
 	<bean id="undeleteAssingments"
 		class="org.sakaiproject.component.app.scheduler.jobs.UndeleteAssignments">
-				<property name="sessionManager">
+		<property name="sessionManager">
 			<ref bean="org.sakaiproject.tool.api.SessionManager" />
-			</property>
-			<property name="assignmentService" ref="AssignmentService"/>
+		</property>
+		<property name="assignmentService" ref="AssignmentService" />
 	</bean>
 
 	<bean
-		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerStatefulTestJob"
+		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerundeletAssignment"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
 		singleton="true" init-method="init">
 		<property name="beanId">

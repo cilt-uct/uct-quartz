@@ -8,6 +8,7 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.sakaiproject.assignment.api.Assignment;
+import org.sakaiproject.assignment.api.AssignmentContent;
 import org.sakaiproject.assignment.api.AssignmentEdit;
 import org.sakaiproject.assignment.api.AssignmentService;
 import org.sakaiproject.entity.api.EntityPropertyNotDefinedException;
@@ -48,6 +49,8 @@ public class UndeleteAssignments implements Job {
 					LOG.info("undeleting" + ass.getTitle());
 					rpe.removeProperty("CHEF:assignment_deleted");
 					rpe.addProperty("CHEF:assignment_deleted", "fasle");
+					
+					//AssignmentContent ace = ae.getContent();
 					assignmentService.commitEdit(ae);
 					
 				}
