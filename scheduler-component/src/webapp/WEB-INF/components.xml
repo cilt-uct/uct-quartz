@@ -495,7 +495,7 @@
 		<property name="sessionManager">
 			<ref bean="org.sakaiproject.tool.api.SessionManager" />
 		</property>
-		<property name="assignmentService" ref="AssignmentService" />
+		<property name="assignmentService" ref="org.sakaiproject.assignment.api.AssignmentService" />
 	</bean>
 
 	<bean
