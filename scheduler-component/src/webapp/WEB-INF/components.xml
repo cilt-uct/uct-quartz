@@ -493,6 +493,9 @@
 	<!--  Undelete assignemnts -->
 	<bean id="undeleteAssingments"
 		class="org.sakaiproject.component.app.scheduler.jobs.UndeleteAssignments">
+				<property name="sessionManager">
+			<ref bean="org.sakaiproject.tool.api.SessionManager" />
+			<property name="assignmentService" ref="AssignmentService"/>
 	</bean>
 
 	<bean
