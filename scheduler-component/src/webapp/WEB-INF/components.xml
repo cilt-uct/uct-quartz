@@ -488,4 +488,27 @@
 		</property>
 	</bean>
 	
+	
+	
+	<!--  Undelete assignemnts -->
+	<bean id="undeleteAssingments"
+		class="org.sakaiproject.component.app.scheduler.jobs.UndeleteAssignments">
+	</bean>
+
+	<bean
+		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerStatefulTestJob"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		singleton="true" init-method="init">
+		<property name="beanId">
+			<value>undeleteAssingments</value>
+		</property>
+		<property name="jobName">
+			<value>undelete assignments</value>
+		</property>
+		<property name="schedulerManager">
+			<ref
+				bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+	</bean>
+	
 </beans>
