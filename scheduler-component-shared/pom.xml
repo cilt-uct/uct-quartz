@@ -48,6 +48,16 @@
 		</dependency>
 		<dependency>
 			<groupId>org.sakaiproject</groupId>
+			<artifactId>sakai-mailarchive-api</artifactId>
+			<version>${sakai.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.sakaiproject</groupId>
+			<artifactId>sakai-message-api</artifactId>
+			<version>${sakai.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.sakaiproject</groupId>
 			<artifactId>sakai-assignment-api</artifactId>
 			<version>${sakai.version}</version>
 		</dependency>

@@ -24,5 +24,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/messageforums"/>
 	<classpathentry kind="var" path="M2_REPO/openldap/ldap/2005.03.29/ldap-2005.03.29.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/assignment-api"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/mailarchive-api"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

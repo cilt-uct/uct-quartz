@@ -514,4 +514,32 @@
 		</property>
 	</bean>
 	
+	
+	<!--  Clear the RTT message archive -->
+	<bean id="clearRTTMail"
+		class="org.sakaiproject.component.app.scheduler.jobs.ClearRTTMail">
+		<property name="sessionManager">
+			<ref bean="org.sakaiproject.tool.api.SessionManager" />
+		</property>
+		<property name="mailArchiveService" ref="org.sakaiproject.mailarchive.api.MailArchiveService"/>
+	</bean>
+
+	<bean
+		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerClearRTTMail"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		singleton="true" init-method="init">
+		<property name="beanId">
+			<value>cleatRTTMail</value>
+		</property>
+		<property name="jobName">
+			<value>clear RTT mail</value>
+		</property>
+		<property name="schedulerManager">
+			<ref
+				bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+	</bean>
+	
+	
+	
 </beans>
