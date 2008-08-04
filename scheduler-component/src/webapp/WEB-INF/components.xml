@@ -529,7 +529,7 @@
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
 		singleton="true" init-method="init">
 		<property name="beanId">
-			<value>cleatRTTMail</value>
+			<value>clearRTTMail</value>
 		</property>
 		<property name="jobName">
 			<value>clear RTT mail</value>
