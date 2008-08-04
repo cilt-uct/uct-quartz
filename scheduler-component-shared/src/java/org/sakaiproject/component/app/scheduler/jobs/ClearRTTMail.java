@@ -1,5 +1,7 @@
 package org.sakaiproject.component.app.scheduler.jobs;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -12,6 +14,8 @@ import org.sakaiproject.exception.PermissionException;
 import org.sakaiproject.mailarchive.api.MailArchiveChannel;
 import org.sakaiproject.mailarchive.api.MailArchiveMessage;
 import org.sakaiproject.mailarchive.api.MailArchiveService;
+import org.sakaiproject.message.api.MessageHeader;
+import org.sakaiproject.time.api.Time;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
 
@@ -41,8 +45,18 @@ public class ClearRTTMail implements Job {
 			List messages = channel.getMessages(null, true);
 			for (int i = 0; i < messages.size(); i++) {
 				MailArchiveMessage mes = (MailArchiveMessage) messages.get(i);
-				log.debug("deleting message " + mes.getId());
-				channel.removeMessage(mes.getId());
+				MessageHeader messageHeader = mes.getHeader();
+				Time mTime = messageHeader.getDate();
+				Date d = new Date(mTime.getTime());
+
+				//What was the time an hour agon
+				Calendar cal = Calendar.getInstance();
+				cal.set(Calendar.HOUR, -1);
+
+				if (d.before(cal.getTime())) {
+					log.debug("deleting message " + mes.getId());
+					channel.removeMessage(mes.getId());
+				}
 			}
 			
 			
