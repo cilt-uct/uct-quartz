@@ -37,11 +37,11 @@ public class ClearRTTMail implements Job {
 		
 	    try {
 			MailArchiveChannel channel = mailArchiveService.getMailArchiveChannel(MAIL_CHANNEL);
-			log.info("got message channel with " + channel.getCount() + "messages");
+			log.info("got message channel with " + channel.getCount() + " messages");
 			List messages = channel.getMessages(null, true);
 			for (int i = 0; i < messages.size(); i++) {
 				MailArchiveMessage mes = (MailArchiveMessage) messages.get(i);
-				log.warn("deleting message " + mes.getId());
+				log.debug("deleting message " + mes.getId());
 				channel.removeMessage(mes.getId());
 			}
 			
