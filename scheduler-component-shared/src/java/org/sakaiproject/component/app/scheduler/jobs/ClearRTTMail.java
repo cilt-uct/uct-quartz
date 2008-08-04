@@ -51,7 +51,7 @@ public class ClearRTTMail implements Job {
 
 				//What was the time an hour agon
 				Calendar cal = Calendar.getInstance();
-				cal.set(Calendar.HOUR, -1);
+				cal.roll(Calendar.HOUR, -1);
 
 				if (d.before(cal.getTime())) {
 					log.debug("deleting message " + mes.getId());
