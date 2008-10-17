@@ -1,28 +1,23 @@
 package org.sakaiproject.component.app.scheduler.jobs;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.StatefulJob;
-import org.sakaiproject.authz.api.AuthzGroupService;
 import org.sakaiproject.authz.api.AuthzGroup;
+import org.sakaiproject.authz.api.AuthzGroupService;
+import org.sakaiproject.coursemanagement.api.AcademicSession;
+import org.sakaiproject.coursemanagement.api.CourseManagementService;
 import org.sakaiproject.entity.api.ResourceProperties;
-import org.sakaiproject.site.api.SiteService;
-import org.sakaiproject.site.api.SiteService.SelectionType;
-import org.sakaiproject.site.api.SiteService.SortType;
 import org.sakaiproject.site.api.Site;
+import org.sakaiproject.site.api.SiteService;
+import org.sakaiproject.site.api.SiteService.SortType;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
-//import org.sakaiproject.javax.PagingPosition;
-import org.sakaiproject.authz.api.GroupProvider;
-import org.sakaiproject.authz.api.Member;
-
-import java.util.Map;
-import java.util.Set;
-import java.util.Iterator;
-import java.util.List;
 
 public class UCTSaveRealms implements StatefulJob {
 	
@@ -41,15 +36,27 @@ public class UCTSaveRealms implements StatefulJob {
 		this.authzGroupService = a;
 	}
 	
-	private GroupProvider groupProvider;
-	public void setGroupProvider(GroupProvider gp){
-		groupProvider =gp;
+	private CourseManagementService courseManagementService;
+	public void setCourseManagementService(
+			CourseManagementService courseManagementService) {
+		this.courseManagementService = courseManagementService;
 	}
 	
 	String term = "2008";
 	public void setTerm(String t) {
 		term = t;
 	}
+	
+	private List<String> getTerms() {
+		List<AcademicSession>  as = courseManagementService.getCurrentAcademicSessions();
+		List<String> ret = new ArrayList<String>();
+		for (int i =0; i < as.size(); i++) {
+			AcademicSession a = as.get(i);
+			ret.add(a.getEid());
+		}
+		return ret;
+	}
+	
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		// TODO Auto-generated method stub
 
@@ -58,7 +65,8 @@ public class UCTSaveRealms implements StatefulJob {
 	    sakaiSession.setUserId("admin");
 	    sakaiSession.setUserEid("admin");
 	    
-	List sites = siteService.getSites(SiteService.SelectionType.NON_USER, "course", null, null, SortType.NONE, null);
+	List<Site> sites = siteService.getSites(SiteService.SelectionType.NON_USER, "course", null, null, SortType.NONE, null);
+	List<String> currentTerms = getTerms();
 	for (int i =0 ; i< sites.size(); i++ ) {
 		Site s = (Site)sites.get(i);
 		LOG.debug("got site " + s.getTitle());
@@ -68,34 +76,9 @@ public class UCTSaveRealms implements StatefulJob {
 			if (term != null ) {
 				term = term.trim();
 				LOG.debug("site is in term: " + term);
-				if (term.equals(term)) {
+				if (currentTerms.contains(term)) {
 					try {
 					AuthzGroup group = authzGroupService.getAuthzGroup("/site/" + s.getId());
-					if (group.getProviderGroupId() != null && group.getProviderGroupId().length()>0 && FIX_USERS) {
-						String pId = group.getProviderGroupId();
-						String[] pIds = groupProvider.unpackId(pId);
-						Set members = group.getMembers();
-						Iterator it = members.iterator();
-						while (it.hasNext()) {
-							Member m = (Member) it.next();
-							//ignore for provided users
-							if (!m.isProvided()) {
-							for  (String thisId: pIds) {
-								String role = groupProvider.getRole(thisId, m.getUserEid());
-								if (role!= null && role.length()>0) {
-									LOG.debug("Found external role of " + role + " internal role is: " + m.getRole().getId());
-									if (role.equals(m.getRole().getId())) {
-									LOG.debug("Seting user: " + m.getUserEid() + " to provided");
-									group.removeMember(m.getUserId());
-
-									}
-								}
-							}
-							}
-						}
-					}
-					
-					
 					authzGroupService.save(group);
 					}
 					catch(Exception e) {
