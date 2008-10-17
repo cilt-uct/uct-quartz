@@ -173,7 +173,7 @@
 	</bean>
 
 	<!-- Save Realms  For upgrade-->
-	<bean id="saveRealmsUpdate"
+	<!--  deprecated<bean id="saveRealmsUpdate"
 		class="org.sakaiproject.component.app.scheduler.jobs.UCTSaveRealmsUpdate">
 		<property name="sessionManager">
 			<ref bean="org.sakaiproject.tool.api.SessionManager" />
@@ -205,7 +205,7 @@
 				bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
 		</property>
 	</bean>
-
+ -->
 
 	<!--  check site quota's -->
 	<bean id="setQuotas"
