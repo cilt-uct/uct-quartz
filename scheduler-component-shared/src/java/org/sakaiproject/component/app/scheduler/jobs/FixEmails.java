@@ -104,6 +104,17 @@ public class FixEmails implements Job {
 				if (!isValidEmail(u.getEmail())) {
 					LOG.warn(u.getEmail() + " is not a valid email");
 					
+				} else {
+					SakaiPerson sp = personManager.getSakaiPerson(u.getId(), personManager.getUserMutableType());
+					String mail = u.getEmail();
+					if (sp != null && sp.getMail() == null) {
+						sp.setMail(mail);
+						sakaiSession.setUserId(u.getId());
+					    sakaiSession.setUserEid(u.getEid());
+						personManager.save(sp);
+						sakaiSession.setUserId(ADMIN);
+						sakaiSession.setUserEid(ADMIN);
+					}
 				}
 			}
 		}
