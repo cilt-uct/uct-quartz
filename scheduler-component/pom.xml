@@ -3,8 +3,8 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>uctjobs-base</artifactId>
-    <groupId>org.sakaiproject</groupId>
-    <version>2.5.0</version>
+    <groupId>org.sakaiproject.uct</groupId>
+    <version>1.0-SNAPSHOT</version>
    <relativePath>../pom.xml</relativePath>
   </parent>
   <name>Sakai Scheduler Component</name>
@@ -21,9 +21,9 @@
   </properties>
   <dependencies>
   	<dependency>
-  	<groupId>org.sakaiproject</groupId>
+  	<groupId>org.sakaiproject.uct</groupId>
 	<artifactId>uctsakai-comp-shared-scheduler</artifactId>
-	<version>${sakai.version}</version>
+	<version>${project.version}</version>
   	</dependency>
       <dependency>
       <groupId>openldap</groupId>

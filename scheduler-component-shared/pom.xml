@@ -3,12 +3,12 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<artifactId>uctjobs-base</artifactId>
-		<groupId>org.sakaiproject</groupId>
-		<version>2.5.0</version>
+		<groupId>org.sakaiproject.uct</groupId>
+		<version>1.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<name>Sakai Scheduler Component</name>
-	<groupId>org.sakaiproject</groupId>
+	<groupId>org.sakaiproject.uct</groupId>
 	<artifactId>uctsakai-comp-shared-scheduler</artifactId>
 	<organization>
 		<name>Sakai Project</name>
@@ -29,113 +29,38 @@
 		<dependency>
 			<groupId>org.sakaiproject</groupId>
 			<artifactId>sakai-scheduler-api</artifactId>
-			<version>${sakai.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.sakaiproject</groupId>
-			<artifactId>sakai-component-api</artifactId>
-			<version>	</version>
+			<groupId>org.sakaiproject.kernel</groupId>
+			<artifactId>sakai-component-manager</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.sakaiproject</groupId>
-			<artifactId>sakai-db-api</artifactId>
-			<version>${sakai.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.sakaiproject</groupId>
-			<artifactId>sakai-component</artifactId>
-			<version>${sakai.version}</version>
+			<groupId>org.sakaiproject.kernel</groupId>
+			<artifactId>sakai-kernel-api</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.sakaiproject</groupId>
 			<artifactId>sakai-mailarchive-api</artifactId>
-			<version>${sakai.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.sakaiproject</groupId>
-			<artifactId>sakai-message-api</artifactId>
-			<version>${sakai.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.sakaiproject</groupId>
 			<artifactId>sakai-assignment-api</artifactId>
-			<version>${sakai.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.sakaiproject</groupId>
-			<artifactId>sakai-util-api</artifactId>
-			<version>${sakai.version}</version>
+			<artifactId>sakai-message-api</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.sakaiproject</groupId>
 			<artifactId>sakai-contentreview-service-api</artifactId>
-			<version>${sakai.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.sakaiproject</groupId>
-			<artifactId>sakai-tool-api</artifactId>
-			<version>${sakai.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.sakaiproject</groupId>
-			<artifactId>sakai-site-api</artifactId>
-			<version>${sakai.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.sakaiproject</groupId>
-			<artifactId>sakai-authz-api</artifactId>
-			<version>${sakai.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.sakaiproject</groupId>
-			<artifactId>sakai-entity-api</artifactId>
-			<version>${sakai.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.sakaiproject</groupId>
-			<artifactId>sakai-email-api</artifactId>
-			<version>${sakai.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.sakaiproject</groupId>
-			<artifactId>sakai-user-api</artifactId>
-			<version>${sakai.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.sakaiproject</groupId>
-			<artifactId>sakai-component-api</artifactId>
-			<version>${sakai.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.sakaiproject</groupId>
-			<artifactId>sakai-event-api</artifactId>
-			<version>${sakai.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.sakaiproject</groupId>
 			<artifactId>sakai-coursemanagement-api</artifactId>
-			<version>${sakai.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.sakaiproject</groupId>
-			<artifactId>sakai-util-api</artifactId>
-			<version>${sakai.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.sakaiproject</groupId>
-			<artifactId>sakai-content-api</artifactId>
-			<version>${sakai.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.sakaiproject</groupId>
-			<artifactId>sakai-user-api</artifactId>
-			<version>${sakai.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-logging</groupId>
 			<artifactId>commons-logging</artifactId>
-			<version>1.0.4</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-dbcp</groupId>
@@ -145,19 +70,15 @@
 		<dependency>
 			<groupId>org.sakaiproject</groupId>
 			<artifactId>sakai-common-edu-person-api</artifactId>
-			<version>${sakai.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.sakaiproject</groupId>
 			<artifactId>sakai-common-type-api</artifactId>
-			<version>${sakai.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.sakaiproject</groupId>
 			<artifactId>sakai-common-manager-api</artifactId>
-			<version>${sakai.version}</version>
 		</dependency>
-
 		<dependency>
 			<groupId>${sakai.hibernate.groupId}</groupId>
 			<artifactId>${sakai.hibernate.artifactId}</artifactId>
@@ -167,8 +88,6 @@
 		<dependency>
 			<groupId>org.sakaiproject</groupId>
 			<artifactId>sakai-messageforums-api</artifactId>
-			<version>${sakai.version}</version>
-			<scope>provided</scope>
 		</dependency>
 
 		<dependency>

@@ -2,14 +2,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <artifactId>base</artifactId>
+    <artifactId>master</artifactId>
     <groupId>org.sakaiproject</groupId>
-    <version>2.5.0</version>
-    
+    <version>2.6.0RC1-SNAPSHOT</version>
+    <relativePath>../master/pom.xml</relativePath>
   </parent>
   <name>Sakai JobScheduler Project</name>
-  <groupId>org.sakaiproject</groupId>
+  <groupId>org.sakaiproject.uct</groupId>
   <artifactId>uctjobs-base</artifactId>
+  <version>1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <modules>
     <module>scheduler-component</module>
