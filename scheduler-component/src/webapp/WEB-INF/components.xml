@@ -569,4 +569,36 @@
 	</bean>
 	
 	
+<!--  Reset content types -->
+	<bean id="resetTypes"
+		class="org.sakaiproject.component.app.scheduler.jobs.ResetContentTypes">
+		<property name="sessionManager">
+			<ref bean="org.sakaiproject.tool.api.SessionManager" />
+		</property>
+		<property name="siteService">
+			<ref bean="org.sakaiproject.site.api.SiteService" />
+		</property>
+		<property name="contentHostingService">
+			<ref
+				bean="org.sakaiproject.content.api.ContentHostingService" />
+		</property>
+	</bean>
+
+	<bean
+		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerResetTypes"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		singleton="true" init-method="init">
+		<property name="beanId">
+			<value>resetTypes</value>
+		</property>
+		<property name="jobName">
+			<value>reset content Types</value>
+		</property>
+		<property name="schedulerManager">
+			<ref
+				bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+	</bean>
+	
+	
 </beans>
