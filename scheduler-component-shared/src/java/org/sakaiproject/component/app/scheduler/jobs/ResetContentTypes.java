@@ -1,5 +1,6 @@
 package org.sakaiproject.component.app.scheduler.jobs;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -54,7 +55,12 @@ public class ResetContentTypes implements Job {
 		contentHostingService = chs;
 	}
 	
+	private List<String> forceTypes = new ArrayList<String>();
 	
+	public void setForceTypes(List<String> forceTypes) {
+		this.forceTypes = forceTypes;
+	}
+
 	private static final Log log = LogFactory.getLog(ResetContentTypes.class);
 	
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
@@ -69,6 +75,10 @@ public class ResetContentTypes implements Job {
 		while (it.hasNext())  {
 			Entry<String, String> ent = (Entry<String, String>) it.next();
 			log.info(ent.getKey() + ": " + ent.getValue());
+		}
+		
+		for (int i = 0; i < forceTypes.size(); i++ ) {
+			log.info("force reindexing for " + forceTypes.get(i));
 		}
 		
 	    Session sakaiSession = sessionManager.getCurrentSession();
@@ -87,9 +97,12 @@ public class ResetContentTypes implements Job {
 		    		log.debug("got resource " + resId);
 		    		if (reset(resId)) {
 		    			ContentResourceEdit res = contentHostingService.editResource(resId);
-		    			log.info("content had type: " + res.getContentType());
-		    			res.setContentType(getContentType(resId));
-		    			contentHostingService.commitResource(res, 0);
+		    			String oldType = res.getContentType();
+		    			if (!oldType.equals(getContentType(resId)) || forceTypes.contains(getExtension(resId))) {
+		    				log.info("content had type: " + res.getContentType());
+		    				res.setContentType(getContentType(resId));
+		    				contentHostingService.commitResource(res, 0);
+		    			}
 		    		}
 		    	}
 			} catch (IdUnusedException e) {

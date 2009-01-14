@@ -585,10 +585,28 @@
 		<property name="extensions">
 			<map>
 				<entry key="docx"><value>application/vnd.openxmlformats-officedocument.wordprocessingml.document</value></entry>
+				<entry key="pptx"><value>application/vnd.openxmlformats-officedocument.presentationml.presentation</value></entry>
+				<entry key="ppsx"><value>application/vnd.openxmlformats-officedocument.presentationml.slideshow</value></entry>
+				<entry key="xlsx"><value>application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</value></entry>
+				<entry key="dotx"><value> application/vnd.openxmlformats-officedocument.wordprocessingml.template</value></entry>
+				<entry key="xps"><value>application/vnd.ms-xpsdocument</value></entry>
+				<entry key="odt"><value>application/vnd.oasis.opendocument.text</value></entry>
+				<entry key="ott"><value>application/vnd.oasis.opendocument.text-template</value></entry>
+				<entry key="oth"><value>application/vnd.oasis.opendocument.text-web</value></entry>
+				<entry key="odm"><value>application/vnd.oasis.opendocument.text-master</value></entry>
+				<entry key="odp"><value>application/vnd.oasis.opendocument.presentation</value></entry>
+				<entry key="otp"><value>application/vnd.oasis.opendocument.presentation-template</value></entry>
+				<entry key="ods"><value>application/vnd.oasis.opendocument.spreadsheet</value></entry>
+				<entry key="ots"><value>application/vnd.oasis.opendocument.spreadsheet-template</value></entry>
 				<entry key="doc"><value>application/msword</value></entry>
 				<entry key="pdf"><value>application/pdf</value></entry>
-				<entry key="odt"><value>application/vnd.oasis.opendocument.text</value></entry>
 			</map>
+		</property>
+		<property name="forceTypes">
+			<list>
+				<value>doc</value>
+				<value>odt</value>
+			</list>
 		</property>
 		
 	</bean>
