@@ -582,6 +582,14 @@
 			<ref
 				bean="org.sakaiproject.content.api.ContentHostingService" />
 		</property>
+		<property name="extensions">
+			<map>
+				<entry key="docx"><value>application/vnd.openxmlformats-officedocument.wordprocessingml.document</value></entry>
+				<entry key="doc"><value>application/msword</value></entry>
+				<entry key="pdf"><value>application/pdf</value></entry>
+			</map>
+		</property>
+		
 	</bean>
 
 	<bean

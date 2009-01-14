@@ -57,8 +57,8 @@ public class ResetContentTypes implements Job {
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		//set the user information into the current session
 		//for now 
-		extensions.put("doc", "application/msword");
-		extensions.put("odt", "application/openoffice");
+		//extensions.put("doc", "application/msword");
+		//extensions.put("odt", "application/openoffice");
 		
 	    Session sakaiSession = sessionManager.getCurrentSession();
 	    sakaiSession.setUserId("admin");
@@ -73,7 +73,7 @@ public class ResetContentTypes implements Job {
 		    	List members = collection.getMembers();
 		    	for (int q =0; q < members.size(); q++) {
 		    		String resId = (String)members.get(q);
-		    		LOG.info("got resource " + resId);
+		    		LOG.debug("got resource " + resId);
 		    		if (reset(resId)) {
 		    			ContentResourceEdit res = contentHostingService.editResource(resId);
 		    			LOG.info("content had type: " + res.getContentType());
@@ -122,7 +122,7 @@ public class ResetContentTypes implements Job {
 		String extension = null;
 		if (resId.indexOf(".") > 0 ) {
 			extension = resId.substring(resId.lastIndexOf(".") + 1, resId.length());
-			LOG.info("got extension: " + extension);
+			LOG.debug("got extension: " + extension);
 		}
 			
 		return extension;
