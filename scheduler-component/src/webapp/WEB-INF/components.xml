@@ -587,6 +587,7 @@
 				<entry key="docx"><value>application/vnd.openxmlformats-officedocument.wordprocessingml.document</value></entry>
 				<entry key="doc"><value>application/msword</value></entry>
 				<entry key="pdf"><value>application/pdf</value></entry>
+				<entry key="odt"><value>application/vnd.oasis.opendocument.text</value></entry>
 			</map>
 		</property>
 		

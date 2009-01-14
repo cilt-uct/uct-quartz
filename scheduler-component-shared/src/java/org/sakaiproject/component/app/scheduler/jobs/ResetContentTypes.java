@@ -1,8 +1,11 @@
 package org.sakaiproject.component.app.scheduler.jobs;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -52,13 +55,21 @@ public class ResetContentTypes implements Job {
 	}
 	
 	
-	private static final Log LOG = LogFactory.getLog(ResetContentTypes.class);
+	private static final Log log = LogFactory.getLog(ResetContentTypes.class);
 	
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		//set the user information into the current session
 		//for now 
 		//extensions.put("doc", "application/msword");
 		//extensions.put("odt", "application/openoffice");
+		
+		log.info("got a map of " + extensions.size() + " to change");
+		Set<Entry<String, String>> es = extensions.entrySet();
+		Iterator<Entry<String, String>> it = es.iterator();
+		while (it.hasNext())  {
+			Entry<String, String> ent = (Entry<String, String>) it.next();
+			log.info(ent.getKey() + ": " + ent.getValue());
+		}
 		
 	    Session sakaiSession = sessionManager.getCurrentSession();
 	    sakaiSession.setUserId("admin");
@@ -73,10 +84,10 @@ public class ResetContentTypes implements Job {
 		    	List members = collection.getMembers();
 		    	for (int q =0; q < members.size(); q++) {
 		    		String resId = (String)members.get(q);
-		    		LOG.debug("got resource " + resId);
+		    		log.debug("got resource " + resId);
 		    		if (reset(resId)) {
 		    			ContentResourceEdit res = contentHostingService.editResource(resId);
-		    			LOG.info("content had type: " + res.getContentType());
+		    			log.info("content had type: " + res.getContentType());
 		    			res.setContentType(getContentType(resId));
 		    			contentHostingService.commitResource(res, 0);
 		    		}
@@ -115,6 +126,7 @@ public class ResetContentTypes implements Job {
 		if (extensions.containsKey(extension)) {
 			return true;
 		}
+		log.debug("we don't change " + extension);
 		return false;
 	}
 
@@ -122,7 +134,7 @@ public class ResetContentTypes implements Job {
 		String extension = null;
 		if (resId.indexOf(".") > 0 ) {
 			extension = resId.substring(resId.lastIndexOf(".") + 1, resId.length());
-			LOG.debug("got extension: " + extension);
+			log.debug("got extension: " + extension);
 		}
 			
 		return extension;
