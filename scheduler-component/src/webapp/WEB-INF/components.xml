@@ -600,12 +600,14 @@
 				<entry key="ots"><value>application/vnd.oasis.opendocument.spreadsheet-template</value></entry>
 				<entry key="doc"><value>application/msword</value></entry>
 				<entry key="pdf"><value>application/pdf</value></entry>
+				<entry key="rtf"><value>application/rtf</value></entry>
 			</map>
 		</property>
 		<property name="forceTypes">
 			<list>
 				<value>doc</value>
 				<value>odt</value>
+				<value>rtf</value>
 			</list>
 		</property>
 		
