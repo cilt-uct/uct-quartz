@@ -99,7 +99,7 @@ public class ResetContentTypes implements Job {
 		    			ContentResourceEdit res = contentHostingService.editResource(resId);
 		    			String oldType = res.getContentType();
 		    			if ((!oldType.equals(getContentType(resId)) || forceTypes.contains(getExtension(resId))) && !"text/url".equals(oldType)) {
-		    				log.debug("content had type: " + res.getContentType());
+		    				log.info("content:"  + resId  +" had type: " + res.getContentType());
 		    				res.setContentType(getContentType(resId));
 		    				contentHostingService.commitResource(res, 0);
 		    			} else {
