@@ -102,6 +102,8 @@ public class ResetContentTypes implements Job {
 		    				log.info("content had type: " + res.getContentType());
 		    				res.setContentType(getContentType(resId));
 		    				contentHostingService.commitResource(res, 0);
+		    			} else {
+		    				contentHostingService.cancelResource(res);
 		    			}
 		    		}
 		    	}
