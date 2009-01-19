@@ -37,6 +37,17 @@ public class AddPageToMyWorkspace implements Job {
 		this.userDirectoryService = s;
 	}
 	
+	private String pageTitle;
+	public void setPageTitle(String pageTitle) {
+		this.pageTitle = pageTitle;
+	}
+
+	private String toolId;
+	public void setToolId(String toolId) {
+		this.toolId = toolId;
+	}
+
+
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		// TODO Auto-generated method stub
 		
@@ -49,19 +60,22 @@ public class AddPageToMyWorkspace implements Job {
 	    for (int i = 0; i < users.size(); i++) {
 	    	User u = (User) users.get(i);
 	    	
-	    	if (u.getType() != null && (u.getType().equals("student") || u.getType().equals("staff") || u.getType().equals("thirdparty")))
+	    	if (doUserType(u.getType()))
 	    		LOG.info("going to add page to: " + u.getEid());
 	    	try {
 				Site userSite = siteService.getSite(siteService.getUserSiteId(u.getId()));
-				SitePage page = userSite.addPage();
-				page.setTitle("LearnOnline");
-				siteService.save(userSite);
-				ToolConfiguration tool = page.addTool("sakai.iframe");
-				tool.setTitle("LearnOnline");
+				if (!siteContainsPage(userSite)) {
+					SitePage page = userSite.addPage();
+					page.setTitle(pageTitle);
+					siteService.save(userSite);
+					ToolConfiguration tool = page.addTool(toolId);
+					tool.setTitle(pageTitle);
+					/*
 				tool.getPlacementConfig().setProperty(
 						"source", "https://vula.uct.ac.za/web/learnonline/ekp/index.htm");
-				
-				siteService.save(userSite);
+					 */
+					siteService.save(userSite);
+				}
 				
 			} catch (IdUnusedException e) {
 				// TODO Auto-generated catch block
@@ -74,6 +88,23 @@ public class AddPageToMyWorkspace implements Job {
 
 	    }
 		
+	}
+
+
+	private boolean siteContainsPage(Site userSite) {
+		SitePage page = userSite.getPage(pageTitle);
+		if (page != null)
+				return true;
+		return false;
+	}
+
+
+	private boolean doUserType(String type) {
+		//u.getType() != null && (u.getType().equals("student") || u.getType().equals("staff") || u.getType().equals("thirdparty"))
+		/*
+		 * for now do all users
+		 */
+		return true;
 	}
 
 }

@@ -405,7 +405,7 @@
 	</bean>	
 	 -->
 	
-		<!--  check site quota's -->
+		<!--  Add page to worksite setup -->
 	<bean id="addToolUserSite"
 		class="org.sakaiproject.component.app.scheduler.jobs.AddPageToMyWorkspace">
 		<property name="sessionManager">
@@ -415,6 +415,8 @@
 			<ref bean="org.sakaiproject.site.api.SiteService" />
 		</property>
 		<property name="userDirectoryService" ref="org.sakaiproject.user.api.UserDirectoryService"/>
+		<property name="toolId"><value>sakai.search</value></property>
+		<property name="pageTitle"><value>Search</value></property>
 	</bean>
 
 	<bean
