@@ -92,9 +92,13 @@ public class AddPageToMyWorkspace implements Job {
 
 
 	private boolean siteContainsPage(Site userSite) {
-		SitePage page = userSite.getPage(pageTitle);
-		if (page != null)
+		List pages = userSite.getPages();
+		for (int i = 0; i < pages.size(); i++) {
+			SitePage page = (SitePage)pages.get(i);
+			if (pageTitle.equals(page.getTitle()))
 				return true;
+		}
+		
 		return false;
 	}
 
