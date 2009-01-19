@@ -61,10 +61,11 @@ public class AddPageToMyWorkspace implements Job {
 	    	User u = (User) users.get(i);
 	    	
 	    	if (doUserType(u.getType()))
-	    		LOG.info("going to add page to: " + u.getEid());
+	    		
 	    	try {
 				Site userSite = siteService.getSite(siteService.getUserSiteId(u.getId()));
 				if (!siteContainsPage(userSite)) {
+					LOG.info("going to add page to: " + u.getEid());
 					SitePage page = userSite.addPage();
 					page.setTitle(pageTitle);
 					siteService.save(userSite);
