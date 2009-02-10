@@ -118,7 +118,13 @@ public class UCTCheckAccounts implements Job {
 	
 	
 	private boolean doThisUser(User u) {
-		if ("staff".equalsIgnoreCase(u.getType()) || "thirdparty".equalsIgnoreCase(u.getType()) || "student".equalsIgnoreCase(u.getType())) {
+		if ("staff".equalsIgnoreCase(u.getType()) || "thirdparty".equalsIgnoreCase(u.getType())) {
+			return true;
+		} else if ("student".equalsIgnoreCase(u.getType())) {
+			//skip the valid testing accounts
+			if (u.getEid().indexOf("user") == 0 || u.getEid().indexOf("tii") ==0 || u.getEid().indexOf("test") == 0 || u.getEid().indexOf("student") == 0) 
+				return false;
+				
 			return true;
 		}
 		
