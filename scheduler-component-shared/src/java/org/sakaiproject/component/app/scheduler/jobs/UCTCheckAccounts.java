@@ -31,19 +31,13 @@ import com.novell.ldap.LDAPSocketFactory;
 public class UCTCheckAccounts implements Job {
 
 	private static final String NOT_FOUND_TYPE = "ldapNotFound";
+	
 	private UserDirectoryService userDirectoryService;
 	public void setUserDirectoryService(UserDirectoryService s) {
 		this.userDirectoryService = s;
 	}
 
-	private UserDirectoryProvider userDirectoryProvider;
 
-	public void setUserDirectoryProvider(UserDirectoryProvider userDirectoryProvider) {
-		this.userDirectoryProvider = userDirectoryProvider;
-	}
-
-	
-	
 	private SessionManager sessionManager;
 	public void setSessionManager(SessionManager s) {
 		this.sessionManager = s;
@@ -124,7 +118,7 @@ public class UCTCheckAccounts implements Job {
 	
 	
 	private boolean doThisUser(User u) {
-		if ("staff".equalsIgnoreCase(u.getType()) || "thirdparty".equalsIgnoreCase(u.getType()) ) {
+		if ("staff".equalsIgnoreCase(u.getType()) || "thirdparty".equalsIgnoreCase(u.getType()) || "student".equalsIgnoreCase(u.getType())) {
 			return true;
 		}
 		
