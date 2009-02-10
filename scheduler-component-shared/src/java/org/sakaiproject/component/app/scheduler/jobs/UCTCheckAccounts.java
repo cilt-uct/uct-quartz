@@ -84,7 +84,7 @@ public class UCTCheckAccounts implements Job {
 			User u = (User)users.get(i);
 			if (doThisUser(u)) {
 				if (!userExists(u.getEid())) {
-					LOG.warn("user: " + u.getEid() + "does not exist in auth tree" );
+					LOG.warn("user: " + u.getEid() + " does not exist in auth tree" );
 					try {
 						UserEdit ue = userDirectoryService.editUser(u.getId());
 						ue.setType(NOT_FOUND_TYPE);
@@ -105,7 +105,7 @@ public class UCTCheckAccounts implements Job {
 					}
 					
 				} else {
-					LOG.info("user: " + u.getEid() + " is in ldap");
+					LOG.debug("user: " + u.getEid() + " is in ldap");
 				}
 					
 				
