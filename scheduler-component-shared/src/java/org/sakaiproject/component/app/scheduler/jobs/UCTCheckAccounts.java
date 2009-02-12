@@ -1,12 +1,19 @@
 package org.sakaiproject.component.app.scheduler.jobs;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import org.sakaiproject.coursemanagement.api.CourseManagementAdministration;
+import org.sakaiproject.coursemanagement.api.CourseManagementService;
+import org.sakaiproject.coursemanagement.api.EnrollmentSet;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
 import org.sakaiproject.user.api.User;
@@ -66,6 +73,20 @@ public class UCTCheckAccounts implements Job {
 		this.basePath = basePath;
 	}
 
+	private CourseManagementAdministration courseManagementAdministration;
+	private CourseManagementService courseManagementService;
+	
+	
+	
+	public void setCourseAdmin(CourseManagementAdministration courseAdmin) {
+		this.courseManagementAdministration = courseAdmin;
+	}
+
+
+	public void setCmService(CourseManagementService cmService) {
+		this.courseManagementService = cmService;
+	}
+
 
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		// TODO Auto-generated method stub
@@ -86,6 +107,10 @@ public class UCTCheckAccounts implements Job {
 				if (!userExists(u.getEid())) {
 					LOG.warn("user: " + u.getEid() + " does not exist in auth tree" );
 					try {
+						//if this is a student remove from current courses in this year
+						if ("student".equalsIgnoreCase(u.getType()))
+								removeFromCourses(u);
+						
 						UserEdit ue = userDirectoryService.editUser(u.getId());
 						ue.setType(NOT_FOUND_TYPE);
 						userDirectoryService.commitEdit(ue);
@@ -117,6 +142,24 @@ public class UCTCheckAccounts implements Job {
 	}
 	
 	
+	private void removeFromCourses(User u) {
+		SimpleDateFormat yearf = new SimpleDateFormat("yyyy");
+		String thisYear = yearf.format(new Date());
+		String userEid = u.getEid();
+		Set enroled = courseManagementService.findCurrentlyEnrolledEnrollmentSets(userEid);
+		Iterator coursesIt = enroled.iterator();
+		LOG.debug("got list of enrolement set with " + enroled.size());
+		 while(coursesIt.hasNext()) {
+			EnrollmentSet eSet = (EnrollmentSet)coursesIt.next();
+			LOG.info("removing user from " + eSet.getEid());
+			String courseEid =  eSet.getEid();
+			courseManagementAdministration.removeCourseOfferingMembership(userEid, courseEid);
+			courseManagementAdministration.removeSectionMembership(userEid, courseEid);
+			courseManagementAdministration.removeEnrollment(userEid, courseEid);
+		 }
+	}
+
+
 	private boolean doThisUser(User u) {
 		if ("staff".equalsIgnoreCase(u.getType()) || "thirdparty".equalsIgnoreCase(u.getType())) {
 			return true;
