@@ -78,12 +78,12 @@ public class UCTCheckAccounts implements Job {
 	
 	
 	
-	public void setCourseAdmin(CourseManagementAdministration courseAdmin) {
+	public void setCourseManagementAdministration(CourseManagementAdministration courseAdmin) {
 		this.courseManagementAdministration = courseAdmin;
 	}
 
 
-	public void setCmService(CourseManagementService cmService) {
+	public void setCourseManagementService(CourseManagementService cmService) {
 		this.courseManagementService = cmService;
 	}
 
