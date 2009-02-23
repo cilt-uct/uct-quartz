@@ -18,7 +18,6 @@ import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
 import org.sakaiproject.user.api.User;
 import org.sakaiproject.user.api.UserAlreadyDefinedException;
-import org.sakaiproject.user.api.UserDirectoryProvider;
 import org.sakaiproject.user.api.UserDirectoryService;
 import org.sakaiproject.user.api.UserEdit;
 import org.sakaiproject.user.api.UserLockedException;
@@ -38,6 +37,15 @@ import com.novell.ldap.LDAPSocketFactory;
 public class UCTCheckAccounts implements Job {
 
 	private static final String NOT_FOUND_TYPE = "ldapNotFound";
+	
+	
+	private static final String TYPE_STUDENT = "student";
+	private static final String TYPE_STAFF = "staff";
+	private static final Object TYPE_THIRDPARTY = "thirdparty";
+	
+	private static final String STATUS_INACTIVE = "Inactive";
+	private static final String STATUS_INACTIVE_STAFF = "inactiveStaff";
+	private static final String STATUS_INACTIVE_THIRDPARTY = "inactiveStaff";
 	
 	private UserDirectoryService userDirectoryService;
 	public void setUserDirectoryService(UserDirectoryService s) {
@@ -112,7 +120,7 @@ public class UCTCheckAccounts implements Job {
 								removeFromCourses(u);
 						
 						UserEdit ue = userDirectoryService.editUser(u.getId());
-						ue.setType(NOT_FOUND_TYPE);
+						ue.setType(getInactiveType(u.getType()));
 						userDirectoryService.commitEdit(ue);
 						
 					} catch (UserNotDefinedException e) {
@@ -142,9 +150,20 @@ public class UCTCheckAccounts implements Job {
 	}
 	
 	
+	private String getInactiveType(String type) {
+		String ret= STATUS_INACTIVE;
+		if (TYPE_STAFF.equals(type)) {
+			ret = STATUS_INACTIVE_STAFF;
+		} else if (TYPE_THIRDPARTY.equals(type)) {
+			ret = STATUS_INACTIVE_THIRDPARTY;
+		}
+		
+		return ret;
+	}
+
+
 	private void removeFromCourses(User u) {
-		SimpleDateFormat yearf = new SimpleDateFormat("yyyy");
-		String thisYear = yearf.format(new Date());
+		
 		String userEid = u.getEid();
 		Set enroled = courseManagementService.findCurrentlyEnrolledEnrollmentSets(userEid);
 		Iterator coursesIt = enroled.iterator();
@@ -181,7 +200,6 @@ public class UCTCheckAccounts implements Job {
 		LDAPConnection conn = new LDAPConnection();
 		String sFilter = "cn=" + id;
 
-		String thisDn = "";
 		String[] attrList = new String[] { "dn" };
 		try{
 			conn.connect( ldapHost, ldapPort );
