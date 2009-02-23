@@ -118,15 +118,12 @@ public class UCTImportCourses implements Job {
 		String setCategory = "Department";
 		String courseEid = courseCode +","+term;
 		
-		SimpleDateFormat yearf = new SimpleDateFormat("yyyy");
-		String thisYear = yearf.format(new Date());
-		
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.YEAR, new Integer(term).intValue());
 		cal.set(Calendar.MONTH, Calendar.JANUARY);
 		cal.set(Calendar.DAY_OF_MONTH, 1);
 		
-		Date yearStart = cal.getTime();
+		
 		
 		cal.set(Calendar.MONTH, Calendar.DECEMBER);
 		cal.set(Calendar.DAY_OF_MONTH, 31);
