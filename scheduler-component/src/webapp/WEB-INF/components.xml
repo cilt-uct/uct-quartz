@@ -378,32 +378,7 @@
 				bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
 		</property>
 	</bean>	
-	
-	<!-- mark messages as read -->
-	<!-- 	<bean id="markMessagesRead"
-		class="org.sakaiproject.component.app.scheduler.jobs.MarkMessagesRead">
-		<property name="areaManager" ref="org.sakaiproject.api.app.messageforums.AreaManager"/>
-		<property name="authzGroupService" ref="org.sakaiproject.authz.api.AuthzGroupService" />
-		<property name="messageForumsMessageManager" ref="org.sakaiproject.api.app.messageforums.MessageForumsMessageManager" />
-		
-	</bean>
 
-	<bean
-		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.markMessagesRead"
-		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
-		<property name="beanId">
-			<value>markMessagesRead</value>
-		</property>
-		<property name="jobName">
-			<value>mark Messages as read</value>
-		</property>
-		<property name="schedulerManager">
-			<ref
-				bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
-		</property>
-	</bean>	
-	 -->
 	
 		<!--  Add page to worksite setup -->
 	<bean id="addToolUserSite"
