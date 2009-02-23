@@ -59,8 +59,7 @@ public class IncreaseQuotas implements Job {
 	    Session sakaiSession = sessionManager.getCurrentSession();
 	    sakaiSession.setUserId("admin");
 	    sakaiSession.setUserEid("admin");
-	    List sites = siteService.getSites(SiteService.SelectionType.NON_USER, "course", null, null, SortType.NONE, null);
-		Long totalCollectionSize = new Long(0);
+	    List<Site> sites = siteService.getSites(SiteService.SelectionType.NON_USER, "course", null, null, SortType.NONE, null);
 		StringBuffer sb = new StringBuffer();
 	    for (int i =0 ; i< sites.size(); i++ ) {
 			Site s = (Site)sites.get(i);

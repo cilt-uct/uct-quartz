@@ -80,6 +80,7 @@ public class UCTImportCourses implements Job {
 	    		String[] data = record.split(",");
 	    		this.createCourse(data[7] + data[8], term, data[10], data[7]);
 	    	} 
+	    	fr.close();
 	    } catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
