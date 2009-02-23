@@ -108,44 +108,58 @@ public class UCTCheckAccounts implements Job {
 	    LDAPSocketFactory ssf = new LDAPJSSESecureSocketFactory();
 		LDAPConnection.setSocketFactory(ssf);
 		
-	    List users = userDirectoryService.getUsers();
-		for (int i= 0; i < users.size(); i++ ){
-			User u = (User)users.get(i);
-			if (doThisUser(u)) {
-				if (!userExists(u.getEid())) {
-					LOG.warn("user: " + u.getEid() + " does not exist in auth tree" );
-					try {
-						//if this is a student remove from current courses in this year
-						if ("student".equalsIgnoreCase(u.getType()))
+		int first = 1;
+		int last = 100;
+		int increment = 100;
+		boolean doAnother = true;
+		while (doAnother) {
+			
+		
+			List<User> users = userDirectoryService.getUsers(first, last);
+			for (int i= 0; i < users.size(); i++ ){
+				User u = (User)users.get(i);
+				if (doThisUser(u)) {
+					if (!userExists(u.getEid())) {
+						LOG.warn("user: " + u.getEid() + " does not exist in auth tree" );
+						try {
+							//if this is a student remove from current courses in this year
+							if ("student".equalsIgnoreCase(u.getType()))
 								removeFromCourses(u);
-						
-						UserEdit ue = userDirectoryService.editUser(u.getId());
-						ue.setType(getInactiveType(u.getType()));
-						userDirectoryService.commitEdit(ue);
-						
-					} catch (UserNotDefinedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (UserPermissionException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (UserLockedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (UserAlreadyDefinedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+
+							UserEdit ue = userDirectoryService.editUser(u.getId());
+							ue.setType(getInactiveType(u.getType()));
+							userDirectoryService.commitEdit(ue);
+
+						} catch (UserNotDefinedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (UserPermissionException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (UserLockedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (UserAlreadyDefinedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+
+					} else {
+						LOG.debug("user: " + u.getEid() + " is in ldap");
 					}
-					
-				} else {
-					LOG.debug("user: " + u.getEid() + " is in ldap");
+
+
 				}
-					
-				
+
+
+
 			}
-			
-			
-			
+			if (users.size() < increment) {
+				doAnother = false;
+			} else {
+				first = last +1;
+				last = last + increment;
+			}
 		}
 	}
 	
