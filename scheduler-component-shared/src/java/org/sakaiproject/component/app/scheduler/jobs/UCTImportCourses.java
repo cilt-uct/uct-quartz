@@ -64,8 +64,19 @@ public class UCTImportCourses implements Job {
 	    Session sakaiSession = sessionManager.getCurrentSession();
 	    sakaiSession.setUserId(ADMIN);
 	    sakaiSession.setUserEid(ADMIN);
+	    FileReader fr = null;
 	    try {
-	    	FileReader fr = new FileReader(filePath);
+	    	fr = new FileReader(filePath);
+	    } catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return;
+	    }
+	    if (fr == null) {
+	    	return;
+	    }
+	    
+	    try {
 	    	BufferedReader br = new BufferedReader(fr);
 	    	String record = null;  
 	    	while ( (record=br.readLine()) != null) { 
@@ -80,17 +91,21 @@ public class UCTImportCourses implements Job {
 	    		String[] data = record.split(",");
 	    		this.createCourse(data[7] + data[8], term, data[10], data[7]);
 	    	} 
+	    	
 	    	fr.close();
-	    } catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	    finally {
-	    	
-	    }
+		finally {
+			try {
+				fr.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
 
 	}
 	
