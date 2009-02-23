@@ -14,5 +14,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/sakai-common-type-api"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/sakai-mailarchive-api"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/sakai-message-api"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/sakai-assignment-api"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
