@@ -40,70 +40,7 @@
 	</bean>
 
 
-	<!--migrate CM -->
-	<bean id="UCTMigrateCourseInfo"
-		class="org.sakaiproject.component.app.scheduler.jobs.UCTMigrateCourseInfo">
-		<property name="sqlService">
-			<ref bean="org.sakaiproject.db.api.SqlService" />
-		</property>
-		<property name="courseManagementService">
-			<ref
-				bean="org.sakaiproject.coursemanagement.api.CourseManagementService" />
-		</property>
-		<property name="courseManagementAdministration">
-			<ref
-				bean="org.sakaiproject.coursemanagement.api.CourseManagementAdministration" />
-		</property>
-		<property name="sessionManager">
-			<ref bean="org.sakaiproject.tool.api.SessionManager" />
-		</property>
-		<property name="users">
-			<map>
-				<!-- Dept of Chemical Engineering
-					Anastacia Haddon
-					staff number: 01374828 
-					Authorization Recieved-->
-				<entry key="01374828">
-					<value>CHE</value>
-				</entry>
-				<!--colleen SAN "01360522"
-					<entry key="01360522">
-					<value>SAN</value>
-					</entry>-->
-				<!-- robyn FAM 01407627
-					<entry key="01407627">
-					<value>FAM</value>
-					</entry> -->
-				<!-- petros FAM 01373614 -->
-				<!-- Rowen CRJ law courses  01365463 -->
-				<!-- Mandy Bedin and Paula RDL law courses 01027808 and 01349732 -->
-				<!-- Dorothy for CML courses (01048554) -->
-				<!-- Ken HS -->
-				<!-- Freda HS -->
-				<!--  Nanette might for the APG courses (01301365) -->
-				<!--  Marilyn Solomons for AHS courses  (01368342) ?? -->
-				<!-- Yoemna for IS courses-->
-			</map>
-		</property>
-
-	</bean>
-
-	<bean
-		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerUCTMigrateCourseInfo"
-		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
-		<property name="beanId">
-			<value>UCTMigrateCourseInfo</value>
-		</property>
-		<property name="jobName">
-			<value>UCT migrate course info</value>
-		</property>
-		<property name="schedulerManager">
-			<ref
-				bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
-		</property>
-	</bean>
-
+	
 
 
 
