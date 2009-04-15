@@ -95,6 +95,10 @@
 			<artifactId>ldap</artifactId>
 			<version>2005.03.29</version>
 		</dependency>
+		<dependency>
+    	<groupId>org.sakaiproject.emailtemplateservice</groupId>
+    	<artifactId>emailtemplateservice-api</artifactId>
+    </dependency>
 	</dependencies>
 	<build>
 		<resources>

@@ -545,5 +545,40 @@
 		</property>
 	</bean>
 	
+<!-- Check joinable Sites -->
+	<bean id="checkJoinableSites"
+	class="org.sakaiproject.component.app.scheduler.jobs.JoinableSiteJob">
+	<property name="sessionManager">
+		<ref bean="org.sakaiproject.tool.api.SessionManager" />
+	</property>
+	<property name="siteService">
+		<ref bean="org.sakaiproject.site.api.SiteService" />
+	</property>
+	<property name="userDirectoryService">
+		<ref bean="org.sakaiproject.user.api.UserDirectoryService" />
+	</property>
+	<property name="emailTemplateService">
+		<ref
+			bean="org.sakaiproject.emailtemplateservice.service.EmailTemplateService" />
+	</property>
+</bean>
+	
+	
+
+	<bean
+		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerJoinableSites"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		singleton="true" init-method="init">
+		<property name="beanId">
+			<value>checkJoinableSites</value>
+		</property>
+		<property name="jobName">
+			<value>check Joinable Sites</value>
+		</property>
+		<property name="schedulerManager">
+			<ref
+				bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+	</bean>
 	
 </beans>
