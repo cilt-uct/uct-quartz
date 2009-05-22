@@ -1,32 +1,25 @@
 package org.sakaiproject.component.app.scheduler.jobs;
 
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-
-import java.util.List;
-import java.util.Set;
-import java.util.Iterator;
-import org.sakaiproject.javax.PagingPosition;
-import org.sakaiproject.site.api.SiteService.SelectionType;
-import org.sakaiproject.site.api.SiteService;
-import org.sakaiproject.site.api.Site;
-
-import org.sakaiproject.email.api.EmailService;
-//import org.sakaiproject.tool.api.Session;
-//import org.sakaiproject.tool.api.SessionManager;
-//import org.sakaiproject.component.api.ComponentManager;
-import org.sakaiproject.authz.api.AuthzGroupService;
 import org.sakaiproject.authz.api.AuthzGroup;
+import org.sakaiproject.authz.api.AuthzGroupService;
 import org.sakaiproject.authz.api.Member;
-import org.sakaiproject.authz.api.Role;
-
-import org.sakaiproject.user.api.UserDirectoryService;
-import org.sakaiproject.user.api.User;
+import org.sakaiproject.email.api.EmailService;
+import org.sakaiproject.site.api.Site;
+import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
+import org.sakaiproject.user.api.User;
+import org.sakaiproject.user.api.UserDirectoryService;
+import org.sakaiproject.user.api.UserNotDefinedException;
 
 public class UCTCourseSiteOwners implements Job {
 	
@@ -103,7 +96,7 @@ private void addCourseOwners() {
 		String addedUsers ="";
 		//first get a list all course sites
 		
-		List siteList = siteService.getSites( org.sakaiproject.site.api.SiteService.SelectionType.ANY, null, null, null,SiteService.SortType.TITLE_ASC,null);
+		List<Site> siteList = siteService.getSites( org.sakaiproject.site.api.SiteService.SelectionType.ANY, null, null, null,SiteService.SortType.TITLE_ASC,null);
 		                                   //(org.sakaiproject.site.api.SiteService.SelectionType.UPDATE, null, null, null, SortType.TITLE_ASC, null));
 		LOG.debug("got a list with " + siteList.size() + " sites");
 		for (int i = 0; i < siteList.size();i++) {
@@ -111,8 +104,8 @@ private void addCourseOwners() {
 			LOG.debug(thisSite.getTitle() + "("+thisSite.getId()+")");
 			//ignore if type is null
 			if (thisSite.getType()!= null) {
-				Set members = thisSite.getMembers();
-				Iterator it = members.iterator();
+				Set<Member> members = thisSite.getMembers();
+				Iterator<Member> it = members.iterator();
 				while (it.hasNext()){
 					Member thisM = (Member)it.next();
 					String role = thisM.getRole().getId();
@@ -190,6 +183,9 @@ private void addCourseOwners() {
 			
 		}
 		
+		//beffore we save we need to clean up the groups of inactive users
+		courseOwners = cleanUpGroup(courseOwners);
+		
 		try {
 			authzGroupService.save(courseOwners);
 			authzGroupService.save(groupCourseOwners);
@@ -208,6 +204,34 @@ private void addCourseOwners() {
 		
 		
 		
+}
+private AuthzGroup cleanUpGroup(AuthzGroup group) {
+	Set<Member> members = group.getMembers();
+	Iterator<Member> it = members.iterator();
+	while (it.hasNext()) {
+		Member member = it.next();
+		try {
+			User u = userDirectoryService.getUser(member.getUserId());
+			if (isInactiveType(u.getType())) {
+				group.removeMember(member.getUserId());
+			}
+		} catch (UserNotDefinedException e) {
+			//user doesn't exist remove the record
+			group.removeMember(member.getUserId());
+		}
+		
+		
+	}
+	
+	
+	return group;
+}
+private boolean isInactiveType(String type) {
+	
+	if (type.startsWith("inactive"))
+		return true;
+	
+	return false;
 }
 	
 	
