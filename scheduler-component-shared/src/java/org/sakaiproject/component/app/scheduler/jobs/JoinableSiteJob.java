@@ -88,13 +88,14 @@ public class JoinableSiteJob implements Job {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-	    		
+	    		Boolean newCheck = false;
 	    		try {
 	    			time = rp.getLongProperty(PROP_LAST_CHECK);
 	    		} catch (EntityPropertyNotDefinedException e) {
 	    			//add the property
 	    			time = Long.valueOf(new Date().getTime());
 	    			rp.addProperty(PROP_LAST_CHECK, time.toString());
+	    			newCheck = true;
 
 	    		} catch (EntityPropertyTypeException e) {
 	    			// TODO Auto-generated catch block
@@ -105,7 +106,7 @@ public class JoinableSiteJob implements Job {
 	    		cal.add(Calendar.MONTH, -1);
 	    		Date oneMonthPast = cal.getTime();
 	    		//if before we send the mail
-	    		if (checkDate.before(oneMonthPast)) {
+	    		if (newCheck || checkDate.before(oneMonthPast)) {
 	    			//we send the stuff
 	    			time = Long.valueOf(new Date().getTime());
 	    			rp.addProperty(PROP_LAST_CHECK, time.toString());
