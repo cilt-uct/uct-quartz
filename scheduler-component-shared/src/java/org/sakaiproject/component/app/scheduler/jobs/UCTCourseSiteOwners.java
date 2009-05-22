@@ -227,6 +227,8 @@ private AuthzGroup cleanUpGroup(AuthzGroup group) {
 	return group;
 }
 private boolean isInactiveType(String type) {
+	if (type == null)
+		return false;
 	
 	if (type.startsWith("inactive"))
 		return true;
