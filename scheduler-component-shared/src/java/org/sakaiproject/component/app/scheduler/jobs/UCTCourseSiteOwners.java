@@ -129,7 +129,7 @@ private void addCourseOwners() {
 							  type = "student";
 							 }
 							
-							if (!type.equals("guest") && !type.equals("student")) {
+							if (!type.equals("guest") && !type.equals("student") && !isInactiveType(type)) {
 							
 								//are they a member of the realm?
 								String arole = authzGroupService.getUserRole(thisM.getUserId(),courseOwners.getId());
