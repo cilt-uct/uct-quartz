@@ -113,6 +113,7 @@ public class JoinableSiteJob implements Job {
 	    			sendOwnerNotification(rp, s);
 	    			if (!siteHasActiveMembers(s)) {
 	    				s.setJoinable(false);
+	    				s.setPublished(false);
 	    				rp.addProperty(PROP_ARCHIVE, "true");
 	    			}
 	    		}
