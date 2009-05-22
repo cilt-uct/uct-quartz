@@ -230,7 +230,7 @@ private boolean isInactiveType(String type) {
 	if (type == null)
 		return false;
 	
-	if (type.startsWith("inactive"))
+	if (type.startsWith("inactive") || type.startsWith("Inactive"))
 		return true;
 	
 	return false;
