@@ -35,10 +35,11 @@ import org.sakaiproject.user.api.UserNotDefinedException;
 
 public class JoinableSiteJob implements Job {
 
+	private static final String SITE_OWNER_ROLE = "Site owner";
 	private static final Log LOG = LogFactory.getLog(JoinableSiteJob.class);
 	private static final String PROP_LAST_CHECK = "JoinableLastCheck";
 	private static final String PROP_ARCHIVE = "archive";
-	
+	private boolean ownerModeStrict = true;
 	
 	private SiteService siteService;
 	public void setSiteService(SiteService s) {
@@ -121,7 +122,7 @@ public class JoinableSiteJob implements Job {
 	    			}
 	    		}
 
-	    		if ("Site owner".equalsIgnoreCase(s.getJoinerRole())) {
+	    		if (SITE_OWNER_ROLE.equalsIgnoreCase(s.getJoinerRole())) {
 	    			LOG.warn("site has join role of site owner");
 	    		}
 	    		
@@ -135,6 +136,23 @@ public class JoinableSiteJob implements Job {
 	    			// TODO Auto-generated catch block
 	    			e.printStackTrace();
 	    		}
+	    	} else {
+    			if (!siteHasActiveMembers(s)) {
+    				LOG.warn("Site has no active members!");
+    				s.setJoinable(false);
+    				s.setPublished(false);
+    				ResourceProperties rp = s.getProperties();
+    				rp.addProperty(PROP_ARCHIVE, "true");
+    				try {
+						siteService.save(s);
+					} catch (IdUnusedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (PermissionException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+    			}
 	    	}
 	    }
 
@@ -144,6 +162,7 @@ public class JoinableSiteJob implements Job {
 		Set<Member> members = site.getMembers();
 		Iterator<Member> it = members.iterator();
 		boolean active = false;
+		boolean owner = false;
 		while (it.hasNext()) {
 			Member m = it.next();
 			try {
@@ -152,13 +171,20 @@ public class JoinableSiteJob implements Job {
 				type = type.toLowerCase();
 				if (type != null && !(type.contains("inactive"))) {
 					active = true;
+					if (SITE_OWNER_ROLE.equals(m.getRole())) {
+						owner = true;
+						return true;
+					}
 				}
 			} catch (UserNotDefinedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		return active;
+		if (ownerModeStrict)
+			return owner;
+		else
+			return active;
 		
 	}
 
