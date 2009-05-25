@@ -38,19 +38,19 @@ public class JoinableSiteJob implements Job {
 	private static final String SITE_OWNER_ROLE = "Site owner";
 	private static final Log LOG = LogFactory.getLog(JoinableSiteJob.class);
 	private static final String PROP_LAST_CHECK = "JoinableLastCheck";
-	private static final String PROP_ARCHIVE = "archive";
+	private static final String PROP_ARCHIVE = "site_archiveble";
 	private boolean ownerModeStrict = true;
-	
+
 	private SiteService siteService;
 	public void setSiteService(SiteService s) {
 		this.siteService = s;
 	}
-	
+
 	private SessionManager sessionManager;
 	public void setSessionManager(SessionManager s) {
 		this.sessionManager = s;
 	}
-	
+
 	private EmailTemplateService emailTemplateService;
 	public void setEmailTemplateService(EmailTemplateService emailTemplateService) {
 		this.emailTemplateService = emailTemplateService;
@@ -60,90 +60,79 @@ public class JoinableSiteJob implements Job {
 	public void setUserDirectoryService(UserDirectoryService s) {
 		this.userDirectoryService = s;
 	}
-	
-	
+
+
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		//set the user information into the current session
-	    Session sakaiSession = sessionManager.getCurrentSession();
-	    sakaiSession.setUserId("admin");
-	    sakaiSession.setUserEid("admin");
-	    
-	    List<Site> sites = siteService.getSites(SiteService.SelectionType.NON_USER, "project", null, null, SortType.NONE, null);
-	    for (int i =0 ; i< sites.size(); i++ ) {
-	    	//iterate through the sites
-	    	Site s = sites.get(i);
-	    	LOG.info("checking:" + s.getId());
-	    	if (s.isJoinable()) {
-	    		LOG.info("site is joinable!");
-	    		ResourceProperties rp = s.getProperties();
-	    		Long time = Long.valueOf(0);
-	    		
-	    		try {
-					boolean b = rp.getBooleanProperty(PROP_ARCHIVE);
-					if (b)
-						continue;
-					
-				} catch (EntityPropertyNotDefinedException e1) {
-					//not much to do this is expected
-				} catch (EntityPropertyTypeException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-	    		Boolean newCheck = false;
-	    		try {
-	    			time = rp.getLongProperty(PROP_LAST_CHECK);
-	    		} catch (EntityPropertyNotDefinedException e) {
-	    			//add the property
-	    			time = Long.valueOf(new Date().getTime());
-	    			rp.addProperty(PROP_LAST_CHECK, time.toString());
-	    			newCheck = true;
+		Session sakaiSession = sessionManager.getCurrentSession();
+		sakaiSession.setUserId("admin");
+		sakaiSession.setUserEid("admin");
 
-	    		} catch (EntityPropertyTypeException e) {
-	    			// TODO Auto-generated catch block
-	    			e.printStackTrace();
-	    		}
-	    		Date checkDate = new Date(time);
-	    		Calendar cal = new GregorianCalendar();
-	    		cal.add(Calendar.MONTH, -1);
-	    		Date oneMonthPast = cal.getTime();
-	    		//if before we send the mail
-	    		if (newCheck || checkDate.before(oneMonthPast)) {
-	    			LOG.info("check is in the past");
-	    			//we send the stuff
-	    			time = Long.valueOf(new Date().getTime());
-	    			rp.addProperty(PROP_LAST_CHECK, time.toString());
+		List<Site> sites = siteService.getSites(SiteService.SelectionType.NON_USER, "project", null, null, SortType.NONE, null);
+		for (int i =0 ; i< sites.size(); i++ ) {
+			//iterate through the sites
+			Site s1 = sites.get(i);
+			
+			try {
+				Site s = siteService.getSite(s1.getId());
+				LOG.info("checking:" + s.getId());
+				if (s.isJoinable()) {
+					LOG.info("site is joinable!");
+					ResourceProperties rp = s.getProperties();
+					Long time = Long.valueOf(0);
 
-	    			sendOwnerNotification(rp, s);
-	    			if (!siteHasActiveMembers(s)) {
-	    				LOG.warn("Site has no active members!");
-	    				s.setJoinable(false);
-	    				s.setPublished(false);
-	    				rp.addProperty(PROP_ARCHIVE, "true");
-	    			}
-	    		}
+					try {
+						boolean b = rp.getBooleanProperty(PROP_ARCHIVE);
+						if (b)
+							continue;
 
-	    		if (SITE_OWNER_ROLE.equalsIgnoreCase(s.getJoinerRole())) {
-	    			LOG.warn("site has join role of site owner");
-	    		}
-	    		
+					} catch (EntityPropertyNotDefinedException e1) {
+						//not much to do this is expected
+						e1.printStackTrace();
+					} catch (EntityPropertyTypeException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					Boolean newCheck = false;
+					try {
+						time = rp.getLongProperty(PROP_LAST_CHECK);
+					} catch (EntityPropertyNotDefinedException e) {
+						//add the property
+						LOG.info("we've never checked this one before!");
+						time = Long.valueOf(new Date().getTime());
+						rp.addProperty(PROP_LAST_CHECK, time.toString());
+						newCheck = true;
 
-	    		try {
-	    			siteService.save(s);
-	    		} catch (IdUnusedException e) {
-	    			// TODO Auto-generated catch block
-	    			e.printStackTrace();
-	    		} catch (PermissionException e) {
-	    			// TODO Auto-generated catch block
-	    			e.printStackTrace();
-	    		}
-	    	} /*else {
-    			if (!siteHasActiveMembers(s)) {
-    				LOG.warn("Site has no active members!");
-    				s.setJoinable(false);
-    				s.setPublished(false);
-    				ResourceProperties rp = s.getProperties();
-    				rp.addProperty(PROP_ARCHIVE, "true");
-    				try {
+					} catch (EntityPropertyTypeException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					Date checkDate = new Date(time);
+					Calendar cal = new GregorianCalendar();
+					cal.add(Calendar.MONTH, -1);
+					Date oneMonthPast = cal.getTime();
+					//if before we send the mail
+					if (newCheck || checkDate.before(oneMonthPast)) {
+						LOG.info("check is in the past");
+						//we send the stuff
+						time = Long.valueOf(new Date().getTime());
+						//rp.addProperty(PROP_LAST_CHECK, time.toString());
+
+						sendOwnerNotification(rp, s);
+						if (!siteHasActiveMembers(s)) {
+							LOG.warn("Site has no active members!");
+							s.setJoinable(false);
+							s.setPublished(false);
+							rp.addProperty(PROP_ARCHIVE, "true");
+						}
+					} 
+
+					if (SITE_OWNER_ROLE.equalsIgnoreCase(s.getJoinerRole())) {
+						LOG.warn("site has join role of site owner");
+					}
+
+
+					try {
 						siteService.save(s);
 					} catch (IdUnusedException e) {
 						// TODO Auto-generated catch block
@@ -152,9 +141,30 @@ public class JoinableSiteJob implements Job {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-    			}
-	    	} */
-	    }
+
+				} else {
+					if (!siteHasActiveMembers(s)) {
+						LOG.warn("Site has no active members!");
+						s.setJoinable(false);
+						s.setPublished(false);
+						ResourceProperties rp = s.getProperties();
+						rp.addProperty(PROP_ARCHIVE, "true");
+						try {
+							siteService.save(s);
+						} catch (IdUnusedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (PermissionException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				}
+			} catch (IdUnusedException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+		}
 
 	}
 
@@ -171,7 +181,8 @@ public class JoinableSiteJob implements Job {
 				type = type.toLowerCase();
 				if (type != null && !(type.contains("inactive"))) {
 					active = true;
-					if (SITE_OWNER_ROLE.equals(m.getRole())) {
+					LOG.info("user: " + u.getEid() + " is active and has role: " + m.getRole().getId());
+					if (SITE_OWNER_ROLE.equals(m.getRole().getId()) || "maintain".equals(m.getRole().getId())) {
 						owner = true;
 						return true;
 					}
@@ -185,7 +196,7 @@ public class JoinableSiteJob implements Job {
 			return owner;
 		else
 			return active;
-		
+
 	}
 
 	private void sendOwnerNotification(ResourceProperties rp, Site site) {
@@ -208,15 +219,15 @@ public class JoinableSiteJob implements Job {
 		replacementValues.put("siteTitle", site.getTitle());
 		replacementValues.put("siteJoinRole", site.getJoinerRole());
 		replacementValues.put("siteOwner", u.getDisplayName());
-		
+
 		List<String> userRefs = new ArrayList<String>();
 		userRefs.add(u.getReference());
-		
+
 		emailTemplateService.sendRenderedMessages("joinableSiteReminder", userRefs, replacementValues, "help@vula.uct.ac.za", "Vula help");
-		
-		
-		
-		
+
+
+
+
 	}
 
 }
