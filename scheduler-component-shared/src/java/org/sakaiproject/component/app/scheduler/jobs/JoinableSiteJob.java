@@ -136,7 +136,7 @@ public class JoinableSiteJob implements Job {
 	    			// TODO Auto-generated catch block
 	    			e.printStackTrace();
 	    		}
-	    	} else {
+	    	} /*else {
     			if (!siteHasActiveMembers(s)) {
     				LOG.warn("Site has no active members!");
     				s.setJoinable(false);
@@ -153,7 +153,7 @@ public class JoinableSiteJob implements Job {
 						e.printStackTrace();
 					}
     			}
-	    	}
+	    	} */
 	    }
 
 	}
