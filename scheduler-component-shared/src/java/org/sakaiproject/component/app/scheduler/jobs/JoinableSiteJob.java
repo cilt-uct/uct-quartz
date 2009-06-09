@@ -75,9 +75,9 @@ public class JoinableSiteJob implements Job {
 			
 			try {
 				Site s = siteService.getSite(s1.getId());
-				LOG.info("checking:" + s.getId());
+				LOG.debug("checking:" + s.getId());
 				if (s.isJoinable()) {
-					LOG.info("site is joinable!");
+					LOG.debug("site is joinable!");
 					ResourceProperties rp = s.getProperties();
 					Long time = Long.valueOf(0);
 
@@ -112,7 +112,7 @@ public class JoinableSiteJob implements Job {
 					Date oneMonthPast = cal.getTime();
 					//if before we send the mail
 					if (newCheck || checkDate.before(oneMonthPast)) {
-						LOG.info("check is in the past");
+						LOG.debug("check is in the past");
 						//we send the stuff
 						time = Long.valueOf(new Date().getTime());
 						//rp.addProperty(PROP_LAST_CHECK, time.toString());
@@ -180,7 +180,7 @@ public class JoinableSiteJob implements Job {
 				type = type.toLowerCase();
 				if (type != null && !(type.contains("inactive"))) {
 					active = true;
-					LOG.info("user: " + u.getEid() + " is active and has role: " + m.getRole().getId());
+					LOG.debug("user: " + u.getEid() + " is active and has role: " + m.getRole().getId());
 					if (SITE_OWNER_ROLE.equals(m.getRole().getId()) || "maintain".equals(m.getRole().getId())) {
 						owner = true;
 						return true;
