@@ -41,7 +41,7 @@ public class CleanInactiveStudents implements Job {
 	public void setSessionManager(SessionManager s) {
 		this.sessionManager = s;
 	}
-	@Override
+	
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
 	
