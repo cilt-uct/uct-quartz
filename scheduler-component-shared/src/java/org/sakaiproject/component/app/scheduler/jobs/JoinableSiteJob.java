@@ -76,7 +76,7 @@ public class JoinableSiteJob implements Job {
 			try {
 				Site s = siteService.getSite(s1.getId());
 				LOG.debug("checking:" + s.getId());
-				if (s.isJoinable()) {
+				if (s.isJoinable() && s.isPublished()) {
 					LOG.debug("site is joinable!");
 					ResourceProperties rp = s.getProperties();
 					Long time = Long.valueOf(0);
@@ -141,7 +141,7 @@ public class JoinableSiteJob implements Job {
 						e.printStackTrace();
 					}
 
-				} else {
+				} else if (s.isPublished()) {
 					if (!siteHasActiveMembers(s)) {
 						LOG.warn("Site has no active members!");
 						s.setJoinable(false);
