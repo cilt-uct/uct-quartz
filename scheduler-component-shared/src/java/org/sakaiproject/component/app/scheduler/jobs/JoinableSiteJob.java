@@ -178,7 +178,9 @@ public class JoinableSiteJob implements Job {
 				User u = userDirectoryService.getUser(m.getUserId());
 				String type = u.getType();
 				type = type.toLowerCase();
-				if (type != null && !(type.contains("inactive"))) {
+				if (type == null) {
+					continue;
+				} else if (type != null && !(type.contains("inactive"))) {
 					active = true;
 					LOG.debug("user: " + u.getEid() + " is active and has role: " + m.getRole().getId());
 					if (SITE_OWNER_ROLE.equals(m.getRole().getId()) || "maintain".equals(m.getRole().getId())) {
