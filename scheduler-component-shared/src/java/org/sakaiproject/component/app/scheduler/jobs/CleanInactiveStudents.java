@@ -86,7 +86,7 @@ public class CleanInactiveStudents implements Job {
 				LOG.warn("This student has 2 or fewer enrollments!");
 				try {
 					User u = userDirectoryService.getUserByEid(eid);
-					if (INACTIVE_STUDENT_TYPE.equals(u.getType())) {
+					if (!INACTIVE_STUDENT_TYPE.equals(u.getType())) {
 						UserEdit ue = userDirectoryService.editUser(u.getId());
 						ue.setType(INACTIVE_STUDENT_TYPE);
 						userDirectoryService.commitEdit(ue);
