@@ -228,9 +228,9 @@ public class UCTCheckAccounts implements Job {
 			LDAPAttribute atr = userEntry.getAttribute("loginDisabled");
 			if (atr != null) {
 			 String disabled = atr.getStringValue();
-			 LOG.info("LoginDisabled:" + disabled);
+			 LOG.debug("LoginDisabled:" + disabled);
 			 if ("TRUE".equals(disabled)) {
-				 LOG.warn("Acccount is disabled in auth tree");
+				 LOG.warn(id + ": Acccount is disabled in auth tree");
 				 conn.disconnect();
 				 return false;
 			 }
