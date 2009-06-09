@@ -37,12 +37,12 @@ import com.novell.ldap.LDAPSocketFactory;
 
 public class UCTCheckAccounts implements Job {
 
-	private static final String NOT_FOUND_TYPE = "ldapNotFound";
+	
 	
 	
 	private static final String TYPE_STUDENT = "student";
 	private static final String TYPE_STAFF = "staff";
-	private static final Object TYPE_THIRDPARTY = "thirdparty";
+	private static final String TYPE_THIRDPARTY = "thirdparty";
 	
 	private static final String STATUS_INACTIVE = "Inactive";
 	private static final String STATUS_INACTIVE_STAFF = "inactiveStaff";
@@ -111,7 +111,7 @@ public class UCTCheckAccounts implements Job {
 		
 		int first = 1;
 		int last = 100;
-		int increment = 100;
+		int increment = 1000;
 		boolean doAnother = true;
 		while (doAnother) {
 			
@@ -195,9 +195,9 @@ public class UCTCheckAccounts implements Job {
 
 
 	private boolean doThisUser(User u) {
-		if ("staff".equalsIgnoreCase(u.getType()) || "thirdparty".equalsIgnoreCase(u.getType())) {
+		if (TYPE_STAFF.equalsIgnoreCase(u.getType()) || TYPE_THIRDPARTY.equalsIgnoreCase(u.getType())) {
 			return true;
-		} else if ("student".equalsIgnoreCase(u.getType())) {
+		} else if (TYPE_STUDENT.equalsIgnoreCase(u.getType())) {
 			//skip the valid testing accounts
 			if (u.getEid().indexOf("user") == 0 || u.getEid().indexOf("tii") ==0 || u.getEid().indexOf("test") == 0 || u.getEid().indexOf("student") == 0) 
 				return false;
