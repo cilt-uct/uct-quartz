@@ -605,14 +605,14 @@
 	
 
 	<bean
-		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerJoinableSites"
+		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerCleanStudents"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
 		singleton="true" init-method="init">
 		<property name="beanId">
 			<value>cleanUpInactiveStudents</value>
 		</property>
 		<property name="jobName">
-			<value>clean up studens</value>
+			<value>clean up students</value>
 		</property>
 		<property name="schedulerManager">
 			<ref
