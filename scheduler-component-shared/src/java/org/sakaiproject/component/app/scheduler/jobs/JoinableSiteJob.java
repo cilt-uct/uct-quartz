@@ -119,7 +119,7 @@ public class JoinableSiteJob implements Job {
 
 						sendOwnerNotification(rp, s);
 						if (!siteHasActiveMembers(s)) {
-							LOG.warn("Site has no active members!");
+							LOG.warn("Site has no active members!: " + s.getId());
 							s.setJoinable(false);
 							s.setPublished(false);
 							rp.addProperty(PROP_ARCHIVE, "true");

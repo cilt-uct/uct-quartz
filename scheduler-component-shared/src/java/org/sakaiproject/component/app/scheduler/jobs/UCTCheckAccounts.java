@@ -24,6 +24,7 @@ import org.sakaiproject.user.api.UserLockedException;
 import org.sakaiproject.user.api.UserNotDefinedException;
 import org.sakaiproject.user.api.UserPermissionException;
 
+import com.novell.ldap.LDAPAttribute;
 import com.novell.ldap.LDAPConnection;
 import com.novell.ldap.LDAPEntry;
 import com.novell.ldap.LDAPException;
@@ -214,14 +215,28 @@ public class UCTCheckAccounts implements Job {
 		LDAPConnection conn = new LDAPConnection();
 		String sFilter = "cn=" + id;
 
-		String[] attrList = new String[] { "dn" };
+		String[] attrList = new String[] { "dn", "loginDisabled" };
 		try{
 			conn.connect( ldapHost, ldapPort );
 			//this will fail if user does not exist	
-			LDAPEntry userEntry = getEntryFromDirectory(sFilter,attrList,conn);			
-			conn.disconnect();
-			if (userEntry == null)
+			LDAPEntry userEntry = getEntryFromDirectory(sFilter,attrList,conn);
+			if (userEntry == null) {
+				conn.disconnect();
 				return false;
+			}
+			
+			LDAPAttribute atr = userEntry.getAttribute("loginDisabled");
+			if (atr != null) {
+			 String disabled = atr.getStringValue();
+			 LOG.info("LoginDisabled:" + disabled);
+			 if ("TRUE".equals(disabled)) {
+				 LOG.warn("Acccount is disabled in auth tree");
+				 conn.disconnect();
+				 return false;
+			 }
+			}
+			conn.disconnect();
+		
 		}
 		catch(Exception e)
 		{
