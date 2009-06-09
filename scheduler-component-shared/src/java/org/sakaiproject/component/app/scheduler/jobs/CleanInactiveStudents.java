@@ -82,7 +82,7 @@ public class CleanInactiveStudents implements Job {
 			//check the students current enrolements
 			Set<EnrollmentSet> enrollments = courseManagementService.findCurrentlyEnrolledEnrollmentSets(eid);
 			LOG.info("found: " + enrollments.size() + " enrollments for the student");
-			if (enrollments.size() >= 2) {
+			if (enrollments.size() <= 2) {
 				LOG.warn("This student has 2 or fewer enrollments!");
 				try {
 					User u = userDirectoryService.getUserByEid(eid);
