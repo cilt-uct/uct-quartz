@@ -179,8 +179,8 @@ public class UCTCheckAccounts implements Job {
 	private void removeFromCourses(User u) {
 		
 		String userEid = u.getEid();
-		Set enroled = courseManagementService.findCurrentlyEnrolledEnrollmentSets(userEid);
-		Iterator coursesIt = enroled.iterator();
+		Set<EnrollmentSet> enroled = courseManagementService.findCurrentlyEnrolledEnrollmentSets(userEid);
+		Iterator<EnrollmentSet> coursesIt = enroled.iterator();
 		LOG.debug("got list of enrolement set with " + enroled.size());
 		 while(coursesIt.hasNext()) {
 			EnrollmentSet eSet = (EnrollmentSet)coursesIt.next();
