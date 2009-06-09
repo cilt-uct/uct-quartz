@@ -581,4 +581,42 @@
 		</property>
 	</bean>
 	
+	<!-- Clean up inactive students -->
+	<bean id="cleanUpInactiveStudents"
+		class="org.sakaiproject.component.app.scheduler.jobs.CleanInactiveStudents">
+		<property name="sessionManager">
+			<ref bean="org.sakaiproject.tool.api.SessionManager" />
+		</property>
+		<property name="emailService">
+			<ref bean="org.sakaiproject.email.api.EmailService" />
+		</property>
+	<property name="courseManagementService">
+		<ref bean="org.sakaiproject.coursemanagement.api.CourseManagementService" />
+	</property>
+	<property name="courseManagementService">
+		<ref bean="org.sakaiproject.coursemanagement.api.CourseManagementService" />
+	</property>
+	<!--
+		<property name="userDirectoryService"> <ref
+		bean="org.sakaiproject.user.api.UserDirectoryService" /> </property>
+	-->
+	</bean>
+	
+	
+
+	<bean
+		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerJoinableSites"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		singleton="true" init-method="init">
+		<property name="beanId">
+			<value>cleanUpInactiveStudents</value>
+		</property>
+		<property name="jobName">
+			<value>clean up studens</value>
+		</property>
+		<property name="schedulerManager">
+			<ref
+				bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+	</bean>
 </beans>
