@@ -87,8 +87,7 @@ public class JoinableSiteJob implements Job {
 							continue;
 
 					} catch (EntityPropertyNotDefinedException e1) {
-						//not much to do this is expected
-						e1.printStackTrace();
+						LOG.debug("site has no archive property");
 					} catch (EntityPropertyTypeException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
