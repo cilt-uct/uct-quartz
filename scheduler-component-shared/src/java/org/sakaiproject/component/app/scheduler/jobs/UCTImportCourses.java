@@ -91,7 +91,7 @@ public class UCTImportCourses implements Job {
 	    		String[] data = record.split(",");
 	    		this.createCourse(data[7] + data[8], term, data[10], data[7]);
 	    	} 
-	    	
+	    	br.close();
 	    	fr.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
