@@ -76,7 +76,7 @@ public class JoinableSiteJob implements Job {
 			try {
 				Site s = siteService.getSite(s1.getId());
 				LOG.debug("checking:" + s.getId());
-				if (s.isJoinable() && s.isPublished()) {
+				if (s.isJoinable() && s.isPublished() && checkThisSite(s.getId())) {
 					LOG.debug("site is joinable!");
 					ResourceProperties rp = s.getProperties();
 					Long time = Long.valueOf(0);
@@ -141,7 +141,7 @@ public class JoinableSiteJob implements Job {
 						e.printStackTrace();
 					}
 
-				} else if (s.isPublished()) {
+				} else if (s.isPublished() && checkThisSite(s.getId())) {
 					if (!siteHasActiveMembers(s)) {
 						LOG.warn("Site has no active members!");
 						s.setJoinable(false);
@@ -166,6 +166,18 @@ public class JoinableSiteJob implements Job {
 		}
 
 	}
+
+	private boolean checkThisSite(String id) {
+		if (id == null)
+			return false;
+		//Ignore special sites
+		if (id.indexOf("!") == 0 )
+			return false;
+		
+		return true;
+		
+	}
+
 
 	private boolean siteHasActiveMembers(Site site) {
 		Set<Member> members = site.getMembers();
