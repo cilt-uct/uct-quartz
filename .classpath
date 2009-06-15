@@ -11,9 +11,9 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/sakai-common-edu-person-api"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/sakai-common-manager-api"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/sakai-common-type-api"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/sakai-mailarchive-api"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/sakai-message-api"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/sakai-assignment-api"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/emailtemplateservice-api"/>
+	<classpathentry kind="var" path="M2_REPO/org/sakaiproject/sakai-mailarchive-api/2.7.0-SNAPSHOT/sakai-mailarchive-api-2.7.0-SNAPSHOT.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/sakaiproject/sakai-message-api/2.7.0-SNAPSHOT/sakai-message-api-2.7.0-SNAPSHOT.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
