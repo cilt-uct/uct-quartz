@@ -1,7 +1,5 @@
 package org.sakaiproject.component.app.scheduler.jobs;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -110,8 +108,8 @@ public class UCTCheckAccounts implements Job {
 		LDAPConnection.setSocketFactory(ssf);
 		
 		int first = 1;
-		int last = 100;
 		int increment = 1000;
+		int last = increment;
 		boolean doAnother = true;
 		while (doAnother) {
 			

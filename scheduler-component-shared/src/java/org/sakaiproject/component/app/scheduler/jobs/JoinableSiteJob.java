@@ -61,7 +61,7 @@ public class JoinableSiteJob implements Job {
 		this.userDirectoryService = s;
 	}
 
-
+ 
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		//set the user information into the current session
 		Session sakaiSession = sessionManager.getCurrentSession();
