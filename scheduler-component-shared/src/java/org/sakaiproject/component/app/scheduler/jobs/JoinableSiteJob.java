@@ -171,7 +171,7 @@ public class JoinableSiteJob implements Job {
 		if (id == null)
 			return false;
 		//Ignore special sites
-		if (id.indexOf("!") == 0 )
+		if (id.startsWith("!"))
 			return false;
 		
 		return true;
