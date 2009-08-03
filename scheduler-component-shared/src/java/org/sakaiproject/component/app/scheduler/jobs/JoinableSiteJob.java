@@ -39,6 +39,7 @@ public class JoinableSiteJob implements Job {
 	private static final Log LOG = LogFactory.getLog(JoinableSiteJob.class);
 	private static final String PROP_LAST_CHECK = "JoinableLastCheck";
 	private static final String PROP_ARCHIVE = "site_archiveble";
+	private static final String PROP_IGNORE = "site_joinable_reminder_ignore";
 	private boolean ownerModeStrict = true;
 
 	private SiteService siteService;
@@ -80,6 +81,20 @@ public class JoinableSiteJob implements Job {
 					LOG.debug("site is joinable!");
 					ResourceProperties rp = s.getProperties();
 					Long time = Long.valueOf(0);
+					
+					//We should ignore this site if property says so
+					try {
+						boolean ignore = rp.getBooleanProperty(PROP_IGNORE);
+						if (! ignore){
+							continue;
+						}
+					} catch (EntityPropertyNotDefinedException e2) {
+						LOG.debug("site has no ignore flag and can be analysed");
+						//add ignore flag
+						rp.addProperty(PROP_IGNORE, Boolean.FALSE.toString());
+					} catch (EntityPropertyTypeException e2) {
+						
+					}
 
 					try {
 						boolean b = rp.getBooleanProperty(PROP_ARCHIVE);
