@@ -91,7 +91,7 @@ public class JoinableSiteJob implements Job {
 					} catch (EntityPropertyNotDefinedException e2) {
 						LOG.debug("site has no ignore flag and can be analysed");
 						//add ignore flag
-						rp.addProperty(PROP_IGNORE, Boolean.TRUE.toString());
+						rp.addProperty(PROP_IGNORE, Boolean.FALSE.toString());
 					} catch (EntityPropertyTypeException e2) {
 						
 					}
