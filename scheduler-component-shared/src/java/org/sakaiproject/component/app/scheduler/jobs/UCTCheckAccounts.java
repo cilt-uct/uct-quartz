@@ -96,9 +96,8 @@ public class UCTCheckAccounts implements Job {
 
 
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
-		// TODO Auto-generated method stub
-	
-//		 set the user information into the current session
+		
+		//set the user information into the current session
 	    Session sakaiSession = sessionManager.getCurrentSession();
 	    sakaiSession.setUserId(ADMIN);
 	    sakaiSession.setUserEid(ADMIN);
