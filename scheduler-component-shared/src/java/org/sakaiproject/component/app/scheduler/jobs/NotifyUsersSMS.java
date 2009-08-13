@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -18,6 +20,8 @@ import org.sakaiproject.user.api.User;
 import org.sakaiproject.user.api.UserDirectoryService;
 
 public class NotifyUsersSMS implements Job {
+
+	private static final Log LOG = LogFactory.getLog(NotifyUsersSMS.class);
 
 	private SessionManager sessionManager;
 	public void setSessionManager(SessionManager s) {
@@ -72,7 +76,7 @@ public class NotifyUsersSMS implements Job {
 						Map<String, String> replacementValues = new HashMap<String, String>();
 						//we need display name, mobileno, recieve preference, hidePreference
 						if (u.getDisplayName() !=null) {
-							replacementValues.put("greeting", u.getDisplayName());
+							replacementValues.put("greeting", u.getFirstName());
 						} else {
 							replacementValues.put("greeting", u.getDisplayId());
 						}
@@ -81,14 +85,18 @@ public class NotifyUsersSMS implements Job {
 						
 						ResourceProperties rp = u.getProperties();
 						String val = rp.getProperty("smsnotifications");
-						if (val == null)
-							val = "true";
+					
+						if ("true".equals(val) || val == null)
+							val = "Yes";
+						
+						if ("false".equals(val))
+							val = "No";
 						
 						replacementValues.put("prefReceive", val);
 						
-						String hideS = "false";
+						String hideS = "No";
 						if (sp.getHidePrivateInfo()!=null && sp.getHidePrivateInfo().booleanValue()) {
-							hideS = "true";
+							hideS = "Yes";
 						}
 						replacementValues.put("prefHide", hideS);
 						
@@ -98,9 +106,13 @@ public class NotifyUsersSMS implements Job {
 						if ("student".equals(u.getType()))
 							key = "smsnotify.student";
 						
+						replacementValues.put("eid", u.getEid());
+						
+						LOG.info("Sending SMS notification email to " + u.getEid());
+						
 						emailTemplateService.sendRenderedMessages(key, to , replacementValues, "help@vula.uct.ac.za", "Vula Team");
 						
-						//pause to prevent generating an email flood]
+						// pause to prevent generating an email flood
 						try {
 							Thread.sleep(2000);
 						} catch (InterruptedException e) {
@@ -120,7 +132,6 @@ public class NotifyUsersSMS implements Job {
 		}//End WHILE
 
 	}
-
 
 	private boolean doThisUser(User u) {
 		String type = u.getType();
