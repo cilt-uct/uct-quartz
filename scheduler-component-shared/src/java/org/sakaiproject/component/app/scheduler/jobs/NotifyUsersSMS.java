@@ -62,6 +62,10 @@ public class NotifyUsersSMS implements Job {
 				if (doThisUser(u)) {
 					//get the users profile
 					SakaiPerson sp = sakaiPersonManager.getSakaiPerson(u.getId(), sakaiPersonManager.getUserMutableType());
+					//the profile may be null (i.e. user has no profile
+					if (sp == null) {
+						continue;
+					}
 					
 					//if the user has a mobile number generate and send an email
 					if (sp.getMobile() != null && sp.getMobile().length() > 2) {
