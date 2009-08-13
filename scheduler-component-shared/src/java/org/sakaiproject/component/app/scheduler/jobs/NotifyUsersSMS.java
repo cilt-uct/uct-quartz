@@ -41,7 +41,7 @@ public class NotifyUsersSMS implements Job {
 	private static final String ADMIN = "admin";
 	
 	
-	@Override
+	
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		//set the user information into the current session
 	    Session sakaiSession = sessionManager.getCurrentSession();
