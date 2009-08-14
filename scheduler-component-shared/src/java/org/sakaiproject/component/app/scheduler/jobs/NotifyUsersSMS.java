@@ -110,7 +110,7 @@ public class NotifyUsersSMS implements Job {
 						
 						LOG.info("Sending SMS notification email to " + u.getEid());
 						
-						emailTemplateService.sendRenderedMessages(key, to , replacementValues, "help@vula.uct.ac.za", "Vula Team");
+						emailTemplateService.sendRenderedMessages(key, to , replacementValues, "help@vula.uct.ac.za", "Vula Team, UCT");
 						
 						// pause to prevent generating an email flood
 						try {
@@ -137,7 +137,10 @@ public class NotifyUsersSMS implements Job {
 		String type = u.getType();
 		if (type == null)
 			return false;
-		
+	
+		if (u.getEmail() == null || "".equals(u.getEmail().trim()))
+			return false;
+	
 		if ("student".equals(type) || "staff".equals(type) || "guest".equals(type)
 				|| "pace".equals(type) || "thirdparty".equals(type))
 			return true;
