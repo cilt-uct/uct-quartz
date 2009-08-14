@@ -75,7 +75,7 @@ public class NotifyUsersSMS implements Job {
 					if (sp.getMobile() != null && sp.getMobile().length() > 2) {
 						Map<String, String> replacementValues = new HashMap<String, String>();
 						//we need display name, mobileno, recieve preference, hidePreference
-						if (u.getDisplayName() !=null) {
+						if (u.getFirstName() != null && !"".equals(u.getFirstName())) {
 							replacementValues.put("greeting", u.getFirstName());
 						} else {
 							replacementValues.put("greeting", u.getDisplayId());
