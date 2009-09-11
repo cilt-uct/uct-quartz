@@ -659,7 +659,7 @@
 			<ref bean="org.sakaiproject.site.api.SiteService" />
 		</property>
 		<property name="userDirectoryService" ref="org.sakaiproject.user.api.UserDirectoryService"/>
-		<property name="toolId"><value>  	sakai.summary.calendar</value></property>
+		<property name="toolId"><value>sakai.summary.calendar</value></property>
 		<property name="pageTitle"><value>Home</value></property>
 		<property name="toolTitle"><value>Calendar</value></property>
 	</bean>

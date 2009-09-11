@@ -76,8 +76,9 @@ public class AddToolToMyWorkspaceHome implements Job {
 					try {
 						Site userSite = siteService.getSite(siteService.getUserSiteId(u.getId()));
 						if (!siteHomeContainsTool(userSite)) {
-							LOG.info("going to tool to  page to: " + u.getEid());
+							
 							SitePage page = getHomePage(userSite);
+							LOG.info("going to add tool to  page to: " + u.getEid() + " on page: " + page.getTitle());
 							ToolConfiguration tool = page.addTool(toolId);
 							tool.setLayoutHints("0,1");
 							tool.setTitle(toolTitle);
