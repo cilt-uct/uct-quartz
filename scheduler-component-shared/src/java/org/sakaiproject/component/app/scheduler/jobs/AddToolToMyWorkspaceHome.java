@@ -78,12 +78,17 @@ public class AddToolToMyWorkspaceHome implements Job {
 						if (!siteHomeContainsTool(userSite)) {
 							
 							SitePage page = getHomePage(userSite);
-							LOG.info("going to add tool to  page to: " + u.getEid() + " on page: " + page.getTitle());
-							ToolConfiguration tool = page.addTool(toolId);
-							tool.setLayoutHints("0,1");
-							tool.setTitle(toolTitle);
-							tool.moveUp();
-							siteService.save(userSite);
+							if (page != null) {
+								LOG.info("going to add tool to  page to: " + u.getEid() + " on page: " + page.getTitle());
+								ToolConfiguration tool = page.addTool(toolId);
+								tool.setLayoutHints("0,1");
+								tool.setTitle(toolTitle);
+								tool.moveUp();
+								siteService.save(userSite);
+							} else {
+								LOG.warn("users worksite has no Home page!: " + u.getEid());
+
+							}
 						}
 
 					} catch (IdUnusedException e) {
