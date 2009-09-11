@@ -646,5 +646,38 @@
 			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
 		</property>
 	</bean>
+	
+	
+	
+		<!--  Add tool to worksite home -->
+	<bean id="addToolUserSiteHome"
+		class="org.sakaiproject.component.app.scheduler.jobs.AddToolToMyWorkspaceHome">
+		<property name="sessionManager">
+			<ref bean="org.sakaiproject.tool.api.SessionManager" />
+		</property>
+		<property name="siteService">
+			<ref bean="org.sakaiproject.site.api.SiteService" />
+		</property>
+		<property name="userDirectoryService" ref="org.sakaiproject.user.api.UserDirectoryService"/>
+		<property name="toolId"><value>  	sakai.summary.calendar</value></property>
+		<property name="pageTitle"><value>Home</value></property>
+		<property name="toolTitle"><value>Calendar</value></property>
+	</bean>
+
+	<bean
+		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerToolPageUserSite"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		singleton="true" init-method="init">
+		<property name="beanId">
+			<value>addToolUserSiteHome</value>
+		</property>
+		<property name="jobName">
+			<value>Add tool to user Site Home</value>
+		</property>
+		<property name="schedulerManager">
+			<ref
+				bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+	</bean>
 
 </beans>

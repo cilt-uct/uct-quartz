@@ -13,7 +13,6 @@ import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SitePage;
 import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.site.api.ToolConfiguration;
-import org.sakaiproject.site.api.SiteService.SortType;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
 import org.sakaiproject.user.api.User;
@@ -56,7 +55,7 @@ public class AddPageToMyWorkspace implements Job {
 	    sakaiSession.setUserId("admin");
 	    sakaiSession.setUserEid("admin");
 	    
-	    List users = userDirectoryService.getUsers();
+	    List<User> users = userDirectoryService.getUsers();
 	    for (int i = 0; i < users.size(); i++) {
 	    	User u = (User) users.get(i);
 	    	
@@ -93,7 +92,7 @@ public class AddPageToMyWorkspace implements Job {
 
 
 	private boolean siteContainsPage(Site userSite) {
-		List pages = userSite.getPages();
+		List<SitePage> pages = userSite.getPages();
 		for (int i = 0; i < pages.size(); i++) {
 			SitePage page = (SitePage)pages.get(i);
 			if (pageTitle.equals(page.getTitle()))
