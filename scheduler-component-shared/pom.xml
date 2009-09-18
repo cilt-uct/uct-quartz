@@ -53,6 +53,8 @@
 		<dependency>
 			<groupId>org.sakaiproject.sms</groupId>
 			<artifactId>sms-api</artifactId>
+			<version>0.12-SNAPSHOT</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.sakaiproject</groupId>
