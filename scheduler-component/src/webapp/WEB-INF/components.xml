@@ -680,4 +680,31 @@
 		</property>
 	</bean>
 
+	<!-- Populate the normalized number filed in Profile -->
+	<bean id="profileNormalized"
+		class="org.sakaiproject.component.app.scheduler.jobs.PopulateNormalizedMobile">
+		<property name="sessionManager">
+			<ref bean="org.sakaiproject.tool.api.SessionManager" />
+		</property>
+		<property name="userDirectoryService">
+			<ref bean="org.sakaiproject.user.api.UserDirectoryService" />
+		</property>
+		<property name="sakaiPersonManager"
+			ref="org.sakaiproject.api.common.edu.person.SakaiPersonManager" />
+		<property name="numberRoutingHelper" ref="org.sakaiproject.sms.logic.external.NumberRoutingHelper"/>
+	</bean>
+	<bean
+		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerProfileNormalize"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		singleton="true" init-method="init">
+		<property name="beanId">
+			<value>profileNormalized</value>
+		</property>
+		<property name="jobName">
+			<value>Populate the Normalized cell no</value>
+		</property>
+		<property name="schedulerManager">
+			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+	</bean>
 </beans>

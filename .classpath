@@ -15,5 +15,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/emailtemplateservice-api"/>
 	<classpathentry kind="var" path="M2_REPO/org/sakaiproject/sakai-mailarchive-api/2.7.0-SNAPSHOT/sakai-mailarchive-api-2.7.0-SNAPSHOT.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/sakaiproject/sakai-message-api/2.7.0-SNAPSHOT/sakai-message-api-2.7.0-SNAPSHOT.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/sms-api"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
