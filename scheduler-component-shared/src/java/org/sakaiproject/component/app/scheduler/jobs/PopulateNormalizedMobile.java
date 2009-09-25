@@ -95,15 +95,7 @@ public class PopulateNormalizedMobile implements Job {
 	}
 
 	private boolean doThisUser(User u) {
-		String type = u.getType();
-		if (type == null)
-			return false;
-		
-		if ("student".equals(type) || "staff".equals(type) || "guest".equals(type)
-				|| "pace".equals(type) || "thirdparty".equals(type))
-			return true;
-		
-		return false;
+		return true;
 	}
 
 }
