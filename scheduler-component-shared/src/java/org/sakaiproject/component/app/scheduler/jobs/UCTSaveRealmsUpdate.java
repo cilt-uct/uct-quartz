@@ -1,27 +1,24 @@
 package org.sakaiproject.component.app.scheduler.jobs;
 
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-import org.sakaiproject.authz.api.AuthzGroupService;
 import org.sakaiproject.authz.api.AuthzGroup;
-import org.sakaiproject.entity.api.ResourceProperties;
-import org.sakaiproject.site.api.SiteService;
-import org.sakaiproject.site.api.SiteService.SelectionType;
-import org.sakaiproject.site.api.SiteService.SortType;
-import org.sakaiproject.site.api.Site;
-import org.sakaiproject.tool.api.Session;
-import org.sakaiproject.tool.api.SessionManager;
-import org.sakaiproject.javax.PagingPosition;
+import org.sakaiproject.authz.api.AuthzGroupService;
 import org.sakaiproject.authz.api.GroupProvider;
 import org.sakaiproject.authz.api.Member;
-
-import java.util.Map;
-import java.util.Set;
-import java.util.Iterator;
-import java.util.List;
+import org.sakaiproject.entity.api.ResourceProperties;
+import org.sakaiproject.site.api.Site;
+import org.sakaiproject.site.api.SiteService;
+import org.sakaiproject.site.api.SiteService.SortType;
+import org.sakaiproject.tool.api.Session;
+import org.sakaiproject.tool.api.SessionManager;
 
 public class UCTSaveRealmsUpdate implements Job {
 

@@ -1,31 +1,24 @@
 package org.sakaiproject.component.app.scheduler.jobs;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-
+import org.sakaiproject.entity.api.ResourceProperties;
+import org.sakaiproject.entity.api.ResourcePropertiesEdit;
+import org.sakaiproject.exception.IdUnusedException;
+import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
-import org.sakaiproject.user.api.UserDirectoryService;
-import org.sakaiproject.user.api.User;
-import org.sakaiproject.user.api.PreferencesService;
-import org.sakaiproject.user.api.Preferences;
 import org.sakaiproject.user.api.PreferencesEdit;
-import org.sakaiproject.exception.IdUnusedException;
-import org.sakaiproject.entity.api.ResourcePropertiesEdit;
-import org.sakaiproject.entity.api.ResourceProperties;
-import org.sakaiproject.site.api.SiteService.SelectionType;
-import org.sakaiproject.site.api.SiteService.SortType;
-import org.sakaiproject.site.api.Site;
-
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Collection;
-import java.util.Iterator;
+import org.sakaiproject.user.api.PreferencesService;
+import org.sakaiproject.user.api.User;
+import org.sakaiproject.user.api.UserDirectoryService;
 
 
 public class UCTResetCourseTabs implements Job {
