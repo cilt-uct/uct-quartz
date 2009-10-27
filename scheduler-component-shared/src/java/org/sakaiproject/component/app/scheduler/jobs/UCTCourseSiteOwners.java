@@ -193,7 +193,7 @@ private void addCourseOwners() {
 			LOG.debug("added " + addedUsers);
 			if (addedUsers.length()>0) {
 				
-				emailService.send("help@vula.uct.ac.za","help@vula.uct.ac.za","Users added to CourseSiteOwners",addedUsers,null,null,null);
+				emailService.send("help-team@vula.uct.ac.za","help-team@vula.uct.ac.za","Users added to CourseSiteOwners",addedUsers,null,null,null);
 			}
 		}
 		catch (Exception e)
