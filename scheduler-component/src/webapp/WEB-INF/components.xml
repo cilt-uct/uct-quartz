@@ -225,10 +225,10 @@
 				bean="org.sakaiproject.coursemanagement.api.CourseManagementAdministration" />
 		</property>
 		<property name="term">
-			<value>2008</value>
+			<value>2010</value>
 		</property>
 		<property name="filePath">
-			<value>/data/sakai/import/2008_courses.csv</value>
+			<value>/data/sakai/import/2010_courses.csv</value>
 		</property>
 	</bean>
 

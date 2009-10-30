@@ -46,7 +46,7 @@ public class CleanUpCmData implements Job {
 	
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		// TODO Auto-generated method stub
-	    log.info("about to clean up cm date in term: " + 2008);
+	    log.info("about to clean up cm date in term: " + term);
 		Session sakaiSession = sessionManager.getCurrentSession();
 	    sakaiSession.setUserId(ADMIN);
 	    sakaiSession.setUserEid(ADMIN);
