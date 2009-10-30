@@ -14,6 +14,7 @@ import org.sakaiproject.coursemanagement.api.CourseManagementAdministration;
 import org.sakaiproject.coursemanagement.api.CourseManagementService;
 import org.sakaiproject.coursemanagement.api.CourseOffering;
 import org.sakaiproject.coursemanagement.api.CourseSet;
+import org.sakaiproject.coursemanagement.api.Section;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
 
@@ -85,6 +86,13 @@ public class CleanUpCmData implements Job {
 	    					String set = (String)itb.next();
 	    					courseAdmin.removeCourseOfferingFromCourseSet(set, fullEid);
 	    				}
+	    				Set<Section> s = courseManagementService.getChildSections(fullEid);
+	    				Iterator<Section> it2 = s.iterator();
+	    				while (it2.hasNext()) {
+	    					Section section = it2.next();
+	    					courseAdmin.removeSection(section.getEid());
+	    				}
+	    				
 	    				courseAdmin.removeCourseOffering(fullEid);
 	    				
 	    			}
