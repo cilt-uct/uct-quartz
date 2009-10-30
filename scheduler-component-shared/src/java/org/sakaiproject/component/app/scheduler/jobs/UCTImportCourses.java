@@ -24,7 +24,8 @@ import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
 
 public class UCTImportCourses implements Job {
-
+	private static final Log log = LogFactory.getLog(UCTImportCourses.class);
+			
 	private static final String ADMIN = "admin";
 	private static final Log LOG = LogFactory.getLog(UCTImportCourses.class);
 	private CourseManagementService courseManagementService;
@@ -66,6 +67,7 @@ public class UCTImportCourses implements Job {
 	    sakaiSession.setUserEid(ADMIN);
 	    FileReader fr = null;
 	    try {
+	    	log.info("opening: " + filePath);
 	    	fr = new FileReader(filePath);
 	    } catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -85,6 +87,7 @@ public class UCTImportCourses implements Job {
 	    		 * Course ID	Offer Nbr	Term	Session	Sect	Institution	Acad Group	Subject	Catalog	Career	Descr	Class Nbr	Component
 
 	    		 */
+	    		log.debug("got line: " + record);
 	    		record = record.trim();
 	    		if (record.equals(""))
 	    				continue;

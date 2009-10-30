@@ -262,7 +262,7 @@
 				bean="org.sakaiproject.coursemanagement.api.CourseManagementAdministration" />
 		</property>
 		<property name="term">
-			<value>2008</value>
+			<value>2010</value>
 		</property>
 	</bean>
 
