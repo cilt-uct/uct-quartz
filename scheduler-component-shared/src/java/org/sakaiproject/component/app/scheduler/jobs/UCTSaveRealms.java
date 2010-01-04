@@ -42,10 +42,6 @@ public class UCTSaveRealms implements StatefulJob {
 		this.courseManagementService = courseManagementService;
 	}
 	
-	String term = "2008";
-	public void setTerm(String t) {
-		term = t;
-	}
 	
 	private List<String> getTerms() {
 		List<AcademicSession>  as = courseManagementService.getCurrentAcademicSessions();

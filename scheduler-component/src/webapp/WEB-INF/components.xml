@@ -90,7 +90,6 @@
 			<ref bean="org.sakaiproject.authz.api.AuthzGroupService" />
 		</property>
 		<property name="courseManagementService" ref="org.sakaiproject.coursemanagement.api.CourseManagementService"/>
-		<property name="term"><value>2010</value></property>
 	</bean>
 
 	<bean
