@@ -11,6 +11,7 @@ import org.sakaiproject.content.api.ContentCollection;
 import org.sakaiproject.content.api.ContentHostingService;
 import org.sakaiproject.db.api.SqlService;
 import org.sakaiproject.exception.IdUnusedException;
+import org.sakaiproject.exception.InUseException;
 import org.sakaiproject.exception.PermissionException;
 import org.sakaiproject.exception.TypeException;
 import org.sakaiproject.tool.api.Session;
@@ -33,6 +34,11 @@ public class CleanOrphanedContent implements Job {
 	private ContentHostingService contentHostingService;
 	public void setContentHostingService(ContentHostingService contentHostingService) {
 		this.contentHostingService = contentHostingService;
+	}
+	
+	private Boolean doCleanUp;
+	public void setDoCleanUp(Boolean doCleanUp) {
+		this.doCleanUp = doCleanUp;
 	}
 
 	public void execute(JobExecutionContext context)
@@ -75,6 +81,11 @@ public class CleanOrphanedContent implements Job {
 				long thisOne = collection.getBodySizeK();
 				log.info("Collection " + r + " has " + thisOne  + " in the collection");
 				userBytes = userBytes + thisOne;
+				
+				//delete the resource
+				if (doCleanUp) {
+					contentHostingService.removeResource(r);
+				}
 			} catch (IdUnusedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -82,6 +93,9 @@ public class CleanOrphanedContent implements Job {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (PermissionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InUseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} 
