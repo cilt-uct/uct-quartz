@@ -706,4 +706,38 @@
 			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
 		</property>
 	</bean>
+	
+		
+	<!--  Clear the orpahened profiles -->
+	<bean id="checkOContent"
+		class="org.sakaiproject.component.app.scheduler.jobs.CleanOrphanedContent">
+		<property name="sessionManager">
+			<ref bean="org.sakaiproject.tool.api.SessionManager" />
+		</property>
+		<property name="contentHostingService"
+			ref="org.sakaiproject.content.api.ContentHostingService" />
+		<property name="sqlService" ref="org.sakaiproject.db.api.SqlService" />
+	</bean>
+	
+	
+
+	<bean
+		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerClearProfiles"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		singleton="true" init-method="init">
+		<property name="beanId">
+			<value>cleanProfiles</value>
+		</property>
+		<property name="jobName">
+			<value>clear orphaned profiles</value>
+		</property>
+		<property name="schedulerManager">
+			<ref
+				bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+	</bean>
+	
+	
+	
+	
 </beans>
