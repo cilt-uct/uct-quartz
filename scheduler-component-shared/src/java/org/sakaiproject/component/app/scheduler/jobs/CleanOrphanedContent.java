@@ -13,6 +13,7 @@ import org.sakaiproject.db.api.SqlService;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.exception.InUseException;
 import org.sakaiproject.exception.PermissionException;
+import org.sakaiproject.exception.ServerOverloadException;
 import org.sakaiproject.exception.TypeException;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
@@ -84,7 +85,7 @@ public class CleanOrphanedContent implements Job {
 				
 				//delete the resource
 				if (doCleanUp) {
-					contentHostingService.removeResource(r);
+					contentHostingService.removeCollection(r);
 				}
 			} catch (IdUnusedException e) {
 				// TODO Auto-generated catch block
@@ -96,6 +97,9 @@ public class CleanOrphanedContent implements Job {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (InUseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ServerOverloadException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} 
