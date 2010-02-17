@@ -43,17 +43,17 @@ public class CleanOrphanedContent implements Job {
 	    sakaiSession.setUserId(ADMIN);
 	    sakaiSession.setUserEid(ADMIN);
 		
-		String sql = "select replace(mid(collection_id,7),'/','') as cuid from CONTENT_COLLECTION where in_collection='/user/' and (replace(mid(collection_id,7),'/','') not in (SELECT user_id from SAKAI_USER_ID_MAP));";
+		String sql = "select collection_id as cuid from CONTENT_COLLECTION where in_collection='/user/' and (replace(mid(collection_id,7),'/','') not in (SELECT user_id from SAKAI_USER_ID_MAP));";
 		List<String> res = sqlService.dbRead(sql);
 		long userBytes = getBytesInCollection(res);
 		log.info("Orpahned content in user collections: " + userBytes);
 		
-		sql = "select replace(mid(collection_id,7),'/',''), collection_id from CONTENT_COLLECTION where in_collection='/group/' and replace(mid(collection_id,7),'/','') not in (select site_id from SAKAI_SITE); ";
+		sql = "select collection_id from CONTENT_COLLECTION where in_collection='/group/' and replace(mid(collection_id,7),'/','') not in (select site_id from SAKAI_SITE); ";
 		res = sqlService.dbRead(sql);
 		long siteBytes = getBytesInCollection(res);
 		log.info("Orpahned content in site collections: " + siteBytes);
 		
-		sql = "select replace(mid(collection_id,7),'/',''), collection_id from CONTENT_COLLECTION where in_collection='/group/' and replace(mid(collection_id,7),'/','') not in (select site_id from SAKAI_SITE); ";
+		sql = "select collection_id from CONTENT_COLLECTION where in_collection='/attachment/' and replace(mid(collection_id,13),'/','') not in (select site_id from SAKAI_SITE); ";
 		res = sqlService.dbRead(sql);
 		long attachBytes = getBytesInCollection(res);
 		log.info("Orpahned content in attachment collections: " + attachBytes);
