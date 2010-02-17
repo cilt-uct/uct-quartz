@@ -722,14 +722,14 @@
 	
 
 	<bean
-		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerClearProfiles"
+		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerOrphenedContent"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
 		singleton="true" init-method="init">
 		<property name="beanId">
-			<value>cleanProfiles</value>
+			<value>checkOContent</value>
 		</property>
 		<property name="jobName">
-			<value>clear orphaned profiles</value>
+			<value>clear orphaned content</value>
 		</property>
 		<property name="schedulerManager">
 			<ref
