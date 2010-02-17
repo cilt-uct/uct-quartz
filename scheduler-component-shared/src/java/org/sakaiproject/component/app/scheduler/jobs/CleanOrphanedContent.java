@@ -73,6 +73,7 @@ public class CleanOrphanedContent implements Job {
 			try {
 				ContentCollection  collection = contentHostingService.getCollection(r);
 				long thisOne = collection.getBodySizeK();
+				log.info("Collection " + r + " has " + thisOne  + " in the collection");
 				userBytes = userBytes + thisOne;
 			} catch (IdUnusedException e) {
 				// TODO Auto-generated catch block
