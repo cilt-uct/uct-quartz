@@ -59,13 +59,13 @@ public class CleanOrphanedContent implements Job {
 		res = sqlService.dbRead(sql);
 		long siteBytes = getBytesInCollection(res);
 		
-		
+		/*
 		sql = "select collection_id from CONTENT_COLLECTION where in_collection='/attachment/' and replace(mid(collection_id,13),'/','') not in (select site_id from SAKAI_SITE); ";
 		res = sqlService.dbRead(sql);
 		long attachBytes = getBytesInCollection(res);
-		
+		*/
 		log.info("Orpahned content in user collections: " + userBytes);
-		log.info("Orpahned content in attachment collections: " + attachBytes);
+		//log.info("Orpahned content in attachment collections: " + attachBytes);
 		log.info("Orpahned content in site collections: " + siteBytes);
 	}
 	
