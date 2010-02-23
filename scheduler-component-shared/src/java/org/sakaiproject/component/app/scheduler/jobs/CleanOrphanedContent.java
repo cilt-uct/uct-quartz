@@ -85,7 +85,9 @@ public class CleanOrphanedContent implements Job {
 				
 				//delete the resource
 				if (doCleanUp) {
-					contentHostingService.removeCollection(r);
+					if (r != null) {
+						contentHostingService.removeCollection(r);
+					}
 				}
 			} catch (IdUnusedException e) {
 				// TODO Auto-generated catch block
