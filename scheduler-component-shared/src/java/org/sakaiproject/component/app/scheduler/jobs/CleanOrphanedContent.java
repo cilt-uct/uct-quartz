@@ -55,7 +55,7 @@ public class CleanOrphanedContent implements Job {
 		long userBytes = getBytesInCollection(res);
 		
 		
-		sql = "select collection_id from CONTENT_COLLECTION where in_collection='/group/' and replace(mid(collection_id,7),'/','') not in (select site_id from SAKAI_SITE); ";
+		sql = "select collection_id from CONTENT_COLLECTION where in_collection='/group/' and replace(mid(collection_id,7),'/','') not in (select site_id from SAKAI_SITE) and length(collection_id)=length('/group/ffdd45d6-9e1d-4328-8082-646472c8b325/'); ";
 		res = sqlService.dbRead(sql);
 		long siteBytes = getBytesInCollection(res);
 		
