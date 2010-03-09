@@ -101,7 +101,7 @@ public class CleanFacOnlyStudents implements Job {
 			}
 		}
 		StringBuilder sb = new StringBuilder();
-		sb.append("we would inactivate these "+ studentCount +" students: \r\n");
+		sb.append("we have removed these "+ studentCount +" students from fac course groups: \r\n");
 		for (int i =0; i < removedEids.size(); i++) {
 			sb.append(removedEids.get(i));
 			sb.append("\r\n");
