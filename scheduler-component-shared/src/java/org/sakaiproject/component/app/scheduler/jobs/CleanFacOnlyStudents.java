@@ -79,7 +79,7 @@ public class CleanFacOnlyStudents implements Job {
 			List<User> users = userDirectoryService.getUsers(first, last);
 			for (int i = 0; i < users.size(); i++) {
 				User user = users.get(i);
-				if ("Student".equals(user.getType())) {
+				if ("student".equals(user.getType())) {
 
 					LOG.info("Checking: " + user.getEid());
 					//check the students current enrollments
