@@ -86,7 +86,7 @@ public class CleanFacOnlyStudents implements Job {
 					String eid = user.getEid();
 					Set<EnrollmentSet> enrollments = courseManagementService.findCurrentlyEnrolledEnrollmentSets(eid);
 					LOG.info("found: " + enrollments.size() + " enrollments for the student");
-					if (!enrollmentsOk(enrollments)) {
+					if (enrollments.size() > 0 && !enrollmentsOk(enrollments)) {
 						LOG.warn("This student has no course registrations or fewer enrollments!");
 
 						//remove the student from current courses
