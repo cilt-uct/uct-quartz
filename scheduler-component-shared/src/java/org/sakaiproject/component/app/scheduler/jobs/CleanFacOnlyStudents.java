@@ -97,8 +97,27 @@ public class CleanFacOnlyStudents implements Job {
 
 
 					}
+				} else if ("offer".equals(user.getType())) {
+					//check that the student only in the fac offer group
+					String eid = user.getEid();
+					Set<EnrollmentSet> enrollments = courseManagementService.findCurrentlyEnrolledEnrollmentSets(eid);
+					if (enrollments.size() > 1) {
+						List<String> courseList = new ArrayList<String>();
+						//we have more than just the enrollemnent set could include a faculty
+						Iterator<EnrollmentSet> it = enrollments.iterator();
+						while (it.hasNext()) {
+							EnrollmentSet set = it.next();
+							if (set.getEid().contains("_offer,2010")) {
+								courseList.add(set.getEid());
+							} else if (set.getEid().length() == "FUL,2010".length()) {
+								courseList.add(set.getEid());
+							}
+						}
+						synchCourses(courseList, eid);
+					}
+					
 				}
-			}
+			} 
 			if (users.size() < increment) {
 				doAnother = false;
 			} else {
