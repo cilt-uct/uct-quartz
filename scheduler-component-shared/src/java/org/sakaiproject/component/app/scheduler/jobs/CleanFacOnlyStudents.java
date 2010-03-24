@@ -107,7 +107,7 @@ public class CleanFacOnlyStudents implements Job {
 						Iterator<EnrollmentSet> it = enrollments.iterator();
 						while (it.hasNext()) {
 							EnrollmentSet set = it.next();
-							if (set.getEid().contains("_offer,2010")) {
+							if (set.getEid().contains("OFFER_STUDENT,2010")) {
 								courseList.add(set.getEid());
 							} else if (set.getEid().length() == "FUL,2010".length()) {
 								courseList.add(set.getEid());
