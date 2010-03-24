@@ -122,7 +122,8 @@ public class CleanFacOnlyStudents implements Job {
 		while (it.hasNext()) {
 			EnrollmentSet enrollment = it.next();
 			int check = "PHI3009F,2010".length();
-			if (enrollment.getEid().length() == check) {
+			String course = enrollment.getEid();
+			if (course.length() == check && course.indexOf("_STUD,") == -1) {
 				LOG.info("This student is a member of" + enrollment.getEid());
 				return true;
 			}
