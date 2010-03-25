@@ -64,7 +64,7 @@ public class SmsBirthdayMessage implements Job {
 		List<String> filtered = filterUserList(res);
 	    //TODO we need to filter the list to remove inactive users
 	    
-	    Set<String> userSet = new HashSet<String>(res);
+	    Set<String> userSet = new HashSet<String>(filtered);
 	    SmsTask task = new SmsTask();
 	    task.setSakaiUserIdsList(userSet);
 	    task.setMessageBody("Happy Birthday from the Vula Team at UCT!");
