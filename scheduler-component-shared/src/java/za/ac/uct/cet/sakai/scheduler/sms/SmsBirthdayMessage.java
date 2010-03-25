@@ -74,7 +74,7 @@ public class SmsBirthdayMessage implements Job {
 	    cal.set(Calendar.MINUTE, 0);
 	    Date dateToSend = cal.getTime();
 	    task.setDateToSend(dateToSend);
-	    task.setSakaiSiteId("d02f250e-be2d-4b72-009a-161d66ed6df9");
+	    task.setSmsAccountId(Long.valueOf(1));
 	    
 	    smsTaskLogic.persistSmsTask(task);
 	    
