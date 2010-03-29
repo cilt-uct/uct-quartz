@@ -29,6 +29,20 @@
       </snapshots>
     </repository>
     </repositories>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+		<groupId>org.sakaiproject.emailtemplateservice
+		</groupId>
+		<artifactId>emailtemplateservice-api
+		</artifactId>
+		<version>0.3-SNAPSHOT</version>
+		<scope>provided</scope>
+	</dependency>
+    </dependencies>
+</dependencyManagement>
+     
 </project>
 
 
