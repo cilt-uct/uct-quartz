@@ -17,7 +17,7 @@
     <module>scheduler-component-shared</module>
    
   </modules>
-  
+<!-- We added all this to enable the Hudson build -->  
      <repositories>
     <repository>
       <id>sakai-maven</id>
