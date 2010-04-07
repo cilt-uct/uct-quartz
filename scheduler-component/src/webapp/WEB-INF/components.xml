@@ -379,7 +379,7 @@
 		</property>
 	</bean>
 	
-		<!--  Stefeul test job -->
+		<!--  Stateful test job -->
 	<bean id="statefulTestJob"
 		class="org.sakaiproject.component.app.scheduler.jobs.UCTTestJob">
 	</bean>
@@ -402,7 +402,7 @@
 	
 	
 	
-	<!--  Undelete assignemnts -->
+	<!--  Undelete assignments -->
 	<bean id="undeleteAssingments"
 		class="org.sakaiproject.component.app.scheduler.jobs.UndeleteAssignments">
 		<property name="sessionManager">
@@ -454,7 +454,7 @@
 	</bean>
 	
 	
-	<!--  Clear the orpahened profiles -->
+	<!--  Clear the orphaned profiles -->
 	<bean id="cleanProfiles"
 		class="org.sakaiproject.component.app.scheduler.jobs.ClearorphanedProfiles">
 		<property name="sessionManager">
@@ -747,7 +747,7 @@
 	</bean>
 	
 		
-	<!--  Clear the orpahened profiles -->
+	<!--  Clear the orpahened content -->
 	<bean id="checkOContent"
 		class="org.sakaiproject.component.app.scheduler.jobs.CleanOrphanedContent">
 		<property name="sessionManager">
@@ -757,6 +757,7 @@
 			ref="org.sakaiproject.content.api.ContentHostingService" />
 		<property name="sqlService" ref="org.sakaiproject.db.api.SqlService" />
 		<property name="doCleanUp" value="true"/>
+		<property name="siteService" ref="org.sakaiproject.site.api.SiteService"/>
 	</bean>
 	
 	
