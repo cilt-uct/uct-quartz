@@ -15,6 +15,8 @@ import org.sakaiproject.exception.InUseException;
 import org.sakaiproject.exception.PermissionException;
 import org.sakaiproject.exception.ServerOverloadException;
 import org.sakaiproject.exception.TypeException;
+import org.sakaiproject.site.api.Site;
+import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
 
@@ -37,6 +39,12 @@ public class CleanOrphanedContent implements Job {
 		this.contentHostingService = contentHostingService;
 	}
 	
+	
+	private SiteService siteService;	
+	public void setSiteService(SiteService siteService) {
+		this.siteService = siteService;
+	}
+
 	private Boolean doCleanUp;
 	public void setDoCleanUp(Boolean doCleanUp) {
 		this.doCleanUp = doCleanUp;
@@ -49,10 +57,21 @@ public class CleanOrphanedContent implements Job {
 	    Session sakaiSession = sessionManager.getCurrentSession();
 	    sakaiSession.setUserId(ADMIN);
 	    sakaiSession.setUserEid(ADMIN);
-		
-		String sql = "select collection_id as cuid from CONTENT_COLLECTION where in_collection='/user/' and (replace(mid(collection_id,7),'/','') not in (SELECT user_id from SAKAI_USER_ID_MAP));";
+
+		/** 
+		 * we may have orphaned sites
+		 */
+		String sql = "select site_id from SAKAI_SITE where site_id like '~%' and mid(site_id,2) not in (select user_id from SAKAI_USER)";
 		List<String> res = sqlService.dbRead(sql);
+		int orphanedSites = res.size();
+		cleanUpOrphanedSites(res);
+	    
+		sql = "select collection_id as cuid from CONTENT_COLLECTION where in_collection='/user/' and (replace(mid(collection_id,7),'/','') not in (SELECT user_id from SAKAI_USER_ID_MAP));";
+		res = sqlService.dbRead(sql);
 		long userBytes = getBytesInCollection(res);
+		
+
+		
 		
 		
 		sql = "select collection_id from CONTENT_COLLECTION where in_collection='/group/' and replace(mid(collection_id,7),'/','') not in (select site_id from SAKAI_SITE) and length(collection_id)=length('/group/ffdd45d6-9e1d-4328-8082-646472c8b325/'); ";
@@ -65,11 +84,29 @@ public class CleanOrphanedContent implements Job {
 		long attachBytes = getBytesInCollection(res);
 		*/
 		log.info("Orpahned content in user collections: " + userBytes);
-		//log.info("Orpahned content in attachment collections: " + attachBytes);
+		//log.info("Orphaned content in attachment collections: " + attachBytes);
 		log.info("Orpahned content in site collections: " + siteBytes);
+		log.info("Orphaned my workspace sites: " + orphanedSites);
 	}
 	
 	
+	private void cleanUpOrphanedSites(List<String> res) {
+		for (int i =0; i < res.size(); i++) {
+			String site_id = res.get(i);
+			try {
+				Site site = siteService.getSite(site_id);
+				siteService.removeSite(site);
+			} catch (IdUnusedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (PermissionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+	}
+
 	private long getBytesInCollection(List<String> collectionList) {
 		long userBytes = 0;
 		log.info("got a result of: " + collectionList.size());
