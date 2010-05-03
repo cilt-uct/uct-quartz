@@ -1,6 +1,7 @@
 package org.sakaiproject.component.app.scheduler.jobs;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -45,6 +46,11 @@ public class AddPageToMyWorkspace implements Job {
 	public void setToolId(String toolId) {
 		this.toolId = toolId;
 	}
+	
+	private Map<String, String> pageProperties;
+	public void setPageProperties(Map<String, String> pageProperties){
+		this.pageProperties = pageProperties;
+	}
 
 
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
@@ -59,7 +65,7 @@ public class AddPageToMyWorkspace implements Job {
 	    for (int i = 0; i < users.size(); i++) {
 	    	User u = (User) users.get(i);
 	    	
-	    	if (doUserType(u.getType()))
+	    	if (doUserType(u))
 	    		
 	    	try {
 				Site userSite = siteService.getSite(siteService.getUserSiteId(u.getId()));
@@ -69,11 +75,8 @@ public class AddPageToMyWorkspace implements Job {
 					page.setTitle(pageTitle);
 					siteService.save(userSite);
 					ToolConfiguration tool = page.addTool(toolId);
-					tool.setTitle(pageTitle);
-					/*
-				tool.getPlacementConfig().setProperty(
-						"source", "https://vula.uct.ac.za/web/learnonline/ekp/index.htm");
-					 */
+					tool.setTitle(pageTitle);					
+					placePageProperties(tool);					
 					siteService.save(userSite);
 				}
 				
@@ -103,12 +106,22 @@ public class AddPageToMyWorkspace implements Job {
 	}
 
 
-	private boolean doUserType(String type) {
-		//u.getType() != null && (u.getType().equals("student") || u.getType().equals("staff") || u.getType().equals("thirdparty"))
+	private boolean doUserType(User u) {
+		return u.getType() != null && (u.getType().equals("student") || u.getType().equals("staff"));
 		/*
-		 * for now do all users
+		 * for now do staff and students
 		 */
-		return true;
+		//return true;
+	}
+	
+	private void placePageProperties(ToolConfiguration tool){
+		if (pageProperties != null && pageProperties.size() > 0 ){
+			for (Map.Entry<String, String> property : pageProperties.entrySet()){
+				if(property.getKey() != null){
+					tool.getPlacementConfig().setProperty(property.getKey(), property.getValue());
+				}
+			}
+		}
 	}
 
 }

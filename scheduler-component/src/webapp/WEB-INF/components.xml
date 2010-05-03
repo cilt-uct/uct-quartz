@@ -326,8 +326,14 @@
 			<ref bean="org.sakaiproject.site.api.SiteService" />
 		</property>
 		<property name="userDirectoryService" ref="org.sakaiproject.user.api.UserDirectoryService"/>
-		<property name="toolId"><value>sakai.search</value></property>
-		<property name="pageTitle"><value>Search</value></property>
+		<property name="toolId"><value>sakai.iframe</value></property>
+		<property name="pageTitle"><value>Career Resources</value></property>
+		<property name="pageProperties">
+			<map>
+				<entry key="source" value="https://vula.uct.ac.za/access/content/group/3a1655f3-7b4f-48ca-bc0a-e8aba4dad747/web/index.html" />
+				<entry key="height" value="700px" />
+			</map>
+		</property>
 	</bean>
 
 	<bean
