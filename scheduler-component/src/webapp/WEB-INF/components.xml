@@ -810,7 +810,7 @@
 			<value>sendBdSms</value>
 		</property>
 		<property name="jobName">
-			<value>Send birthday Smss</value>
+			<value>Send birthday Sms</value>
 		</property>
 		<property name="schedulerManager">
 			<ref
@@ -818,7 +818,28 @@
 		</property>
 	</bean>
 	
+	<!-- Sakai 3 synch -->
+	<bean id="sakai3synch" class="za.ac.uct.cet.sakai.scheduler.sakai3.Sakai3UserSych">
+		<property name="sessionManager">
+			<ref bean="org.sakaiproject.tool.api.SessionManager" />
+		</property>
+		<property name="userDirectoryService">
+			<ref bean="org.sakaiproject.user.api.UserDirectoryService" />
+		</property>
+	</bean>
 	
+	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerSynch3akai"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		singleton="true" init-method="init">
+		<property name="beanId"><value>sakai3synch</value></property>
+		<property name="jobName">
+			<value>Synch Sakai 3 users</value>
+		</property>
+		<property name="schedulerManager">
+			<ref
+				bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+	</bean>
 	
 	
 </beans>
