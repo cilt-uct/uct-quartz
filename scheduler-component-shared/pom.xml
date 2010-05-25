@@ -16,9 +16,9 @@
 	</organization>
 	<inceptionYear>2003</inceptionYear>
 	<packaging>jar</packaging>
-	<!-- <properties>
-		<deploy.target>shared</deploy.target>
-	</properties> -->
+	<!--
+		<properties> <deploy.target>shared</deploy.target> </properties>
+	-->
 	<dependencies>
 		<dependency>
 			<groupId>quartz</groupId>
@@ -37,6 +37,11 @@
 		<dependency>
 			<groupId>org.sakaiproject.kernel</groupId>
 			<artifactId>sakai-kernel-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.sakaiproject.entitybroker</groupId>
+			<artifactId>entitybroker-utils</artifactId>
+
 		</dependency>
 		<dependency>
 			<groupId>org.sakaiproject</groupId>
@@ -92,20 +97,19 @@
 			<version>${sakai.hibernate.version}</version>
 			<scope>provided</scope>
 		</dependency>
-		<!-- <dependency>
-			<groupId>org.sakaiproject</groupId>
-			<artifactId>sakai-messageforums-api</artifactId>
-		</dependency>
- -->
+		<!--
+			<dependency> <groupId>org.sakaiproject</groupId>
+			<artifactId>sakai-messageforums-api</artifactId> </dependency>
+		-->
 		<dependency>
 			<groupId>openldap</groupId>
 			<artifactId>ldap</artifactId>
 			<version>2005.03.29</version>
 		</dependency>
 		<dependency>
-    	<groupId>org.sakaiproject.emailtemplateservice</groupId>
-    	<artifactId>emailtemplateservice-api</artifactId>
-    </dependency>
+			<groupId>org.sakaiproject.emailtemplateservice</groupId>
+			<artifactId>emailtemplateservice-api</artifactId>
+		</dependency>
 	</dependencies>
 	<build>
 		<resources>
