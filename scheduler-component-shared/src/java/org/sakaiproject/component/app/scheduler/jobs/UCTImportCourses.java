@@ -14,7 +14,6 @@ import org.apache.commons.logging.LogFactory;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-import org.sakaiproject.content.api.ContentHostingService;
 import org.sakaiproject.coursemanagement.api.CourseManagementAdministration;
 import org.sakaiproject.coursemanagement.api.CourseManagementService;
 import org.sakaiproject.coursemanagement.api.CourseOffering;
@@ -42,11 +41,6 @@ public class UCTImportCourses implements Job {
 	
 	public void setCourseManagementAdministration(CourseManagementAdministration cs) {
 		courseAdmin = cs;
-	}
-	
-	private ContentHostingService contentHostingService;
-	public void setContentHostingService(ContentHostingService chs) {
-		contentHostingService = chs;
 	}
 	
 	private String filePath;
