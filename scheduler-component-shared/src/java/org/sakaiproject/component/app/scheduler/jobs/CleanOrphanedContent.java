@@ -167,7 +167,7 @@ public class CleanOrphanedContent implements Job {
 		}
 		else if(size_long > 700000L)
 		{
-			String[] args = {  };
+			
 			size = formatter.format(1.0 * size_long / (1024L * 1024L)) + "Mb";
 
 		}
