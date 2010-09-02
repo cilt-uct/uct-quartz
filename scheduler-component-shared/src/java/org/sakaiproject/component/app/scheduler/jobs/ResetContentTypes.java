@@ -84,14 +84,14 @@ public class ResetContentTypes implements Job {
 	    Session sakaiSession = sessionManager.getCurrentSession();
 	    sakaiSession.setUserId("admin");
 	    sakaiSession.setUserEid("admin");
-	    List sites = siteService.getSites(SiteService.SelectionType.ANY, null , null, null, SortType.NONE, null);
+	    List<Site> sites = siteService.getSites(SiteService.SelectionType.ANY, null , null, null, SortType.NONE, null);
 	    for (int i =0 ; i< sites.size(); i++ ) {
 	    	Site s = (Site)sites.get(i);
 	    	String siteColl = contentHostingService.getSiteCollection(s.getId());
 	    	ContentCollection collection;
 			try {
 				collection = contentHostingService.getCollection(siteColl);
-		    	List members = collection.getMembers();
+		    	List<String> members = collection.getMembers();
 		    	for (int q =0; q < members.size(); q++) {
 		    		String resId = (String)members.get(q);
 		    		log.debug("got resource " + resId);
