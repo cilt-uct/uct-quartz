@@ -100,7 +100,9 @@ public class VirusScanContent implements Job {
 		    		String resId = (String)members.get(q);
 		    		log.debug("got resource " + resId);
 		    		try {
-		    		virusScanner.scanContent(resId);
+		    			if (!contentHostingService.isCollection(resId)) {
+		    				virusScanner.scanContent(resId);
+		    			}
 		    		}
 		    		catch (VirusFoundException e) {
 						//we have a virus!
