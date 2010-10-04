@@ -89,8 +89,12 @@ public class VirusScanContent implements Job {
 			Object obj = threadLocalManager.get("SakaiSecurity.advisor.stack");
 			threadLocalManager.clear();
 			threadLocalManager.set("SakaiSecurity.advisor.stack", obj);
-	    	
-	    	Site s = (Site)sites.get(i);
+			sakaiSession = sessionManager.getCurrentSession();
+			sakaiSession.setUserId("admin");
+			sakaiSession.setUserEid("admin");
+
+
+			Site s = (Site)sites.get(i);
 	    	String siteColl = contentHostingService.getSiteCollection(s.getId());
 	    	ContentCollection collection;
 			try {
