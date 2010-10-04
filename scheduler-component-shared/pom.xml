@@ -21,14 +21,14 @@
 	-->
 	<dependencies>
 		<dependency>
-			<groupId>quartz</groupId>
+			<groupId>org.opensymphony.quartz</groupId>
 			<artifactId>quartz</artifactId>
-			<version>1.5.2</version>
-			<!--properties:  deploy.target: shared -->
+			<version>1.6.6</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.sakaiproject</groupId>
-			<artifactId>sakai-scheduler-api</artifactId>
+			<groupId>org.sakaiproject.scheduler</groupId>
+			<artifactId>scheduler-api</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.sakaiproject.kernel</groupId>
@@ -62,21 +62,24 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.sakaiproject</groupId>
-			<artifactId>sakai-contentreview-service-api</artifactId>
+			<groupId>org.sakaiproject.contentreview</groupId>
+			<artifactId>contentreview-service-api</artifactId>
+			<version>2.8.1</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.sakaiproject</groupId>
-			<artifactId>sakai-coursemanagement-api</artifactId>
+			<groupId>org.sakaiproject.contentreview</groupId>
+			<artifactId>contentreview-model-api</artifactId>
+			<version>2.8.1</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.sakaiproject.edu-services.course-management</groupId>
+			<artifactId>coursemanagement-api</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>commons-logging</groupId>
 			<artifactId>commons-logging</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>commons-dbcp</groupId>
-			<artifactId>commons-dbcp</artifactId>
-			<version>1.2.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.sakaiproject.common</groupId>
@@ -84,11 +87,11 @@
 			<version>1.0.1</version>
 		</dependency>
 		<dependency>
-			<groupId>org.sakaiproject</groupId>
+			<groupId>org.sakaiproject.common</groupId>
 			<artifactId>sakai-common-type-api</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.sakaiproject</groupId>
+			<groupId>org.sakaiproject.common</groupId>
 			<artifactId>sakai-common-manager-api</artifactId>
 		</dependency>
 		<dependency>
