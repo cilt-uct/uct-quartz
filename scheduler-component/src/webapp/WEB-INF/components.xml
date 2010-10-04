@@ -565,7 +565,7 @@
 		</property>
 		<property name="virusScanner" ref="org.sakaiproject.antivirus.api.VirusScanner"/>
 		<property name="threadLocalManager" ref="org.sakaiproject.thread_local.api.ThreadLocalManager"/>
-		<property name="emailService" name="org.sakaiproject.email.api.EmailService"/>
+		<property name="emailService" ref="org.sakaiproject.email.api.EmailService"/>
 		
 
 		
