@@ -835,7 +835,7 @@
 	
 	
 	<!--  Send BirthdaySms -->
-	<bean id="sendBdSms"
+	<!-- <bean id="sendBdSms"
 		class="za.ac.uct.cet.sakai.scheduler.sms.SmsBirthdayMessage">
 		<property name="sessionManager">
 			<ref bean="org.sakaiproject.tool.api.SessionManager" />
@@ -865,6 +865,6 @@
 		</property>
 		<property name="restUrl"><value>https//mocha.cet.uct.ac.za</value></property>
 	</bean>
-	
+ -->	
 	
 </beans>
