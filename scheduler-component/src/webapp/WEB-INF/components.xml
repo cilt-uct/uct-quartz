@@ -564,19 +564,10 @@
 				bean="org.sakaiproject.content.api.ContentHostingService" />
 		</property>
 		<property name="virusScanner" ref="org.sakaiproject.antivirus.api.VirusScanner"/>
+		<property name="threadLocalManager" ref="org.sakaiproject.thread_local.api.ThreadLocalManager"/>
+		<property name="emailService" name="org.sakaiproject.email.api.EmailService"/>
 		
-		<property name="extensions">
-			<map>
-				<entry key="docx"><value>application/vnd.openxmlformats-officedocument.wordprocessingml.document</value></entry>
-				</map>
-		</property>
-		<property name="forceTypes">
-			<list>
-				<value>doc</value>
-				<value>odt</value>
-				<value>rtf</value>
-			</list>
-		</property>
+
 		
 	</bean>
 
