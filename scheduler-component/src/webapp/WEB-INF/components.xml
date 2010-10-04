@@ -550,6 +550,53 @@
 		</property>
 	</bean>
 	
+	<!--  Scan content for viruses -->
+	<bean id="scanForViruses"
+		class="org.sakaiproject.component.app.scheduler.jobs.VirusScanContent">
+		<property name="sessionManager">
+			<ref bean="org.sakaiproject.tool.api.SessionManager" />
+		</property>
+		<property name="siteService">
+			<ref bean="org.sakaiproject.site.api.SiteService" />
+		</property>
+		<property name="contentHostingService">
+			<ref
+				bean="org.sakaiproject.content.api.ContentHostingService" />
+		</property>
+		<property name="virusScanner" ref="org.sakaiproject.antivirus.api.VirusScanner"/>
+		
+		<property name="extensions">
+			<map>
+				<entry key="docx"><value>application/vnd.openxmlformats-officedocument.wordprocessingml.document</value></entry>
+				</map>
+		</property>
+		<property name="forceTypes">
+			<list>
+				<value>doc</value>
+				<value>odt</value>
+				<value>rtf</value>
+			</list>
+		</property>
+		
+	</bean>
+
+	<bean
+		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerScanForViruses"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		singleton="true" init-method="init">
+		<property name="beanId">
+			<value>scanForViruses</value>
+		</property>
+		<property name="jobName">
+			<value>Scan Content for Viruses</value>
+		</property>
+		<property name="schedulerManager">
+			<ref
+				bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+	</bean>
+	
+	
 <!-- Check joinable Sites -->
 	<bean id="checkJoinableSites"
 	class="org.sakaiproject.component.app.scheduler.jobs.JoinableSiteJob">

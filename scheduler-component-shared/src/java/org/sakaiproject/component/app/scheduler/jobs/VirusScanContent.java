@@ -13,14 +13,12 @@ import org.apache.commons.logging.LogFactory;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import org.sakaiproject.antivirus.api.VirusFoundException;
+import org.sakaiproject.antivirus.api.VirusScanner;
 import org.sakaiproject.content.api.ContentCollection;
 import org.sakaiproject.content.api.ContentHostingService;
-import org.sakaiproject.content.api.ContentResourceEdit;
 import org.sakaiproject.exception.IdUnusedException;
-import org.sakaiproject.exception.InUseException;
-import org.sakaiproject.exception.OverQuotaException;
 import org.sakaiproject.exception.PermissionException;
-import org.sakaiproject.exception.ServerOverloadException;
 import org.sakaiproject.exception.TypeException;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SiteService;
@@ -31,7 +29,7 @@ import org.sakaiproject.tool.api.SessionManager;
 
 
 
-public class ResetContentTypes implements Job {
+public class VirusScanContent implements Job {
 
 	private SiteService siteService;
 	public void setSiteService(SiteService s) {
@@ -60,7 +58,13 @@ public class ResetContentTypes implements Job {
 		this.forceTypes = forceTypes;
 	}
 
-	private static final Log log = LogFactory.getLog(ResetContentTypes.class);
+	
+	 private VirusScanner virusScanner;	
+	public void setVirusScanner(VirusScanner virusScanner) {
+		this.virusScanner = virusScanner;
+	}
+
+	private static final Log log = LogFactory.getLog(VirusScanContent.class);
 	
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		//set the user information into the current session
@@ -79,7 +83,7 @@ public class ResetContentTypes implements Job {
 		for (int i = 0; i < forceTypes.size(); i++ ) {
 			log.info("force reindexing for " + forceTypes.get(i));
 		}
-		
+		StringBuilder sb = new StringBuilder();
 	    Session sakaiSession = sessionManager.getCurrentSession();
 	    sakaiSession.setUserId("admin");
 	    sakaiSession.setUserEid("admin");
@@ -94,17 +98,14 @@ public class ResetContentTypes implements Job {
 		    	for (int q =0; q < members.size(); q++) {
 		    		String resId = (String)members.get(q);
 		    		log.debug("got resource " + resId);
-		    		if (reset(resId)) {
-		    			ContentResourceEdit res = contentHostingService.editResource(resId);
-		    			String oldType = res.getContentType();
-		    			if ((!oldType.equals(getContentType(resId)) || forceTypes.contains(getExtension(resId))) && !"text/url".equals(oldType)) {
-		    				log.info("content:"  + resId  +" had type: " + res.getContentType());
-		    				res.setContentType(getContentType(resId));
-		    				contentHostingService.commitResource(res, 0);
-		    			} else {
-		    				contentHostingService.cancelResource(res);
-		    			}
+		    		try {
+		    		virusScanner.scanContent(resId);
 		    		}
+		    		catch (VirusFoundException e) {
+						//we have a virus!
+		    			sb.append(resId +": " + e.getMessage() + "\n");
+					}
+		    		
 		    	}
 			} catch (IdUnusedException e) {
 				// TODO Auto-generated catch block
@@ -115,43 +116,14 @@ public class ResetContentTypes implements Job {
 			} catch (PermissionException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			} catch (InUseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (OverQuotaException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ServerOverloadException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			} 
 
 	    }
+	    
+	    log.info("virii found : " + sb.toString());
 
-	}
-
-	private String getContentType(String resId) {
-		return extensions.get(getExtension(resId));
 	}
 
 	
-	private boolean reset(String resId) {
-		String extension = getExtension(resId);
-		if (extensions.containsKey(extension)) {
-			return true;
-		}
-		log.debug("we don't change " + extension);
-		return false;
-	}
-
-	private String getExtension(String resId) {
-		String extension = null;
-		if (resId.indexOf(".") > 0 ) {
-			extension = resId.substring(resId.lastIndexOf(".") + 1, resId.length());
-			log.debug("got extension: " + extension);
-		}
-			
-		return extension;
-	}
-
+	
 }
