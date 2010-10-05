@@ -1,12 +1,6 @@
 package org.sakaiproject.component.app.scheduler.jobs;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Map.Entry;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -82,6 +76,7 @@ public class VirusScanContent implements Job {
 	    sakaiSession.setUserId("admin");
 	    sakaiSession.setUserEid("admin");
 	    List<Site> sites = siteService.getSites(SiteService.SelectionType.ANY, null , null, null, SortType.NONE, null);
+	    long count = 0;
 	    for (int i =0 ; i< sites.size(); i++ ) {
 	    	
 			//SAK-17117 before we do this clear threadLocal
@@ -106,6 +101,7 @@ public class VirusScanContent implements Job {
 		    		try {
 		    			if (!contentHostingService.isCollection(resId)) {
 		    				virusScanner.scanContent(resId);
+		    				count++;
 		    			}
 		    		}
 		    		catch (VirusFoundException e) {
@@ -126,7 +122,7 @@ public class VirusScanContent implements Job {
 			} 
 
 	    }
-	    
+	    log.info("scanned: _" + count + " items");
 	    log.info("virii found : " + sb.toString());
 	    emailService.send("help@vula.uct.ac.za", "help-team@vula.uct.ac.za", "virusScan results", sb.toString(), null, null, null);
 	    
