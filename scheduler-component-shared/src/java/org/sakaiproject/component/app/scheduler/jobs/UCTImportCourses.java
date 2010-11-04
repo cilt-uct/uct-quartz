@@ -52,7 +52,6 @@ public class UCTImportCourses implements Job {
 	}
 
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
-		// TODO Auto-generated method stub
 		// set the user information into the current session
 		Session sakaiSession = sessionManager.getCurrentSession();
 		sakaiSession.setUserId(ADMIN);
@@ -85,7 +84,7 @@ public class UCTImportCourses implements Job {
 				if (record.equals(""))
 					continue;
 				String[] data = record.split(",");
-				this.createCourse(data[7] + data[8], term, data[10], data[7]);
+				this.createCourse(data[7] + data[8], term, data[10], data[7], null, null);
 			} 
 			
 			
@@ -116,23 +115,28 @@ public class UCTImportCourses implements Job {
 	}
 
 
-	private void createCourse(String courseCode, String term, String descr, String setId) {
+	private void createCourse(String courseCode, String term, String descr, String setId, Date startDate, Date endDate) {
 		LOG.info("createCourse(" + courseCode + "," + term + "," + descr + "," + setId );
 
 			String setCategory = "Department";
 			String courseEid = courseCode +","+term;
 
 			Calendar cal = Calendar.getInstance();
-			cal.set(Calendar.YEAR, new Integer(term).intValue());
-			cal.set(Calendar.MONTH, Calendar.JANUARY);
-			cal.set(Calendar.DAY_OF_MONTH, 1);
-			Date startDate = cal.getTime();
+			if (startDate == null) {
+				cal.set(Calendar.YEAR, new Integer(term).intValue());
+				cal.set(Calendar.MONTH, Calendar.JANUARY);
+				cal.set(Calendar.DAY_OF_MONTH, 1);
+				startDate = cal.getTime();
+			}
 
 
 			cal.set(Calendar.MONTH, Calendar.DECEMBER);
 			cal.set(Calendar.DAY_OF_MONTH, 31);
-
 			Date yearEnd = cal.getTime();
+			
+			if (endDate == null) {
+				endDate = cal.getTime();
+			}
 
 			//does the academic session exist
 			if (!courseManagementService.isAcademicSessionDefined(term))
@@ -149,13 +153,15 @@ public class UCTImportCourses implements Job {
 
 			if (!courseManagementService.isCourseOfferingDefined(courseEid)) {
 				LOG.info("creating course offering for " + courseCode + " in year " + term);
-				courseAdmin.createCourseOffering(courseEid, courseCode + " - " + descr, courseEid + " - " + descr, "active", term, courseCode, startDate, yearEnd);
+				courseAdmin.createCourseOffering(courseEid, courseCode + " - " + descr, courseEid + " - " + descr, "active", term, courseCode, startDate, endDate);
 
 			} else {
 				//update the name
 				CourseOffering co = courseManagementService.getCourseOffering(courseEid);
 				co.setTitle(courseEid + " - " + descr);
 				co.setDescription(courseCode + " - " + descr);
+				co.setStartDate(startDate);
+				co.setEndDate(endDate);
 				courseAdmin.updateCourseOffering(co);
 
 			}
