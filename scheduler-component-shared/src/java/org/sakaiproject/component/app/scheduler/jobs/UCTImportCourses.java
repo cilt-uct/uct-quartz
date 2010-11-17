@@ -56,11 +56,11 @@ public class UCTImportCourses implements Job {
 
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		///data/sakai/import/2010_courses.csv
-		
+
 		importFile(filePath + "2010_courses.csv", "2010");
 		importFile(filePath + "2011_courses.csv", "2011");
 	}
-	
+
 	private void importFile(String file, String session) {
 		// set the user information into the current session
 		Session sakaiSession = sessionManager.getCurrentSession();
@@ -97,11 +97,11 @@ public class UCTImportCourses implements Job {
 				//date is in 11, 12
 				Date startDate = parseDate(data[11]);
 				Date endDate = parseDate(data[12]);
-				
+
 				this.createCourse(data[7] + data[8], session, data[10], data[7], startDate, endDate);
 			} 
-			
-			
+
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -139,79 +139,84 @@ public class UCTImportCourses implements Job {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return ret;
 	}
 
 	private void createCourse(String courseCode, String term, String descr, String setId, Date startDate, Date endDate) {
 		LOG.info("createCourse(" + courseCode + "," + term + "," + descr + "," + setId );
 
-			String setCategory = "Department";
-			String courseEid = courseCode +","+term;
+		//if this is a EWA or SUP course ignore
+		if (courseCode.lastIndexOf("SUP") == 8 ||courseCode.lastIndexOf("EWA") == 8) {
+			LOG.warn("we won't import " + courseCode + "as it is a SUP or EWA course");
+		}
 
-			Calendar cal = Calendar.getInstance();
-			if (startDate == null) {
-				cal.set(Calendar.YEAR, new Integer(term).intValue());
-				cal.set(Calendar.MONTH, Calendar.JANUARY);
-				cal.set(Calendar.DAY_OF_MONTH, 1);
-				startDate = cal.getTime();
-			}
+		String setCategory = "Department";
+		String courseEid = courseCode +","+term;
 
-
-			cal.set(Calendar.MONTH, Calendar.DECEMBER);
-			cal.set(Calendar.DAY_OF_MONTH, 31);
-			Date yearEnd = cal.getTime();
-			
-			if (endDate == null) {
-				endDate = cal.getTime();
-			}
-
-			//does the academic session exist
-			if (!courseManagementService.isAcademicSessionDefined(term))
-				courseAdmin.createAcademicSession(term, term,term + " academic year", new Date(), yearEnd);
-
-			//does the course set exist?
-			if (!courseManagementService.isCourseSetDefined(setId)) 
-				courseAdmin.createCourseSet(setId, setId, setId, setCategory, null);
-
-			if (!courseManagementService.isCanonicalCourseDefined(courseCode)) {
-				courseAdmin.createCanonicalCourse(courseCode, courseCode, descr);
-				courseAdmin.addCanonicalCourseToCourseSet(setId, courseCode);
-			}
-
-			if (!courseManagementService.isCourseOfferingDefined(courseEid)) {
-				LOG.info("creating course offering for " + courseCode + " in year " + term);
-				courseAdmin.createCourseOffering(courseEid, courseCode + " - " + descr, courseEid + " - " + descr, "active", term, courseCode, startDate, endDate);
-
-			} else {
-				//update the name
-				CourseOffering co = courseManagementService.getCourseOffering(courseEid);
-				co.setTitle(courseEid + " - " + descr);
-				co.setDescription(courseCode + " - " + descr);
-				co.setStartDate(startDate);
-				co.setEndDate(endDate);
-				courseAdmin.updateCourseOffering(co);
-
-			}
+		Calendar cal = Calendar.getInstance();
+		if (startDate == null) {
+			cal.set(Calendar.YEAR, new Integer(term).intValue());
+			cal.set(Calendar.MONTH, Calendar.JANUARY);
+			cal.set(Calendar.DAY_OF_MONTH, 1);
+			startDate = cal.getTime();
+		}
 
 
-			courseAdmin.addCourseOfferingToCourseSet(setId, courseEid);		 
+		cal.set(Calendar.MONTH, Calendar.DECEMBER);
+		cal.set(Calendar.DAY_OF_MONTH, 31);
+		Date yearEnd = cal.getTime();
 
-			EnrollmentSet enrolmentSet = null; 
-			if (! courseManagementService.isEnrollmentSetDefined(courseEid))
-				enrolmentSet = courseAdmin.createEnrollmentSet(courseEid, descr, descr, "category", "defaultEnrollmentCredits", courseEid, null);
-			else
-				enrolmentSet = courseManagementService.getEnrollmentSet(courseEid);
+		if (endDate == null) {
+			endDate = cal.getTime();
+		}
 
-			if(! courseManagementService.isSectionDefined(courseEid)) {
-				courseAdmin.createSection(courseEid, courseEid, descr, "course", null, courseEid, enrolmentSet.getEid());
-			} else {
-				Section section = courseManagementService.getSection(courseEid);
-				section.setEnrollmentSet(enrolmentSet);
-				section.setCategory("course");
-			}
+		//does the academic session exist
+		if (!courseManagementService.isAcademicSessionDefined(term))
+			courseAdmin.createAcademicSession(term, term,term + " academic year", new Date(), yearEnd);
 
-	
+		//does the course set exist?
+		if (!courseManagementService.isCourseSetDefined(setId)) 
+			courseAdmin.createCourseSet(setId, setId, setId, setCategory, null);
+
+		if (!courseManagementService.isCanonicalCourseDefined(courseCode)) {
+			courseAdmin.createCanonicalCourse(courseCode, courseCode, descr);
+			courseAdmin.addCanonicalCourseToCourseSet(setId, courseCode);
+		}
+
+		if (!courseManagementService.isCourseOfferingDefined(courseEid)) {
+			LOG.info("creating course offering for " + courseCode + " in year " + term);
+			courseAdmin.createCourseOffering(courseEid, courseCode + " - " + descr, courseEid + " - " + descr, "active", term, courseCode, startDate, endDate);
+
+		} else {
+			//update the name
+			CourseOffering co = courseManagementService.getCourseOffering(courseEid);
+			co.setTitle(courseEid + " - " + descr);
+			co.setDescription(courseCode + " - " + descr);
+			co.setStartDate(startDate);
+			co.setEndDate(endDate);
+			courseAdmin.updateCourseOffering(co);
+
+		}
+
+
+		courseAdmin.addCourseOfferingToCourseSet(setId, courseEid);		 
+
+		EnrollmentSet enrolmentSet = null; 
+		if (! courseManagementService.isEnrollmentSetDefined(courseEid))
+			enrolmentSet = courseAdmin.createEnrollmentSet(courseEid, descr, descr, "category", "defaultEnrollmentCredits", courseEid, null);
+		else
+			enrolmentSet = courseManagementService.getEnrollmentSet(courseEid);
+
+		if(! courseManagementService.isSectionDefined(courseEid)) {
+			courseAdmin.createSection(courseEid, courseEid, descr, "course", null, courseEid, enrolmentSet.getEid());
+		} else {
+			Section section = courseManagementService.getSection(courseEid);
+			section.setEnrollmentSet(enrolmentSet);
+			section.setCategory("course");
+		}
+
+
 	}
 
 }
