@@ -23,6 +23,8 @@ import org.sakaiproject.coursemanagement.api.Section;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
 
+import au.com.bytecode.opencsv.CSVReader;
+
 public class UCTImportCourses implements Job {
 	private static final Log log = LogFactory.getLog(UCTImportCourses.class);
 
@@ -67,7 +69,7 @@ public class UCTImportCourses implements Job {
 		sakaiSession.setUserId(ADMIN);
 		sakaiSession.setUserEid(ADMIN);
 		FileReader fr = null;
-		BufferedReader br = null;
+		CSVReader br = null;
 		try {
 			log.info("opening: " + file);
 			fr = new FileReader(file);
@@ -81,19 +83,14 @@ public class UCTImportCourses implements Job {
 		}
 
 		try {
-			br = new BufferedReader(fr);
-			String record = null;  
-			while ( (record=br.readLine()) != null) { 
+			br = new CSVReader(fr);
+			String[] data;  
+			while ( (data = br.readNext()) != null) { 
 				/*
 				 * this should be a record of the format:
 				 * Course ID	Offer Nbr	Term	Session	Sect	Institution	Acad Group	Subject	Catalog	Career	Descr	Class Nbr	Component
 
 				 */
-				log.debug("got line: " + record);
-				record = record.trim();
-				if (record.equals(""))
-					continue;
-				String[] data = record.split(",");
 				//date is in 11, 12
 				Date startDate = parseDate(data[13]);
 				Date endDate = parseDate(data[14]);
