@@ -4,6 +4,9 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -52,6 +55,13 @@ public class UCTImportCourses implements Job {
 	}
 
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
+		///data/sakai/import/2010_courses.csv
+		
+		importFile(filePath + "2010_courses.csv");
+		importFile(filePath + "2011_courses.csv");
+	}
+	
+	private void importFile(String file) {
 		// set the user information into the current session
 		Session sakaiSession = sessionManager.getCurrentSession();
 		sakaiSession.setUserId(ADMIN);
@@ -59,8 +69,8 @@ public class UCTImportCourses implements Job {
 		FileReader fr = null;
 		BufferedReader br = null;
 		try {
-			log.info("opening: " + filePath);
-			fr = new FileReader(filePath);
+			log.info("opening: " + file);
+			fr = new FileReader(file);
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -84,7 +94,11 @@ public class UCTImportCourses implements Job {
 				if (record.equals(""))
 					continue;
 				String[] data = record.split(",");
-				this.createCourse(data[7] + data[8], term, data[10], data[7], null, null);
+				//date is in 11, 12
+				Date startDate = parseDate(data[11]);
+				Date endDate = parseDate(data[12]);
+				
+				this.createCourse(data[7] + data[8], term, data[10], data[7], startDate, endDate);
 			} 
 			
 			
@@ -114,6 +128,20 @@ public class UCTImportCourses implements Job {
 
 	}
 
+
+	private Date parseDate(String string) {
+		//format is 7/25/2011
+		DateFormat df = new SimpleDateFormat("M/d/y");
+		Date ret = null;
+		try {
+			ret = df.parse(string);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return ret;
+	}
 
 	private void createCourse(String courseCode, String term, String descr, String setId, Date startDate, Date endDate) {
 		LOG.info("createCourse(" + courseCode + "," + term + "," + descr + "," + setId );

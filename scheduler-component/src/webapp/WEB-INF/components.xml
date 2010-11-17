@@ -227,7 +227,7 @@
 			<value>2010</value>
 		</property>
 		<property name="filePath">
-			<value>/data/sakai/import/2010_courses.csv</value>
+			<value>/data/sakai/import/</value>
 		</property>
 	</bean>
 
