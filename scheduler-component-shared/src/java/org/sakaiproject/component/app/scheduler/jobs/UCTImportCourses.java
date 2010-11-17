@@ -95,8 +95,8 @@ public class UCTImportCourses implements Job {
 					continue;
 				String[] data = record.split(",");
 				//date is in 11, 12
-				Date startDate = parseDate(data[11]);
-				Date endDate = parseDate(data[12]);
+				Date startDate = parseDate(data[13]);
+				Date endDate = parseDate(data[14]);
 
 				this.createCourse(data[7] + data[8], session, data[10], data[7], startDate, endDate);
 			} 
