@@ -57,11 +57,11 @@ public class UCTImportCourses implements Job {
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		///data/sakai/import/2010_courses.csv
 		
-		importFile(filePath + "2010_courses.csv");
-		importFile(filePath + "2011_courses.csv");
+		importFile(filePath + "2010_courses.csv", "2010");
+		importFile(filePath + "2011_courses.csv", "2011");
 	}
 	
-	private void importFile(String file) {
+	private void importFile(String file, String session) {
 		// set the user information into the current session
 		Session sakaiSession = sessionManager.getCurrentSession();
 		sakaiSession.setUserId(ADMIN);
@@ -98,7 +98,7 @@ public class UCTImportCourses implements Job {
 				Date startDate = parseDate(data[11]);
 				Date endDate = parseDate(data[12]);
 				
-				this.createCourse(data[7] + data[8], term, data[10], data[7], startDate, endDate);
+				this.createCourse(data[7] + data[8], session, data[10], data[7], startDate, endDate);
 			} 
 			
 			
