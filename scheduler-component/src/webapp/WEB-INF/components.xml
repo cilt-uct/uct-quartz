@@ -247,6 +247,42 @@
 		</property>
 	</bean>
 	
+	
+	<!-- Synch Research courses-->
+	<bean id="synchResearchCourses"
+		class="oza.ac.uct.cet.sakai.scheduler.courses.SynchResearchCourses">
+		<property name="sessionManager">
+			<ref bean="org.sakaiproject.tool.api.SessionManager" />
+		</property>
+		<property name="courseManagementService">
+			<ref
+				bean="org.sakaiproject.coursemanagement.api.CourseManagementService" />
+		</property>
+		<property name="courseManagementAdministration">
+			<ref
+				bean="org.sakaiproject.coursemanagement.api.CourseManagementAdministration" />
+		</property>
+		<property name="sqlService" ref="org.sakaiproject.db.api.SqlService"/>
+		
+	</bean>
+
+	<bean
+		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerImportCourses"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		singleton="true" init-method="init">
+		<property name="beanId">
+			<value>importCourses</value>
+		</property>
+		<property name="jobName">
+			<value>Import New Course Data</value>
+		</property>
+		<property name="schedulerManager">
+			<ref
+				bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+	</bean>
+	
+	
 	<bean id="cleanUpCourses"
 		class="org.sakaiproject.component.app.scheduler.jobs.CleanUpCmData">
 		<property name="sessionManager">
