@@ -12,6 +12,7 @@ import org.quartz.JobExecutionException;
 import org.sakaiproject.coursemanagement.api.CourseManagementAdministration;
 import org.sakaiproject.coursemanagement.api.CourseManagementService;
 import org.sakaiproject.coursemanagement.api.Membership;
+import org.sakaiproject.coursemanagement.api.exception.IdNotFoundException;
 import org.sakaiproject.db.api.SqlService;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
@@ -59,8 +60,14 @@ public class SynchResearchCourses implements Job {
 			String nextCourseEid = courseEid.replace(",2010", ",2011");
 			LOG.info("going to add " + members.size() + " members to " + nextCourseEid + " from " + courseEid);
 			while (mit.hasNext()) {
-			Membership membership = mit.next();
-			courseAdmin.addOrUpdateSectionMembership(membership.getUserId(), membership.getRole(), nextCourseEid, membership.getRole());
+				Membership membership = mit.next();
+				try {
+				courseAdmin.addOrUpdateSectionMembership(membership.getUserId(), membership.getRole(), nextCourseEid, membership.getRole());
+				}
+				catch (IdNotFoundException e) {
+					LOG.warn("could not find course: " + nextCourseEid);
+					//TODO should we clear the course?
+				}
 			}
 		}
 		
