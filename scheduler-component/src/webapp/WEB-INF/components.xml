@@ -267,14 +267,14 @@
 	</bean>
 
 	<bean
-		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerImportCourses"
+		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerSynchresearchCourses"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
 		singleton="true" init-method="init">
 		<property name="beanId">
-			<value>importCourses</value>
+			<value>synchResearchCourses</value>
 		</property>
 		<property name="jobName">
-			<value>Import New Course Data</value>
+			<value>Synch Research courses</value>
 		</property>
 		<property name="schedulerManager">
 			<ref
