@@ -250,7 +250,7 @@
 	
 	<!-- Synch Research courses-->
 	<bean id="synchResearchCourses"
-		class="oza.ac.uct.cet.sakai.scheduler.courses.SynchResearchCourses">
+		class="za.ac.uct.cet.sakai.scheduler.courses.SynchResearchCourses">
 		<property name="sessionManager">
 			<ref bean="org.sakaiproject.tool.api.SessionManager" />
 		</property>
