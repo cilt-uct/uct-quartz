@@ -74,8 +74,11 @@ public class UCTSaveRealms implements StatefulJob {
 				LOG.debug("site is in term: " + term);
 				if (currentTerms.contains(term)) {
 					try {
-					AuthzGroup group = authzGroupService.getAuthzGroup("/site/" + s.getId());
-					authzGroupService.save(group);
+						AuthzGroup group = authzGroupService.getAuthzGroup("/site/" + s.getId());
+						//we only need to save if there is a provider set
+						if (group.getProviderGroupId() != null && group.getProviderGroupId().length() > 0) {
+							authzGroupService.save(group);
+						}
 					}
 					catch(Exception e) {
 						e.printStackTrace();
