@@ -858,6 +858,33 @@
 		</property>
 	</bean>
 	
+		<!--  Update the custom title flags -->
+	<bean id="setCustomTitleFlag"
+		class="org.sakaiproject.component.app.scheduler.jobs.UpdateCustomPages">
+		<property name="sessionManager">
+			<ref bean="org.sakaiproject.tool.api.SessionManager" />
+		</property>
+		<property name="siteService" ref="org.sakaiproject.site.api.SiteService"/>
+		<property name="serverConfugurationService" ref="org.sakaiproject.component.api.ServerConfigurationService"/>
+	</bean>
+	
+	
+
+	<bean
+		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerSetCustomTitleFlags"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		singleton="true" init-method="init">
+		<property name="beanId">
+			<value>setCustomTitleFlags</value>
+		</property>
+		<property name="jobName">
+			<value>set Custom Page Title Flags</value>
+		</property>
+		<property name="schedulerManager">
+			<ref
+				bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+	</bean>
 	
 	
 	
