@@ -8,6 +8,8 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.sakaiproject.component.api.ServerConfigurationService;
+import org.sakaiproject.entity.api.EntityPropertyNotDefinedException;
+import org.sakaiproject.entity.api.EntityPropertyTypeException;
 import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.exception.PermissionException;
@@ -18,6 +20,8 @@ import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.site.api.SiteService.SelectionType;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
+
+import com.sun.org.apache.bcel.internal.generic.SIPUSH;
 
 public class UpdateCustomPages implements Job {
 
@@ -106,8 +110,21 @@ public class UpdateCustomPages implements Job {
 	 **/	 
 	private boolean getTitleCustomLegacy(SitePage page, String m_title)
 	{
-		if ( ! serverConfigurationService.getBoolean("legacyPageTitleCustom", true) )
+		//
+		boolean is_home = false;
+		try {
+			is_home = page.getProperties().getBooleanProperty(SitePage.IS_HOME_PAGE);
+		} catch (EntityPropertyNotDefinedException e) {
+			// we excect a lot of these
+		} catch (EntityPropertyTypeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		if (is_home) {
 			return false;
+		}
+		
 
 		// Get the toolId of the first tool associated with this page
 		String toolId = page.getTools().get(0).getToolId();
