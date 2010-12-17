@@ -875,7 +875,7 @@
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
 		singleton="true" init-method="init">
 		<property name="beanId">
-			<value>setCustomTitleFlags</value>
+			<value>setCustomTitleFlag</value>
 		</property>
 		<property name="jobName">
 			<value>set Custom Page Title Flags</value>
