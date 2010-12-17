@@ -15,6 +15,7 @@ import org.sakaiproject.javax.PagingPosition;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SitePage;
 import org.sakaiproject.site.api.SiteService;
+import org.sakaiproject.site.api.SiteService.SelectionType;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
 
@@ -54,7 +55,7 @@ public class UpdateCustomPages implements Job {
 		boolean doAnother = true;
 		while (doAnother) {
 
-			List<Site> sites = siteService.getSites(null ,null, null, null, null, new PagingPosition(first, last));
+			List<Site> sites = siteService.getSites(SelectionType.ANY ,null, null, null, null, new PagingPosition(first, last));
 			for (int i = 0; i < sites.size(); i++) {
 				boolean modified = false;
 				Site site = sites.get(i);
