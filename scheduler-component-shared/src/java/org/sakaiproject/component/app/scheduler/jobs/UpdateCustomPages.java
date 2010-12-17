@@ -61,7 +61,7 @@ public class UpdateCustomPages implements Job {
 				Site site = sites.get(i);
 				List<SitePage> pages = site.getPages();
 				for (int q = 0; q < pages.size(); q++) {
-					SitePage page = pages.get(i);
+					SitePage page = pages.get(q);
 					if (getTitleCustomLegacy(page, page.getTitle())) {
 						//We need to add the property
 						ResourceProperties rp = page.getProperties();
