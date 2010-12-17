@@ -126,6 +126,14 @@ public class UpdateCustomPages implements Job {
 		}
 		
 
+		
+		// if	 more than one tool on this page, just return the default page title
+		if ( page.getTools().size() != 1 )
+		{
+			return false;
+		}
+		
+		
 		// Get the toolId of the first tool associated with this page
 		String toolId = page.getTools().get(0).getToolId();
 		String toolName = page.getTools().get(0).getTitle();
