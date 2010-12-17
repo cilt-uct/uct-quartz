@@ -865,7 +865,7 @@
 			<ref bean="org.sakaiproject.tool.api.SessionManager" />
 		</property>
 		<property name="siteService" ref="org.sakaiproject.site.api.SiteService"/>
-		<property name="serverConfugurationService" ref="org.sakaiproject.component.api.ServerConfigurationService"/>
+		<property name="serverConfigurationService" ref="org.sakaiproject.component.api.ServerConfigurationService"/>
 	</bean>
 	
 	
