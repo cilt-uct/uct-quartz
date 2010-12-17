@@ -115,7 +115,7 @@ public class UpdateCustomPages implements Job {
 		try {
 			is_home = page.getProperties().getBooleanProperty(SitePage.IS_HOME_PAGE);
 		} catch (EntityPropertyNotDefinedException e) {
-			// we excect a lot of these
+			// we expect a lot of these
 		} catch (EntityPropertyTypeException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
