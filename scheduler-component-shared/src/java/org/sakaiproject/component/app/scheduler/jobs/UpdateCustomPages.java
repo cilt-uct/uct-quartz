@@ -18,10 +18,9 @@ import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SitePage;
 import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.site.api.SiteService.SelectionType;
+import org.sakaiproject.thread_local.api.ThreadLocalManager;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
-
-import com.sun.org.apache.bcel.internal.generic.SIPUSH;
 
 public class UpdateCustomPages implements Job {
 
@@ -42,7 +41,10 @@ public class UpdateCustomPages implements Job {
 	}
 
 
-
+	private ThreadLocalManager threadLocalManager;
+	public void setThreadLocalManager(ThreadLocalManager threadLocalManager) {
+		this.threadLocalManager = threadLocalManager;
+	}
 
 	private static final Log LOG = LogFactory.getLog(UpdateCustomPages.class);
 
@@ -61,6 +63,16 @@ public class UpdateCustomPages implements Job {
 
 			List<Site> sites = siteService.getSites(SelectionType.ANY ,null, null, null, null, new PagingPosition(first, last));
 			for (int i = 0; i < sites.size(); i++) {
+				
+				//SAK-17117 before we do this clear threadLocal
+				//get the security advisor stack otherwise later calls will fail
+				Object obj = threadLocalManager.get("SakaiSecurity.advisor.stack");
+				threadLocalManager.clear();
+				threadLocalManager.set("SakaiSecurity.advisor.stack", obj);
+				sakaiSession = sessionManager.getCurrentSession();
+				sakaiSession.setUserId("admin");
+				sakaiSession.setUserEid("admin");
+				
 				boolean modified = false;
 				Site site = sites.get(i);
 				List<SitePage> pages = site.getPages();
