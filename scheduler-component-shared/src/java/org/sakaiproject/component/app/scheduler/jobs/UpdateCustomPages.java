@@ -78,12 +78,16 @@ public class UpdateCustomPages implements Job {
 				List<SitePage> pages = site.getPages();
 				for (int q = 0; q < pages.size(); q++) {
 					SitePage page = pages.get(q);
-					if (getTitleCustomLegacy(page, page.getTitle())) {
-						//We need to add the property
-						ResourceProperties rp = page.getProperties();
-						rp.addProperty(SitePage.PAGE_CUSTOM_TITLE_PROP, "true");
-						LOG.info("page " + page.getTitle() + " has been modified");
-						modified = true;
+					
+					String custom = (String)page.getProperties().get(SitePage.PAGE_CUSTOM_TITLE_PROP);
+					if (custom == null) {
+						if (getTitleCustomLegacy(page, page.getTitle())) {
+							//We need to add the property
+							ResourceProperties rp = page.getProperties();
+							rp.addProperty(SitePage.PAGE_CUSTOM_TITLE_PROP, "true");
+							LOG.info("page " + page.getTitle() + " has been modified");
+							modified = true;
+						}
 					}
 
 				}
