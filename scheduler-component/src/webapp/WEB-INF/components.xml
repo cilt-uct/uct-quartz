@@ -866,6 +866,7 @@
 		</property>
 		<property name="siteService" ref="org.sakaiproject.site.api.SiteService"/>
 		<property name="serverConfigurationService" ref="org.sakaiproject.component.api.ServerConfigurationService"/>
+		<property name="threadLocalManager" ref="org.sakaiproject.thread_local.api.ThreadLocalManager"/>
 	</bean>
 	
 	
