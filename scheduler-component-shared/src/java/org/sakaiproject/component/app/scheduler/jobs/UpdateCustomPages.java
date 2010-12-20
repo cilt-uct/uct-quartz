@@ -75,26 +75,35 @@ public class UpdateCustomPages implements Job {
 				
 				boolean modified = false;
 				Site site = sites.get(i);
-				List<SitePage> pages = site.getPages();
-				for (int q = 0; q < pages.size(); q++) {
-					SitePage page = pages.get(q);
-					
-					String custom = (String)page.getProperties().get(SitePage.PAGE_CUSTOM_TITLE_PROP);
-					if (custom == null) {
-						if (getTitleCustomLegacy(page, page.getTitle())) {
-							//We need to add the property
-							ResourceProperties rp = page.getProperties();
-							rp.addProperty(SitePage.PAGE_CUSTOM_TITLE_PROP, "true");
-							LOG.info("page " + page.getTitle() + " has been modified");
-							modified = true;
+				Site editSite = null;
+				try {
+					editSite = siteService.getSite(site.getId());
+					List<SitePage> pages = editSite.getPages();
+					for (int q = 0; q < pages.size(); q++) {
+						SitePage page = pages.get(q);
+						
+						String custom = (String)page.getProperties().get(SitePage.PAGE_CUSTOM_TITLE_PROP);
+						if (custom == null) {
+							if (getTitleCustomLegacy(page, page.getTitle())) {
+								//We need to add the property
+								ResourceProperties rp = page.getProperties();
+								rp.addProperty(SitePage.PAGE_CUSTOM_TITLE_PROP, "true");
+								LOG.info("page " + page.getTitle() + " has been modified");
+								modified = true;
+							}
 						}
+
 					}
 
+				} catch (IdUnusedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
 				}
+
 				if (modified) {
 					
 					try {
-						siteService.save(site);
+						siteService.save(editSite);
 					} catch (IdUnusedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
