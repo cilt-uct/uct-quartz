@@ -163,11 +163,11 @@ public class UpdateCustomPages implements Job {
 		String toolId = page.getTools().get(0).getToolId();
 		String toolName = page.getTools().get(0).getTitle();
 
-		//if ( "sakai.iframe".equals(toolId) || "sakai.news".equals(toolId) || "sakai.rutgers.linktool".equals(toolId) )
-		//{
-			//return true;
-		//}
-		//else
+		if ( "sakai.iframe".equals(toolId) || "sakai.news".equals(toolId) || "sakai.rutgers.linktool".equals(toolId) || "sakai.synoptic.messagecenter.HOLD".equals(toolId) )
+		{
+			return false;
+		}
+		else
 		if(m_title !=null && !m_title.equals(toolName))
 		{
 			return true;
