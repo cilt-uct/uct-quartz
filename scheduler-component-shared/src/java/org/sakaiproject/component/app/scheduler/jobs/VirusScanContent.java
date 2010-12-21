@@ -15,6 +15,7 @@ import org.sakaiproject.email.api.EmailService;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.exception.PermissionException;
 import org.sakaiproject.exception.TypeException;
+import org.sakaiproject.javax.PagingPosition;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.site.api.SiteService.SortType;
@@ -31,27 +32,27 @@ public class VirusScanContent implements Job {
 	public void setSiteService(SiteService s) {
 		this.siteService = s;
 	}
-	
+
 	private SessionManager sessionManager;
 	public void setSessionManager(SessionManager s) {
 		this.sessionManager = s;
 	}
-	
+
 
 
 	private ContentHostingService contentHostingService;
 	public void setContentHostingService(ContentHostingService chs) {
 		contentHostingService = chs;
 	}
-	
 
 
-	
-	 private VirusScanner virusScanner;	
+
+
+	private VirusScanner virusScanner;	
 	public void setVirusScanner(VirusScanner virusScanner) {
 		this.virusScanner = virusScanner;
 	}
-	
+
 	private ThreadLocalManager threadLocalManager;
 	public void setThreadLocalManager(ThreadLocalManager threadLocalManager) {
 		this.threadLocalManager = threadLocalManager;
@@ -63,75 +64,88 @@ public class VirusScanContent implements Job {
 	}
 
 	private static final Log log = LogFactory.getLog(VirusScanContent.class);
-	
+
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		//set the user information into the current session
 		//for now 
 		//extensions.put("doc", "application/msword");
 		//extensions.put("odt", "application/openoffice");
-		
+
 
 		StringBuilder sb = new StringBuilder();
-	    Session sakaiSession = sessionManager.getCurrentSession();
-	    sakaiSession.setUserId("admin");
-	    sakaiSession.setUserEid("admin");
-	    List<Site> sites = siteService.getSites(SiteService.SelectionType.ANY, null , null, null, SortType.NONE, null);
-	    long count = 0;
-	    for (int i =0 ; i< sites.size(); i++ ) {
-	    	
-			//SAK-17117 before we do this clear threadLocal
-			//get the security advisor stack otherwise later calls will fail
-			Object obj = threadLocalManager.get("SakaiSecurity.advisor.stack");
-			threadLocalManager.clear();
-			threadLocalManager.set("SakaiSecurity.advisor.stack", obj);
-			sakaiSession = sessionManager.getCurrentSession();
-			sakaiSession.setUserId("admin");
-			sakaiSession.setUserEid("admin");
+		Session sakaiSession = sessionManager.getCurrentSession();
+		sakaiSession.setUserId("admin");
+		sakaiSession.setUserEid("admin");
+		int first = 1;
+		int increment = 1000;
+		int last = increment;
+		boolean doAnother = true;
+		long count = 0;
+		while (doAnother) {
+			List<Site> sites = siteService.getSites(SiteService.SelectionType.ANY, null , null, null, SortType.NONE, new PagingPosition(first, last));
+			for (int i =0 ; i< sites.size(); i++ ) {
+
+				//SAK-17117 before we do this clear threadLocal
+				//get the security advisor stack otherwise later calls will fail
+				Object obj = threadLocalManager.get("SakaiSecurity.advisor.stack");
+				threadLocalManager.clear();
+				threadLocalManager.set("SakaiSecurity.advisor.stack", obj);
+				sakaiSession = sessionManager.getCurrentSession();
+				sakaiSession.setUserId("admin");
+				sakaiSession.setUserEid("admin");
 
 
-			Site s = (Site)sites.get(i);
-	    	String siteColl = contentHostingService.getSiteCollection(s.getId());
-	    	ContentCollection collection;
-			try {
-				collection = contentHostingService.getCollection(siteColl);
-		    	List<String> members = collection.getMembers();
-		    	for (int q =0; q < members.size(); q++) {
-		    		String resId = (String)members.get(q);
-		    		log.debug("got resource " + resId);
-		    		try {
-		    			if (!contentHostingService.isCollection(resId)) {
-		    				virusScanner.scanContent(resId);
-		    				count++;
-		    			}
-		    		}
-		    		catch (VirusFoundException e) {
-						//we have a virus!
-		    			sb.append(resId +": " + e.getMessage() + "\n");
+				Site s = (Site)sites.get(i);
+				String siteColl = contentHostingService.getSiteCollection(s.getId());
+				ContentCollection collection;
+				try {
+					collection = contentHostingService.getCollection(siteColl);
+					List<String> members = collection.getMembers();
+					for (int q =0; q < members.size(); q++) {
+						String resId = (String)members.get(q);
+						log.debug("got resource " + resId);
+						try {
+							if (!contentHostingService.isCollection(resId)) {
+								virusScanner.scanContent(resId);
+								count++;
+							}
+						}
+						catch (VirusFoundException e) {
+							//we have a virus!
+							sb.append(resId +": " + e.getMessage() + "\n");
+						}
+
 					}
-		    		
-		    	}
-			} catch (IdUnusedException e) {
-				// we will get lots of these 
-				if (log.isDebugEnabled()) {
+				} catch (IdUnusedException e) {
+					// we will get lots of these 
+					if (log.isDebugEnabled()) {
+						e.printStackTrace();
+					}
+				} catch (TypeException e) {
+					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}
-			} catch (TypeException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (PermissionException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} 
+				} catch (PermissionException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} 
 
-	    }
-	    log.info("scanned: _" + count + " items");
-	    log.info("virii found : " + sb.toString());
-	    emailService.send("help@vula.uct.ac.za", "help-team@vula.uct.ac.za", "virusScan results", sb.toString(), null, null, null);
-	    
-	    
+			}
+			if (sites.size() < increment) {
+				doAnother = false;
+			} else {
+				first = last +1;
+				last = last + increment;
+			}
+		} //end while
+		log.info("scanned: _" + count + " items");
+		sb.append("\nscanned: _" + count + " items\n");
+		log.info("virii found : " + sb.toString());
+		emailService.send("help@vula.uct.ac.za", "help-team@vula.uct.ac.za", "virusScan results", sb.toString(), null, null, null);
+
+
 
 	}
 
-	
-	
+
+
 }
