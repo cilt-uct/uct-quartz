@@ -90,6 +90,10 @@ public class UpdateCustomPages implements Job {
 								rp.addProperty(SitePage.PAGE_CUSTOM_TITLE_PROP, "true");
 								LOG.info("page " + page.getTitle() + " has been modified");
 								modified = true;
+							} else if (isMessagesPage(page)) {
+								LOG.info("removing old messages page: " + page.getTitle());
+								editSite.removePage(page);
+								
 							}
 						}
 
@@ -125,6 +129,15 @@ public class UpdateCustomPages implements Job {
 
 
 
+
+	private boolean isMessagesPage(SitePage page) {
+		String toolId = page.getTools().get(0).getToolId();
+		if ("sakai.synoptic.messagecenter.HOLD".equals(toolId) && page.getTools().size() == 1) {
+			return true;
+		}
+		
+		return false;
+	}
 
 	/** Checks if this page's tool is a legacy iframe, news or linktool
 	 ** that should assumed to have a custom page title 
