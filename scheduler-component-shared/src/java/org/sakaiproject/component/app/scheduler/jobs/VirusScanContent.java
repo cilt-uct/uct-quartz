@@ -111,8 +111,10 @@ public class VirusScanContent implements Job {
 		    		
 		    	}
 			} catch (IdUnusedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				// we will get lots of these 
+				if (log.isDebugEnabled()) {
+					e.printStackTrace();
+				}
 			} catch (TypeException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
