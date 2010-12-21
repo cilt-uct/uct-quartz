@@ -93,6 +93,7 @@ public class UpdateCustomPages implements Job {
 							} else if (isMessagesPage(page)) {
 								LOG.info("removing old messages page: " + page.getTitle());
 								editSite.removePage(page);
+								modified = true;
 								
 							}
 						}
