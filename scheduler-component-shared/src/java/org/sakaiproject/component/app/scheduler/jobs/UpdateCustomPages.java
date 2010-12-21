@@ -131,6 +131,13 @@ public class UpdateCustomPages implements Job {
 
 
 	private boolean isMessagesPage(SitePage page) {
+		
+		// if	 more than one tool on this page, just return the default page title
+		if ( page.getTools().size() != 1 )
+		{
+			return false;
+		}
+		
 		String toolId = page.getTools().get(0).getToolId();
 		if ("sakai.synoptic.messagecenter.HOLD".equals(toolId) && page.getTools().size() == 1) {
 			return true;
