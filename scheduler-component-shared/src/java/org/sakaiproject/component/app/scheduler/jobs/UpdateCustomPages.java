@@ -1,5 +1,6 @@
 package org.sakaiproject.component.app.scheduler.jobs;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -61,7 +62,16 @@ public class UpdateCustomPages implements Job {
 		boolean doAnother = true;
 		while (doAnother) {
 
-			List<Site> sites = siteService.getSites(SelectionType.ANY ,null, null, null, null, new PagingPosition(first, last));
+			//List<Site> sites = siteService.getSites(SelectionType.ANY ,null, null, null, null, new PagingPosition(first, last));
+			List<Site> sites = new ArrayList<Site>();
+			try {
+				Site thisone = siteService.getSite("1c6a1af5-4516-4f3b-b0c9-88055859df31");
+				sites.add(thisone);
+			} catch (IdUnusedException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+			
 			for (int i = 0; i < sites.size(); i++) {
 				
 				//SAK-17117 before we do this clear threadLocal
@@ -82,8 +92,17 @@ public class UpdateCustomPages implements Job {
 					for (int q = 0; q < pages.size(); q++) {
 						SitePage page = pages.get(q);
 						
-						String custom = (String)page.getProperties().get(SitePage.PAGE_CUSTOM_TITLE_PROP);
-						if (custom == null) {
+						boolean custom = false;
+						try {
+							custom = page.getProperties().getBooleanProperty(SitePage.PAGE_CUSTOM_TITLE_PROP);
+						} catch (EntityPropertyNotDefinedException e) {
+							// we expect a lot of these
+						} catch (EntityPropertyTypeException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						if (!custom) {
+							LOG.info("Page " + page.getTitle() + " has no custom flag");
 							if (getTitleCustomLegacy(page, page.getTitle())) {
 								//We need to add the property
 								ResourceProperties rp = page.getProperties();
@@ -95,6 +114,8 @@ public class UpdateCustomPages implements Job {
 								editSite.removePage(page);
 								modified = true;
 								
+							} else {
+								LOG.info("page " + page.getTitle() + " is not custom");
 							}
 						}
 
@@ -188,8 +209,7 @@ public class UpdateCustomPages implements Job {
 		{
 			return false;
 		}
-		else
-		if(m_title !=null && !m_title.equals(toolName))
+		else if(m_title !=null && !m_title.equals(toolName))
 		{
 			return true;
 		}
