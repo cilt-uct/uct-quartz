@@ -93,7 +93,7 @@ public class UCTImportCourses implements Job {
 				//date is in 11, 12
 				Date startDate = parseDate(data[13]);
 				Date endDate = parseDate(data[14]);
-				if ("LEC".equals(data[12]) && "LG01".equals(data[4])) {
+				if ("LG01".equals(data[4])) {
 					this.createCourse(data[7] + data[8], session, data[10], data[7], startDate, endDate);
 				} else {
 					LOG.info(data[7] + data[8] + " is of type " + data[12] + " with id " + data[4] +  " so ignoring");
