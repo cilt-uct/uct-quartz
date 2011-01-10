@@ -96,7 +96,7 @@ public class UCTImportCourses implements Job {
 				if ("LEC".equals(data[12]) && "LG01".equals(data[4])) {
 					this.createCourse(data[7] + data[8], session, data[10], data[7], startDate, endDate);
 				} else {
-					LOG.info(data[7] + " is of type " + data[12] + " with id " + data[4] +  "so ignoring");
+					LOG.info(data[7] + data[8] + " is of type " + data[12] + " with id " + data[4] +  " so ignoring");
 				}
 			} 
 
