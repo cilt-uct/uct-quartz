@@ -93,8 +93,11 @@ public class UCTImportCourses implements Job {
 				//date is in 11, 12
 				Date startDate = parseDate(data[13]);
 				Date endDate = parseDate(data[14]);
-
-				this.createCourse(data[7] + data[8], session, data[10], data[7], startDate, endDate);
+				if ("LEC".equals(data[12]) && "LG01".equals(data[4])) {
+					this.createCourse(data[7] + data[8], session, data[10], data[7], startDate, endDate);
+				} else {
+					LOG.info(data[7] + " is of type " + data[12] + " with id " + data[4] +  "so ignoring");
+				}
 			} 
 
 
@@ -145,6 +148,7 @@ public class UCTImportCourses implements Job {
 		//if this is a EWA or SUP course ignore
 		if (courseCode.lastIndexOf("SUP") == 8 ||courseCode.lastIndexOf("EWA") == 8) {
 			LOG.warn("we won't import " + courseCode + "as it is a SUP or EWA course");
+			return;
 		}
 
 		String setCategory = "Department";
