@@ -297,7 +297,7 @@
 				bean="org.sakaiproject.coursemanagement.api.CourseManagementAdministration" />
 		</property>
 		<property name="term">
-			<value>2010</value>
+			<value>2011</value>
 		</property>
 	</bean>
 
