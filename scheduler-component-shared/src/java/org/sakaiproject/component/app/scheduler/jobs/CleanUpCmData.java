@@ -68,6 +68,7 @@ public class CleanUpCmData implements Job {
 	    		if (eid.lastIndexOf("SUP") == 8 ||eid.lastIndexOf("EWA") == 8) {
 	    			log.warn("Found course to delete: " + eid);
 	    			String fullEid = eid + "," + term;
+	    			String fullEid2 = eid + ",2010";
 	    			//we only need to remove at this level
 	    			//we need to remove the course offering from its course set
 	    			Set<String> courseSets = course.getCourseSetEids();
@@ -96,6 +97,26 @@ public class CleanUpCmData implements Job {
 	    				courseAdmin.removeCourseOffering(fullEid);
 	    				
 	    			}
+	    			
+	    			if (courseManagementService.isCourseOfferingDefined(fullEid2)) {
+	    				CourseOffering co = courseManagementService.getCourseOffering(fullEid2);
+	    				Set<String> sets = co.getCourseSetEids();
+	    				Iterator<String> itb = sets.iterator();
+	    				while (itb.hasNext()) {
+	    					String set = (String)itb.next();
+	    					courseAdmin.removeCourseOfferingFromCourseSet(set, fullEid2);
+	    				}
+	    				Set<Section> s = courseManagementService.getChildSections(fullEid2);
+	    				Iterator<Section> it2 = s.iterator();
+	    				while (it2.hasNext()) {
+	    					Section section = it2.next();
+	    					courseAdmin.removeSection(section.getEid());
+	    				}
+	    				
+	    				courseAdmin.removeCourseOffering(fullEid2);
+	    				
+	    			}
+	    			
 	    				
 	    			//canon course
 	    			courseAdmin.removeCanonicalCourse(eid);
