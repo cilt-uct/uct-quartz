@@ -2,7 +2,6 @@ package org.sakaiproject.component.app.scheduler.jobs;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DateFormat;
@@ -28,8 +27,6 @@ import org.sakaiproject.coursemanagement.api.EnrollmentSet;
 import org.sakaiproject.coursemanagement.api.Section;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
-
-import au.com.bytecode.opencsv.CSVReader;
 
 public class UCTImportCourses implements Job {
 	private static final Log log = LogFactory.getLog(UCTImportCourses.class);
