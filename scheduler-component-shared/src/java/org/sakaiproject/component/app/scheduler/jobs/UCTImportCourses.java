@@ -1,16 +1,23 @@
 package org.sakaiproject.component.app.scheduler.jobs;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.ss.usermodel.Row;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -58,8 +65,8 @@ public class UCTImportCourses implements Job {
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		///data/sakai/import/2010_courses.csv
 
-		importFile(filePath + "2010_courses.csv", "2010");
-		importFile(filePath + "2011_courses.csv", "2011");
+		importFile(filePath + "2010_courses.xls", "2010");
+		importFile(filePath + "2011_courses.xls", "2011");
 	}
 
 	private void importFile(String file, String session) {
@@ -67,11 +74,12 @@ public class UCTImportCourses implements Job {
 		Session sakaiSession = sessionManager.getCurrentSession();
 		sakaiSession.setUserId(ADMIN);
 		sakaiSession.setUserEid(ADMIN);
-		FileReader fr = null;
-		CSVReader br = null;
+		InputStream fr = null;
+		//CSVReader br = null;
+		POIFSFileSystem fileSystem = null;
 		try {
 			log.info("opening: " + file);
-			fr = new FileReader(file);
+			fr = new FileInputStream(file);
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -82,21 +90,31 @@ public class UCTImportCourses implements Job {
 		}
 
 		try {
-			br = new CSVReader(fr);
-			String[] data;  
-			while ( (data = br.readNext()) != null) { 
+			
+			fileSystem = new POIFSFileSystem(fr);
+			
+			HSSFWorkbook workBook = new HSSFWorkbook (fileSystem);
+			HSSFSheet sheet = workBook.getSheetAt(0);
+			Iterator<Row> rows = sheet.rowIterator ();
+			//we need to skip the first 2 rows
+			rows.next();
+			rows.next();
+			
+			while (rows.hasNext()) { 
+				Row row = rows.next();
+				
 				/*
 				 * this should be a record of the format:
 				 * Course ID	Offer Nbr	Term	Session	Sect	Institution	Acad Group	Subject	Catalog	Career	Descr	Class Nbr	Component
 
 				 */
 				//date is in 11, 12
-				Date startDate = parseDate(data[13]);
-				Date endDate = parseDate(data[14]);
-				if ("LG01".equals(data[4])) {
-					this.createCourse(data[7] + data[8], session, data[10], data[7], startDate, endDate);
+				Date startDate = parseDate(row.getCell(13).getStringCellValue());
+				Date endDate = parseDate(row.getCell(14).getStringCellValue());
+				if ("LG01".equals(row.getCell(4).getStringCellValue()) || "RG01".equals(row.getCell(4).getStringCellValue())) {
+					this.createCourse(row.getCell(7).getStringCellValue() + row.getCell(8).getStringCellValue(), session, row.getCell(10).getStringCellValue(), row.getCell(7).getStringCellValue(), startDate, endDate);
 				} else {
-					LOG.info(data[7] + data[8] + " is of type " + data[12] + " with id " + data[4] +  " so ignoring");
+					LOG.info(row.getCell(7).getStringCellValue() + row.getCell(8).getStringCellValue() + " is of type " + row.getCell(12).getStringCellValue() + " with id " + row.getCell(4).getStringCellValue() +  " so ignoring");
 				}
 			} 
 
@@ -106,14 +124,7 @@ public class UCTImportCourses implements Job {
 			e.printStackTrace();
 		}
 		finally {
-			if (br != null) {
-				try {
-					br.close();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
+			
 			if (fr != null) {
 				try {
 					fr.close();
