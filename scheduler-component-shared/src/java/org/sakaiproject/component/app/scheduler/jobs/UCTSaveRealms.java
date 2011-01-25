@@ -48,6 +48,7 @@ public class UCTSaveRealms implements StatefulJob {
 		List<String> ret = new ArrayList<String>();
 		for (int i =0; i < as.size(); i++) {
 			AcademicSession a = as.get(i);
+			LOG.debug("got accademic session: " + a.getEid());
 			ret.add(a.getEid());
 		}
 		return ret;
@@ -73,6 +74,7 @@ public class UCTSaveRealms implements StatefulJob {
 				term = term.trim();
 				LOG.debug("site is in term: " + term);
 				if (currentTerms.contains(term)) {
+					LOG.debug("saving realm: " + s.getTitle());
 					try {
 						AuthzGroup group = authzGroupService.getAuthzGroup("/site/" + s.getId());
 						//we only need to save if there is a provider set
