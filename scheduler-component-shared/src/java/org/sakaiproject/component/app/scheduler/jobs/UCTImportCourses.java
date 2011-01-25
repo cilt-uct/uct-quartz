@@ -109,8 +109,8 @@ public class UCTImportCourses implements Job {
 
 				 */
 				//date is in 11, 12
-				Date startDate = parseDate(row.getCell(13).getStringCellValue());
-				Date endDate = parseDate(row.getCell(14).getStringCellValue());
+				Date startDate = row.getCell(13).getDateCellValue();
+				Date endDate = row.getCell(14).getDateCellValue();
 				if ("LG01".equals(row.getCell(4).getStringCellValue()) || "RG01".equals(row.getCell(4).getStringCellValue())) {
 					this.createCourse(row.getCell(7).getStringCellValue() + row.getCell(8).getStringCellValue(), session, row.getCell(10).getStringCellValue(), row.getCell(7).getStringCellValue(), startDate, endDate);
 				} else {
