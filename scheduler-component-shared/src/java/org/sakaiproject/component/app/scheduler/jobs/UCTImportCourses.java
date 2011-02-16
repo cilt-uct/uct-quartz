@@ -222,6 +222,7 @@ public class UCTImportCourses implements Job {
 			Section section = courseManagementService.getSection(courseEid);
 			section.setEnrollmentSet(enrolmentSet);
 			section.setCategory("course");
+			courseAdmin.updateSection(section);
 		}
 
 
