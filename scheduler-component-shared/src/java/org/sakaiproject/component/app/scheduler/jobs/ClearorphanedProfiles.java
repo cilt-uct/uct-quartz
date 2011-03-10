@@ -42,10 +42,12 @@ public class ClearorphanedProfiles implements Job {
 		
 		String sql = "select agent_uuid from SAKAI_PERSON_T where agent_uuid not in (SELEct user_id from SAKAI_USER_ID_MAP)";
 	
-		List res = sqlService.dbRead(sql);
+		List<String> res = sqlService.dbRead(sql);
 		log.info("got a result of: " + res.size());
+		int count = 0;
 		for (int i =0; i < res.size(); i++) {
 			String r = (String)res.get(i);
+			count = i;
 			log.info("found orphaned record: " + r);
 			SakaiPerson up = sakaiPersonManager.getSakaiPerson(r, sakaiPersonManager.getUserMutableType());
 			if (up != null)
@@ -57,7 +59,7 @@ public class ClearorphanedProfiles implements Job {
 			
 		}
 		
-
+		log.info("Removed " + count + " orphaned pofiles");
 	}
 	
 }
