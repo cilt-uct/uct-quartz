@@ -92,14 +92,16 @@ public class FixInactiveEmails implements Job{
 				SakaiPerson sp = sakaiPersonManager.getSakaiPerson(u.getId(), sakaiPersonManager.getSystemMutableType());
 				if (sp != null) {
 					sp.setMail(mail);
+					sakaiPersonManager.save(sp);
 				}
-				sakaiPersonManager.save(sp);
+				
 				
 				sp = sakaiPersonManager.getSakaiPerson(u.getId(), sakaiPersonManager.getUserMutableType());
 				if (sp != null) {
 					sp.setMail(mail);
+					sakaiPersonManager.save(sp);
 				}
-				sakaiPersonManager.save(sp);
+				
 				
 				LOG.info("updated: " + userId);
 			} catch (UserNotDefinedException e) {
