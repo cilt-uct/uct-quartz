@@ -971,10 +971,10 @@
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
 		singleton="true" init-method="init">
 		<property name="beanId">
-			<value>cleanDeadGuests</value>
+			<value>CleanIactiveAccountEmail</value>
 		</property>
 		<property name="jobName">
-			<value>clean dead guest users</value>
+			<value>clean inactive users email</value>
 		</property>
 		<property name="schedulerManager">
 			<ref
