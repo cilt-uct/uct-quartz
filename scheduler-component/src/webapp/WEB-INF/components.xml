@@ -967,7 +967,7 @@
 	
 
 	<bean
-		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.uctCleanDeadUsers"
+		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.uctCleanInactiveEmail"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
 		singleton="true" init-method="init">
 		<property name="beanId">
