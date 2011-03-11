@@ -4,12 +4,16 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.sakaiproject.api.common.edu.person.SakaiPerson;
 import org.sakaiproject.api.common.edu.person.SakaiPersonManager;
 import org.sakaiproject.db.api.SqlService;
+import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
 import org.sakaiproject.user.api.UserAlreadyDefinedException;
@@ -22,6 +26,9 @@ import org.sakaiproject.user.api.UserPermissionException;
 public class FixInactiveEmails implements Job{
 
 	private static final Log LOG = LogFactory.getLog(FixInactiveEmails.class);
+	
+	private static final String PROPERTY_DEACTIVATED = "SPML_DEACTIVATED";
+	
 	private SqlService sqlService;
 	private UserDirectoryService userDirectoryService;
 	
@@ -69,6 +76,17 @@ public class FixInactiveEmails implements Job{
 				UserEdit u = userDirectoryService.editUser(userId);
 				String mail = u.getEid() + "@uct.ac.za";
 				u.setEmail(mail);
+				//set the inactive date if none
+				ResourceProperties rp = u.getProperties();
+				DateTime dt = new DateTime();
+				DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
+				
+				//do we have an inactive flag?
+				String deactivated = rp.getProperty(PROPERTY_DEACTIVATED);
+				if (deactivated == null) {
+					rp.addProperty(PROPERTY_DEACTIVATED, fmt.print(dt));
+				}
+
 				userDirectoryService.commitEdit(u);
 				
 				SakaiPerson sp = sakaiPersonManager.getSakaiPerson(u.getId(), sakaiPersonManager.getSystemMutableType());
