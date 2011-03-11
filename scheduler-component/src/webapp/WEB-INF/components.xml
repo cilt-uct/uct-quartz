@@ -955,7 +955,7 @@
 	
 	<!--  Fix inactive account emails -->
 	<bean id="cleanInactiveEmail"
-		class="za.ac.uct.cet.sakai.scheduler.user.CleanGuestsNoSite">
+		class="za.ac.uct.cet.sakai.scheduler.user.FixInactiveEmails">
 		<property name="sessionManager">
 			<ref bean="org.sakaiproject.tool.api.SessionManager" />
 		</property>
