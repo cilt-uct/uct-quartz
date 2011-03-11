@@ -79,7 +79,7 @@ public class FixInactiveEmails implements Job{
 				sp.setMail(mail);
 				sakaiPersonManager.save(sp);
 				
-				LOG.info("removed: " + userId);
+				LOG.info("updated: " + userId);
 			} catch (UserNotDefinedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
