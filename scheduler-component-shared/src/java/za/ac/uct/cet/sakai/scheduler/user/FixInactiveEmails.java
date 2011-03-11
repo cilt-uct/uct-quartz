@@ -90,11 +90,15 @@ public class FixInactiveEmails implements Job{
 				userDirectoryService.commitEdit(u);
 				
 				SakaiPerson sp = sakaiPersonManager.getSakaiPerson(u.getId(), sakaiPersonManager.getSystemMutableType());
-				sp.setMail(mail);
+				if (sp != null) {
+					sp.setMail(mail);
+				}
 				sakaiPersonManager.save(sp);
 				
 				sp = sakaiPersonManager.getSakaiPerson(u.getId(), sakaiPersonManager.getUserMutableType());
-				sp.setMail(mail);
+				if (sp != null) {
+					sp.setMail(mail);
+				}
 				sakaiPersonManager.save(sp);
 				
 				LOG.info("updated: " + userId);
