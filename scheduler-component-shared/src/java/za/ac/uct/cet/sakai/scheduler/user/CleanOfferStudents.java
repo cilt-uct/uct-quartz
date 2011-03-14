@@ -154,7 +154,7 @@ public class CleanOfferStudents implements Job{
 			Section section = it.next();
 			String sectionEid = section.getEid();
 			if (sectionEid.length() == "AAE5000H,2006".length()) {
-				LOG.info("section " + eid + " looks like a course");
+				LOG.info("section " + sectionEid + " looks like a course");
 				return true;
 			} else if (isCurrentOfferGroup(sectionEid)) {
 				LOG.info("this is a 2011 student");
