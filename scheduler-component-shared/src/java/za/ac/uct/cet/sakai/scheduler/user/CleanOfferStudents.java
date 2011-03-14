@@ -96,7 +96,7 @@ public class CleanOfferStudents implements Job{
 					u.setType("inactive");
 					//set the inactive date if none
 					ResourceProperties rp = u.getProperties();
-					DateTime dt = new DateTime();
+					DateTime dt = new DateTime(u.getModifiedTime().getTime());
 					DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
 
 					//do we have an inactive flag?
