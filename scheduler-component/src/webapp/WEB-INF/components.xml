@@ -999,7 +999,7 @@
 	
 
 	<bean
-		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.uctCleanInactiveEmail"
+		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.uctCleanOfferStudents"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
 		singleton="true" init-method="init">
 		<property name="beanId">
