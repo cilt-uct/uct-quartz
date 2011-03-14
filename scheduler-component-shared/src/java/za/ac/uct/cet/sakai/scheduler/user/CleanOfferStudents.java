@@ -152,15 +152,30 @@ public class CleanOfferStudents implements Job{
 			Section section = it.next();
 			String sectionEid = section.getEid();
 			if (sectionEid.length() == "AAE5000H,2006".length()) {
+				LOG.info("section " + eid + " looks like a course");
 				return true;
-			} else if (sectionEid.contains("OFFER_STUDENT,2011")) {
+			} else if (isCurrentOfferGroup(sectionEid)) {
 				LOG.info("this is a 2011 student");
 				return true;
+			} else {
+				LOG.info(sectionEid + " doesn't match our filters");
 			}
 			
 		}
 		
 		return false;
+	}
+
+
+	private boolean isCurrentOfferGroup(String sectionEid) {
+		if ("SCI_OFFER_STUDENT,2011".equals(sectionEid) || "COM_OFFER_STUDENT,2011".equals(sectionEid) ||
+				"HUM_OFFER_STUDENT,2011".equals(sectionEid) || "LAW_OFFER_STUDENT,2011".equals(sectionEid) || 
+				"EBE_OFFER_STUDENT,2011".equals(sectionEid)) {
+			LOG.info(sectionEid + " is a current offer group");
+			return true;
+		}
+		
+			return false;
 	}
 
 }
