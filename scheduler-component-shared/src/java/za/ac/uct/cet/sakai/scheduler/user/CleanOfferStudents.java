@@ -85,12 +85,14 @@ public class CleanOfferStudents implements Job{
 			String userId = users.get(i);
 			try {
 				UserEdit u = userDirectoryService.editUser(userId);
-				String mail = u.getEid() + "@uct.ac.za";
-				//TODO remove user from cm groups
-				removeUserFromCMGroups(u.getEid());
+				
 				
 				//is this user a member of a course at any point?
 				if (!hasMemberships(u.getEid())) {
+					//TODO remove user from cm groups
+					removeUserFromCMGroups(u.getEid());
+					
+					
 					u.setType("inactive");
 					//set the inactive date if none
 					ResourceProperties rp = u.getProperties();
