@@ -119,7 +119,7 @@ private void addCourseOwners() {
 							user = userDirectoryService.getUser(thisM.getUserId());
 							LOG.debug("got user");
 						}
-						catch (Exception e) {
+						catch (UserNotDefinedException e) {
 						 //no such user
 						 //e.printStackTrace();
 						}
