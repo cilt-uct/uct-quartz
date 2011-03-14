@@ -983,4 +983,36 @@
 	</bean>
 	
 	
+	<!--  Clean up old offer students -->
+	<bean id="cleanOfferStudents"
+		class="za.ac.uct.cet.sakai.scheduler.user.CleanOfferStudents">
+		<property name="sessionManager">
+			<ref bean="org.sakaiproject.tool.api.SessionManager" />
+		</property>
+		<property name="userDirectoryService" ref="org.sakaiproject.user.api.UserDirectoryService"/>
+		<property name="sqlService" ref="org.sakaiproject.db.api.SqlService"/>
+		<property name="courseManagementService" ref="org.sakaiproject.coursemanagement.api.CourseManagementService"/>
+		<property name="courseManagementAdministration" ref="org.sakaiproject.coursemanagement.api.CourseManagementAdministration"/>
+		
+	</bean>
+	
+	
+
+	<bean
+		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.uctCleanInactiveEmail"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		singleton="true" init-method="init">
+		<property name="beanId">
+			<value>cleanOfferStudents</value>
+		</property>
+		<property name="jobName">
+			<value>clean offer students</value>
+		</property>
+		<property name="schedulerManager">
+			<ref
+				bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+	</bean>
+	
+	
 </beans>
