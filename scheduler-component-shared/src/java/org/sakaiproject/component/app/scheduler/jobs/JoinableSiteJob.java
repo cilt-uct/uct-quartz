@@ -138,6 +138,9 @@ public class JoinableSiteJob implements Job {
 							s.setJoinable(false);
 							s.setPublished(false);
 							rp.addProperty(PROP_ARCHIVE, "true");
+							rp.addProperty(PROP_LAST_CHECK, time.toString());
+						} else {
+							rp.addProperty(PROP_LAST_CHECK, time.toString());
 						}
 					} 
 
