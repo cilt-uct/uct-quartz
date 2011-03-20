@@ -84,9 +84,9 @@ public class CleanOrphanedContent implements Job {
 		res = sqlService.dbRead(sql);
 		long attachBytes = getBytesInCollection(res);
 		 */
-		log.info("Orpahned content in user collections: " + formatSize(userBytes * 1024));
+		log.info("Orphaned content in user collections: " + formatSize(userBytes * 1024));
 		//log.info("Orphaned content in attachment collections: " + attachBytes);
-		log.info("Orpahned content in site collections: " + formatSize(siteBytes * 1024));
+		log.info("Orphaned content in site collections: " + formatSize(siteBytes * 1024));
 		log.info("Orphaned my workspace sites: " + orphanedSites);
 	}
 
@@ -118,7 +118,7 @@ public class CleanOrphanedContent implements Job {
 			try {
 				ContentCollection  collection = contentHostingService.getCollection(r);
 				long thisOne = collection.getBodySizeK();
-				log.info("Collection " + r + " has " + thisOne  + " in the collection");
+				log.info("Collection " + r + " has " + thisOne  + "K in the collection");
 				userBytes = userBytes + thisOne;
 
 				//delete the resource
