@@ -1015,4 +1015,33 @@
 	</bean>
 	
 	
+	
+	<!--  Set inactive flags on accounts that don't have it -->
+	<bean id="setInactiveFlag"
+		class="za.ac.uct.cet.sakai.scheduler.user.SetInactiveFlags">
+		<property name="sessionManager">
+			<ref bean="org.sakaiproject.tool.api.SessionManager" />
+		</property>
+		<property name="userDirectoryService" ref="org.sakaiproject.user.api.UserDirectoryService"/>
+		<property name="sqlService" ref="org.sakaiproject.db.api.SqlService"/>
+	</bean>
+	
+	
+
+	<bean
+		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.uctSetInactiveFlag"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		singleton="true" init-method="init">
+		<property name="beanId">
+			<value>setInactiveFlag</value>
+		</property>
+		<property name="jobName">
+			<value>Set inactive flag on inactive accounts</value>
+		</property>
+		<property name="schedulerManager">
+			<ref
+				bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+	</bean>
+	
 </beans>
