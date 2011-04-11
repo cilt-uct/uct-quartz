@@ -34,6 +34,7 @@ import org.sakaiproject.user.api.UserPermissionException;
 
 public class CleanOldUserData implements Job{
 
+	private static final String WORKSPACE_CONTENT_REMOVED = "workspace_content_removed";
 	private static final Log LOG = LogFactory.getLog(CleanOldUserData.class);
 	private SqlService sqlService;
 	private UserDirectoryService userDirectoryService;
@@ -75,9 +76,11 @@ public class CleanOldUserData implements Job{
 	    
 	    
 	    //TODO make this a calendar year
-	    //TODO also check for a flag
-		String sql = "select user_id from SAKAI_USER_PROPERTY where name = 'SPML_DEACTIVATED' and timestamp(value) < '2010-01-01 00:00:00';";
-		
+	    DateTime forQuery = new DateTime().minusYears(1);
+	    DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
+	    String strDate = fmt.print(forQuery);
+	    String sql = "select user_id from SAKAI_USER_PROPERTY where name = 'SPML_DEACTIVATED' and timestamp(value) < '" + strDate + "' and user_id not in (select user_id from SAKAI_USER_PROPERTY where name='workspace_content_removed')";
+		LOG.info("sql: " + sql);
 		List<String> users = sqlService.dbRead(sql);
 		
 		LOG.info("got a list of " + users.size() + " user whos data to clean up");
@@ -179,7 +182,7 @@ public class CleanOldUserData implements Job{
 		ResourceProperties rp = user.getProperties();
 		DateTime dt = new DateTime();
 		DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
-		rp.addProperty("workspace_content_removed", fmt.print(dt));
+		rp.addProperty(WORKSPACE_CONTENT_REMOVED, fmt.print(dt));
 		
 	}
 
