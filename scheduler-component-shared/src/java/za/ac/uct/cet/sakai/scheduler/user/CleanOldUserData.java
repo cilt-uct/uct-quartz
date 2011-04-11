@@ -85,7 +85,6 @@ public class CleanOldUserData implements Job{
 			} catch (IdUnusedException e) {
 				LOG.info("user: " + userId + " has no resource collection");
 				noCollection++;
-				e.printStackTrace();
 			} catch (TypeException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
