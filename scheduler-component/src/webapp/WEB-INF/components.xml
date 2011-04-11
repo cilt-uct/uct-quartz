@@ -1044,4 +1044,35 @@
 		</property>
 	</bean>
 	
+	
+	<!--  Calculate the volume in old user sites -->
+	<bean id="checkUserResourceSize"
+		class="za.ac.uct.cet.sakai.scheduler.user.checkUserResourceSize">
+		<property name="sessionManager">
+			<ref bean="org.sakaiproject.tool.api.SessionManager" />
+		</property>
+		<property name="userDirectoryService" ref="org.sakaiproject.user.api.UserDirectoryService"/>
+		<property name="sqlService" ref="org.sakaiproject.db.api.SqlService"/>
+		<property name="contentHostingService" ref="org.sakaiproject.content.api.ContentHostingService"/>
+		<property name="siteService" ref="org.sakaiproject.site.api.SiteService"/>
+	</bean>
+	
+	
+
+	<bean
+		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.uctCheckUserResourceSize"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		singleton="true" init-method="init">
+		<property name="beanId">
+			<value>checkUserResourceSize</value>
+		</property>
+		<property name="jobName">
+			<value>Check the size of old resourcer collections</value>
+		</property>
+		<property name="schedulerManager">
+			<ref
+				bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+	</bean>
+	
 </beans>
