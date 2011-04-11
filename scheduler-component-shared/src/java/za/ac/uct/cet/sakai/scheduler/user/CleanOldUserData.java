@@ -16,7 +16,12 @@ import org.sakaiproject.exception.TypeException;
 import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
+import org.sakaiproject.user.api.UserAlreadyDefinedException;
 import org.sakaiproject.user.api.UserDirectoryService;
+import org.sakaiproject.user.api.UserEdit;
+import org.sakaiproject.user.api.UserLockedException;
+import org.sakaiproject.user.api.UserNotDefinedException;
+import org.sakaiproject.user.api.UserPermissionException;
 
 public class CleanOldUserData implements Job{
 
@@ -60,7 +65,8 @@ public class CleanOldUserData implements Job{
 	    
 	    
 	    
-	    
+	    //TODO make this a calendar year
+	    //TODO also check for a flag
 		String sql = "select user_id from SAKAI_USER_PROPERTY where name = 'SPML_DEACTIVATED' and timestamp(value) < '2010-01-01 00:00:00';";
 		
 		List<String> users = sqlService.dbRead(sql);
@@ -75,12 +81,25 @@ public class CleanOldUserData implements Job{
 			
 			String siteId = siteService.getUserSiteId(userId);
 			String collectionId = contentHostingService.getSiteCollection(siteId);
+			UserEdit user = null;
 			try {
+				//TODO double check the account is inactive etc
+				user = userDirectoryService.editUser(userId);
+				String type = user.getType();
+				if (!type.startsWith("inactive")) {
+					LOG.warn("user: " + user.getEid() + " has type of: " + type);
+					userDirectoryService.cancelEdit(user);
+					continue;
+				}
+				
 				ContentCollection collection = contentHostingService.getCollection(collectionId);
 				hasCollection++;
 				long bodySize = collection.getBodySizeK();
 				LOG.info("user: " + userId + "has a collection of " + bodySize +"kb");
 				totalSize = totalSize + bodySize;
+				//TODO remove the collection
+				//TODO set a flag on the user account
+				
 				
 			} catch (IdUnusedException e) {
 				LOG.info("user: " + userId + " has no resource collection");
@@ -91,8 +110,26 @@ public class CleanOldUserData implements Job{
 			} catch (PermissionException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			} catch (UserNotDefinedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (UserPermissionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (UserLockedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			
+			finally {
+				if (user != null && user.isActiveEdit()) {
+					try {
+						userDirectoryService.commitEdit(user);
+					} catch (UserAlreadyDefinedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
 			
 		}
 		LOG.info("checked " + users.size() + " accounts of which " + noCollection + " had no content collection, " + hasCollection + " had a collection");
