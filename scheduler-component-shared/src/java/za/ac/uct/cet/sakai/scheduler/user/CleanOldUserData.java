@@ -4,15 +4,24 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.sakaiproject.content.api.ContentCollection;
+import org.sakaiproject.content.api.ContentCollectionEdit;
 import org.sakaiproject.content.api.ContentHostingService;
 import org.sakaiproject.db.api.SqlService;
+import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.exception.IdUnusedException;
+import org.sakaiproject.exception.InUseException;
+import org.sakaiproject.exception.InconsistentException;
 import org.sakaiproject.exception.PermissionException;
+import org.sakaiproject.exception.ServerOverloadException;
 import org.sakaiproject.exception.TypeException;
+import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
@@ -98,11 +107,39 @@ public class CleanOldUserData implements Job{
 				LOG.info("user: " + userId + "has a collection of " + bodySize +"kb");
 				totalSize = totalSize + bodySize;
 				//TODO remove the collection
-				//TODO set a flag on the user account
+				try {
+					ContentCollectionEdit edit = contentHostingService.editCollection(collectionId);
+					contentHostingService.removeCollection(edit);
+
+				} catch (IdUnusedException e) {
+
+				} catch (InUseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (InconsistentException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ServerOverloadException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				//Remove the site
+				try {
+					Site site = siteService.getSite(siteId);
+					siteService.removeSite(site);
+				} catch (IdUnusedException e) {
+
+				}
 				
+				//set a flag on the user account
+				setUserFlags(user);
+				
+
 				
 			} catch (IdUnusedException e) {
 				LOG.info("user: " + userId + " has no resource collection");
+				setUserFlags(user);
 				noCollection++;
 			} catch (TypeException e) {
 				// TODO Auto-generated catch block
@@ -134,6 +171,15 @@ public class CleanOldUserData implements Job{
 		}
 		LOG.info("checked " + users.size() + " accounts of which " + noCollection + " had no content collection, " + hasCollection + " had a collection");
 		LOG.info("total resource size: " + totalSize + "kb");
+		
+	}
+
+
+	private void setUserFlags(UserEdit user) {
+		ResourceProperties rp = user.getProperties();
+		DateTime dt = new DateTime();
+		DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
+		rp.addProperty("workspace_content_removed", fmt.print(dt));
 		
 	}
 
