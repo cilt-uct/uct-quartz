@@ -95,7 +95,7 @@ public class CleanOldUserData implements Job{
 				//TODO double check the account is inactive etc
 				user = userDirectoryService.editUser(userId);
 				String type = user.getType();
-				if (!type.startsWith("inactive")) {
+				if (!type.toLowerCase().startsWith("inactive")) {
 					LOG.warn("user: " + user.getEid() + " has type of: " + type);
 					userDirectoryService.cancelEdit(user);
 					continue;
@@ -104,7 +104,7 @@ public class CleanOldUserData implements Job{
 				ContentCollection collection = contentHostingService.getCollection(collectionId);
 				hasCollection++;
 				long bodySize = collection.getBodySizeK();
-				LOG.info("user: " + userId + "has a collection of " + bodySize +"kb");
+				LOG.info("user: " + userId + " has a collection of " + bodySize +"kb");
 				totalSize = totalSize + bodySize;
 				//TODO remove the collection
 				try {
