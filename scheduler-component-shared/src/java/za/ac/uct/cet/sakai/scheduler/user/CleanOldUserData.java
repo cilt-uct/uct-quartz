@@ -111,15 +111,12 @@ public class CleanOldUserData implements Job{
 				totalSize = totalSize + bodySize;
 				//TODO remove the collection
 				try {
-					ContentCollectionEdit edit = contentHostingService.editCollection(collectionId);
-					contentHostingService.removeCollection(edit);
+					
+					contentHostingService.removeCollection(collectionId);
 
 				} catch (IdUnusedException e) {
 
 				} catch (InUseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (InconsistentException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (ServerOverloadException e) {
@@ -174,7 +171,7 @@ public class CleanOldUserData implements Job{
 		}
 		LOG.info("checked " + users.size() + " accounts of which " + noCollection + " had no content collection, " + hasCollection + " had a collection");
 		LOG.info("total resource size: " + totalSize + "kb");
-		
+		//TODO email that
 	}
 
 
