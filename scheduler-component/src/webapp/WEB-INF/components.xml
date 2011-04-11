@@ -1047,7 +1047,7 @@
 	
 	<!--  Calculate the volume in old user sites -->
 	<bean id="checkUserResourceSize"
-		class="za.ac.uct.cet.sakai.scheduler.user.checkUserResourceSize">
+		class="za.ac.uct.cet.sakai.scheduler.user.CleanOldUserData">
 		<property name="sessionManager">
 			<ref bean="org.sakaiproject.tool.api.SessionManager" />
 		</property>
