@@ -221,8 +221,8 @@ public class JoinableSiteJob implements Job {
 					}
 				}
 			} catch (UserNotDefinedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				//We expect that some realms will have orphaned records
+				LOG.debug("user: " + m.getUserId() + " can'tbe found");
 			}
 		}
 		if (ownerModeStrict)
