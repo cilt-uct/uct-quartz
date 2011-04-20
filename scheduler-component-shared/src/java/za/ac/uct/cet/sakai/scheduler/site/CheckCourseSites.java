@@ -11,7 +11,7 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.sakaiproject.authz.api.Member;
-import org.sakaiproject.emailtemplateservice.service.EmailTemplateService;
+import org.sakaiproject.email.api.EmailService;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.site.api.SiteService.SortType;
@@ -36,9 +36,9 @@ public class CheckCourseSites implements Job {
 		this.sessionManager = s;
 	}
 
-	private EmailTemplateService emailTemplateService;
-	public void setEmailTemplateService(EmailTemplateService emailTemplateService) {
-		this.emailTemplateService = emailTemplateService;
+		private EmailService emailService;
+	public void setEmailService(EmailService emailService) {
+		this.emailService = emailService;
 	}
 
 	private UserDirectoryService userDirectoryService;
@@ -77,8 +77,7 @@ public class CheckCourseSites implements Job {
 							break;
 						}
 					} catch (UserNotDefinedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						//nothing to do we expect some of these
 					}
 					
 				}
@@ -90,7 +89,17 @@ public class CheckCourseSites implements Job {
 			}
 			
 		}
-
+		
+		//compose the email
+		StringBuilder sb = new StringBuilder();
+		sb.append("found " + nonActiveSites.size() + " sites that could be archived\n\n");
+		for (int i = 0; i < nonActiveSites.size(); i++) {
+			Site s = nonActiveSites.get(i);
+			sb.append(s.getTitle() + " (" + s.getId() + ")\n");
+		}
+		
+		emailService.send("help@vula.uct.ac.za", "help-team@vula.uct.ac.za", "Course sites with no active students", sb.toString(), null, null, null);
+		
 	}
 
 
