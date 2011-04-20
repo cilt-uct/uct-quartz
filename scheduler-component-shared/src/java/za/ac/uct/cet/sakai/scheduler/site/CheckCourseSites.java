@@ -65,7 +65,7 @@ public class CheckCourseSites implements Job {
 			boolean hasActiveStudent = false;
 			while (it.hasNext()) {
 				Member member = it.next();
-				if ("student".equals(member.getRole())) {
+				if ("Student".equals(member.getRole())) {
 					try {
 						User user = userDirectoryService.getUser(member.getUserId());
 						if ("student".equals(user.getType())) {
