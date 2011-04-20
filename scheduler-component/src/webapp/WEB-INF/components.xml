@@ -1075,4 +1075,43 @@
 		</property>
 	</bean>
 	
+	
+	<!-- Check course Sites -->
+	<bean id="checkCourseSites"
+	class="za.ac.uct.cet.sakai.scheduler.site.CheckCourseSites">
+	<property name="sessionManager">
+		<ref bean="org.sakaiproject.tool.api.SessionManager" />
+	</property>
+	<property name="siteService">
+		<ref bean="org.sakaiproject.site.api.SiteService" />
+	</property>
+	<property name="userDirectoryService">
+		<ref bean="org.sakaiproject.user.api.UserDirectoryService" />
+	</property>
+	<property name="emailTemplateService">
+		<ref
+			bean="org.sakaiproject.emailtemplateservice.service.EmailTemplateService" />
+	</property>
+</bean>
+	
+	
+
+	<bean
+		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerCheckCourseSites"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		singleton="true" init-method="init">
+		<property name="beanId">
+			<value>checkCourseSites</value>
+		</property>
+		<property name="jobName">
+			<value>check Course Sites</value>
+		</property>
+		<property name="schedulerManager">
+			<ref
+				bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+	</bean>
+	
+	
+	
 </beans>
