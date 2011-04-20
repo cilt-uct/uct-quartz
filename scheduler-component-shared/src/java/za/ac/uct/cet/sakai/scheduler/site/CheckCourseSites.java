@@ -66,13 +66,13 @@ public class CheckCourseSites implements Job {
 			while (it.hasNext()) {
 				Member member = it.next();
 				String role = member.getRole().getId();
-				LOG.info("got member: " + member.getUserDisplayId() + " with role: " + role);
+				LOG.debug("got member: " + member.getUserDisplayId() + " with role: " + role);
 				if ("Student".equals(role)) {
-					LOG.info("got a student user");
+					LOG.debug("got a student user");
 					try {
 						User user = userDirectoryService.getUser(member.getUserId());
 						if ("student".equals(user.getType())) {
-							LOG.info("got an active student");
+							LOG.debug("got an active student");
 							hasActiveStudent = true;
 							break;
 						}
