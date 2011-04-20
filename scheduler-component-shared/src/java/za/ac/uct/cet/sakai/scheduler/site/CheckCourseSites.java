@@ -62,11 +62,10 @@ public class CheckCourseSites implements Job {
 			//get the membership
 			Set<Member> members = s1.getMembers();
 			Iterator<Member> it = members.iterator();
-			
-			
 			boolean hasActiveStudent = false;
 			while (it.hasNext()) {
 				Member member = it.next();
+				LOG.info("got member: " + member.getUserDisplayId() + " with role: " + member.getRole());
 				if ("Student".equals(member.getRole())) {
 					LOG.info("got a student user");
 					try {
