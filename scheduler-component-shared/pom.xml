@@ -117,11 +117,6 @@
 			<artifactId>sakai-messageforums-api</artifactId> </dependency>
 		-->
 		<dependency>
-			<groupId>openldap</groupId>
-			<artifactId>ldap</artifactId>
-			<version>2005.03.29</version>
-		</dependency>
-		<dependency>
 			<groupId>org.sakaiproject.emailtemplateservice</groupId>
 			<artifactId>emailtemplateservice-api</artifactId>
 		</dependency>
@@ -130,6 +125,12 @@
 			<artifactId>joda-time</artifactId>
 			<version>1.6.2</version>
 			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.novell.ldap</groupId>
+			<artifactId>jldap</artifactId>
+			<version>2009-10-07</version>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>
