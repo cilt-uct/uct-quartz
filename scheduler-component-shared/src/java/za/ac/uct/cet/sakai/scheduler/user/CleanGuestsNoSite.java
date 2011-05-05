@@ -56,7 +56,7 @@ public class CleanGuestsNoSite implements Job{
 	    
 	    
 	    
-		String sql = "select user_id from SAKAI_USER where type='guest' and user_id not in (select user_id from SAKAI_REALM_RL_GR) and modifiedon < date_sub(now(),INTERVAL 6 MONTH)";
+		String sql = "select user_id from SAKAI_USER where type='guest' and modifiedon < date_sub(now(),INTERVAL 6 MONTH) and user_id not in (select user_id from SAKAI_REALM_RL_GR)";
 		
 		List<String> users = sqlService.dbRead(sql);
 		
