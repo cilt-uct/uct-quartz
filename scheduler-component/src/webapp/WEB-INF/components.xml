@@ -932,6 +932,7 @@
 		</property>
 		<property name="userDirectoryService" ref="org.sakaiproject.user.api.UserDirectoryService"/>
 		<property name="sqlService" ref="org.sakaiproject.db.api.SqlService"/>
+		<property name="validationLogic" ref="org.sakaiproject.accountvalidator.logic.ValidationLogic"/>
 	</bean>
 	
 	

@@ -7,6 +7,8 @@ import org.apache.commons.logging.LogFactory;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import org.sakaiproject.accountvalidator.logic.ValidationLogic;
+import org.sakaiproject.accountvalidator.model.ValidationAccount;
 import org.sakaiproject.db.api.SqlService;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
@@ -38,7 +40,12 @@ public class CleanGuestsNoSite implements Job{
 		this.sessionManager = s;
 	}
 	
-	
+	private ValidationLogic validationLogic;	
+	public void setValidationLogic(ValidationLogic validationLogic) {
+		this.validationLogic = validationLogic;
+	}
+
+
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		
 		//set the user information into the current session
@@ -57,19 +64,23 @@ public class CleanGuestsNoSite implements Job{
 		
 		for (int i = 0; i < users.size(); i++) {
 			String userId = users.get(i);
-			try {
-				UserEdit u = userDirectoryService.editUser(userId);
-				userDirectoryService.removeUser(u);
-				LOG.info("removed: " + userId);
-			} catch (UserNotDefinedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (UserPermissionException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (UserLockedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			//does the user have a validation?
+			ValidationAccount va = validationLogic.getVaLidationAcountByUserId(userId);
+			if (va == null) {
+				try {
+					UserEdit u = userDirectoryService.editUser(userId);
+					userDirectoryService.removeUser(u);
+					LOG.info("removed: " + userId);
+				} catch (UserNotDefinedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (UserPermissionException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (UserLockedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 		
