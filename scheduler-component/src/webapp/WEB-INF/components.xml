@@ -1093,6 +1093,7 @@
 		<ref
 			bean="org.sakaiproject.email.api.EmailService" />
 	</property>
+	<property name="contentHostingService" ref="org.sakaiproject.content.api.ContentHostingService"/>
 </bean>
 	
 	
