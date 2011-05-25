@@ -11,7 +11,12 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.sakaiproject.authz.api.Member;
+import org.sakaiproject.content.api.ContentCollection;
+import org.sakaiproject.content.api.ContentHostingService;
 import org.sakaiproject.email.api.EmailService;
+import org.sakaiproject.exception.IdUnusedException;
+import org.sakaiproject.exception.PermissionException;
+import org.sakaiproject.exception.TypeException;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.site.api.SiteService.SortType;
@@ -46,7 +51,12 @@ public class CheckCourseSites implements Job {
 		this.userDirectoryService = s;
 	}
 
- 
+	
+	private ContentHostingService contentHostingService; 
+	public void setContentHostingService(ContentHostingService contentHostingService) {
+		this.contentHostingService = contentHostingService;
+	}
+
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		//set the user information into the current session
 		Session sakaiSession = sessionManager.getCurrentSession();
@@ -56,6 +66,7 @@ public class CheckCourseSites implements Job {
 		List<Site> sites = siteService.getSites(SiteService.SelectionType.NON_USER, "course", null, null, SortType.NONE, null);
 		
 		List<Site> nonActiveSites = new ArrayList<Site>();
+		Long totalBodyK = 0L;
 		for (int i =0 ; i< sites.size(); i++ ) {
 			//iterate through the sites
 			Site s1 = sites.get(i);
@@ -85,6 +96,24 @@ public class CheckCourseSites implements Job {
 			
 			if (!hasActiveStudent) {
 				LOG.info("site: " + s1.getTitle() + " has no active students");
+				
+				//get the size of the collection
+				String siteCollection  = contentHostingService.getSiteCollection(s1.getId());
+				try {
+					ContentCollection collection = contentHostingService.getCollection(siteCollection);
+					Long bodyK = collection.getBodySizeK();
+					totalBodyK = totalBodyK + bodyK;
+				} catch (IdUnusedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (TypeException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (PermissionException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
 				nonActiveSites.add(s1);
 			}
 			
@@ -92,7 +121,8 @@ public class CheckCourseSites implements Job {
 		
 		//compose the email
 		StringBuilder sb = new StringBuilder();
-		sb.append("found " + nonActiveSites.size() + " sites that could be archived\n\n");
+		sb.append("found " + nonActiveSites.size() + " sites that could be archived\n");
+		sb.append("containing " + totalBodyK + "K of content in resources\n\n");
 		for (int i = 0; i < nonActiveSites.size(); i++) {
 			Site s = nonActiveSites.get(i);
 			sb.append(s.getTitle() + " (" + s.getId() + ")\n");
