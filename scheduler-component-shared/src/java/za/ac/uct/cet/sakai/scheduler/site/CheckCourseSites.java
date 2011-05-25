@@ -104,8 +104,10 @@ public class CheckCourseSites implements Job {
 					Long bodyK = collection.getBodySizeK();
 					totalBodyK = totalBodyK + bodyK;
 				} catch (IdUnusedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					// Possibly the site has no collection
+					if (LOG.isDebugEnabled()) {
+						LOG.debug("site " + s1.getId() + " has no content collection");
+					}
 				} catch (TypeException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
