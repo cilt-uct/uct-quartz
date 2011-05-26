@@ -141,7 +141,7 @@ public class UCTImportCourses implements Job {
 
 		//if this is a EWA or SUP course ignore
 		if (courseCode.lastIndexOf("SUP") == 8 ||courseCode.lastIndexOf("EWA") == 8) {
-			LOG.warn("we won't import " + courseCode + "as it is a SUP or EWA course");
+			LOG.warn("we won't import " + courseCode + " as it is a SUP or EWA course");
 			return;
 		}
 
