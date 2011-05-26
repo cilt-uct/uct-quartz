@@ -108,7 +108,7 @@ public class UCTImportCourses implements Job {
 				//date is in 11, 12
 				Date startDate = row.getCell(13).getDateCellValue();
 				Date endDate = row.getCell(14).getDateCellValue();
-				if ("LG01".equals(row.getCell(4).getStringCellValue()) || "RG01".equals(row.getCell(4).getStringCellValue())) {
+				if ("LG01".equals(row.getCell(4).getStringCellValue()) || "RG01".equals(row.getCell(4).getStringCellValue()) || "1".equals(row.getCell(4).getStringCellValue())) {
 					this.createCourse(row.getCell(7).getStringCellValue() + row.getCell(8).getStringCellValue(), session, row.getCell(10).getStringCellValue(), row.getCell(7).getStringCellValue(), startDate, endDate);
 				} else {
 					LOG.info(row.getCell(7).getStringCellValue() + row.getCell(8).getStringCellValue() + " is of type " + row.getCell(12).getStringCellValue() + " with id " + row.getCell(4).getStringCellValue() +  " so ignoring");
@@ -135,20 +135,6 @@ public class UCTImportCourses implements Job {
 
 	}
 
-
-	private Date parseDate(String string) {
-		//format is 7/25/2011
-		DateFormat df = new SimpleDateFormat("M/d/y");
-		Date ret = null;
-		try {
-			ret = df.parse(string);
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return ret;
-	}
 
 	private void createCourse(String courseCode, String term, String descr, String setId, Date startDate, Date endDate) {
 		LOG.info("createCourse(" + courseCode + "," + term + "," + descr + "," + setId );
