@@ -17,6 +17,7 @@ import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
 import org.sakaiproject.user.api.User;
+import org.sakaiproject.user.api.UserAlreadyDefinedException;
 import org.sakaiproject.user.api.UserDirectoryService;
 import org.sakaiproject.user.api.UserEdit;
 import org.sakaiproject.user.api.UserLockedException;
@@ -94,7 +95,7 @@ public class FixDeactiveFormat implements Job {
 						UserEdit edit = userDirectoryService.editUser(userId);
 						ResourceProperties rp1 = user.getProperties();
 						rp1.addProperty("SPML_DEACTIVATED", fmt.print(newOne));
-						userDirectoryService.cancelEdit(edit);
+						userDirectoryService.commitEdit(edit);
 						
 					} catch (UserPermissionException e1) {
 						// TODO Auto-generated catch block
@@ -102,6 +103,9 @@ public class FixDeactiveFormat implements Job {
 					} catch (UserLockedException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
+					} catch (UserAlreadyDefinedException e3) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 					}
 					
 					
