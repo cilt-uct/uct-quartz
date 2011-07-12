@@ -46,7 +46,7 @@ public class FixDeactiveFormat implements Job {
 	
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		// TODO Auto-generated method stub
-		String sql = "select useid from SAKAI_USER_PROPERTY where name='SPML_DEACTIVATED'";
+		String sql = "select user_id from SAKAI_USER_PROPERTY where name='SPML_DEACTIVATED'";
 		List<String> users = sqlService.dbRead(sql);
 		
 		//set the user information into the current session
