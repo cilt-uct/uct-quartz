@@ -83,7 +83,7 @@ public class CleanOldUserData implements Job{
 		LOG.info("sql: " + sql);
 		List<String> users = sqlService.dbRead(sql);
 		
-		LOG.info("got a list of " + users.size() + " user whos data to clean up");
+		LOG.info("got a list of " + users.size() + " user who's data to clean up");
 		int noCollection = 0;
 		int hasCollection = 0;
 		long totalSize = 0;
@@ -109,7 +109,7 @@ public class CleanOldUserData implements Job{
 				long bodySize = collection.getBodySizeK();
 				LOG.info("user: " + userId + " has a collection of " + bodySize +"kb");
 				totalSize = totalSize + bodySize;
-				//TODO remove the collection
+				//remove the collection
 				try {
 					
 					contentHostingService.removeCollection(collectionId);
