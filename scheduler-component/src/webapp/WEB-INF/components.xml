@@ -1084,7 +1084,9 @@
 		</property>
 		<property name="userDirectoryService" ref="org.sakaiproject.user.api.UserDirectoryService"/>
 		<property name="sqlService" ref="org.sakaiproject.db.api.SqlService"/>
-		<property name="siteService" ref="org.sakaiproject.site.api.SiteService"/>
+		<property name="sessionManager">
+			<ref bean="org.sakaiproject.tool.api.SessionManager" />
+		</property>
 	</bean>
 	
 	
