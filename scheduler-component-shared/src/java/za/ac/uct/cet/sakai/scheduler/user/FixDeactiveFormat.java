@@ -56,7 +56,7 @@ public class FixDeactiveFormat implements Job {
 	    
 	    DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
 	    //Tue Feb 01 15:11:42 SAST 2011 
-	    DateTimeFormatter oldFormat = DateTimeFormat.forPattern("E MM d H:m:s Z Y");
+	    DateTimeFormatter oldFormat = DateTimeFormat.forPattern("EE MM d H:m:s Z Y");
 		
 		for (int i = 0; i < users.size(); i++) {
 			String userId = users.get(i);
