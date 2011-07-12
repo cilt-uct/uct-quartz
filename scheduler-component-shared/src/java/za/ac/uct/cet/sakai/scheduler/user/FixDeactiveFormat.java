@@ -7,6 +7,7 @@ import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.DateTimeFormatterBuilder;
 import org.joda.time.format.ISODateTimeFormat;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
@@ -56,8 +57,24 @@ public class FixDeactiveFormat implements Job {
 	    
 	    DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
 	    //Tue Feb 01 15:11:42 SAST 2011 
-	    DateTimeFormatter oldFormat = DateTimeFormat.forPattern("EE MM d H:m:s Z Y");
-		
+	    DateTimeFormatter oldFormat = new DateTimeFormatterBuilder()
+		.appendDayOfWeekShortText()
+		.appendLiteral(' ')
+		.appendMonthOfYearShortText()
+		.appendLiteral(' ')
+		.appendDayOfMonth(2)
+		.appendLiteral(' ')
+		.appendHourOfDay(2)
+		.appendLiteral(':')
+		.appendMinuteOfHour(2)
+		.appendLiteral(':')
+		.appendSecondOfMinute(2)
+		.appendLiteral(' ')
+		.appendTimeZoneOffset(null, true, 1, 1)
+		.appendLiteral(' ')
+		.appendYear(4, 4)
+		.toFormatter()
+		;
 		for (int i = 0; i < users.size(); i++) {
 			String userId = users.get(i);
 			try {
@@ -71,7 +88,8 @@ public class FixDeactiveFormat implements Job {
 				catch (IllegalArgumentException e) {
 					LOG.info("that's not an ISO date!");
 					//todo we need to parse
-					DateTime newOne = oldFormat.parseDateTime(deactive);
+					String value = deactive.replace("SAST", "+02");
+					DateTime newOne = oldFormat.parseDateTime(value);
 					try {
 						UserEdit edit = userDirectoryService.editUser(userId);
 						ResourceProperties rp1 = user.getProperties();
