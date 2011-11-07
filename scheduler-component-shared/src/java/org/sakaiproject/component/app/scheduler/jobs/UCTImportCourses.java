@@ -159,7 +159,7 @@ public class UCTImportCourses implements Job {
 		//if this is a EWA or SUP course ignore if before 2012
 		int yearNumeric = Integer.valueOf(term).intValue();
 		
-		if (yearNumeric > 2011 && (courseCode.lastIndexOf("SUP") == 8 ||courseCode.lastIndexOf("EWA") == 8)) {
+		if (yearNumeric < 2012 && (courseCode.lastIndexOf("SUP") == 8 ||courseCode.lastIndexOf("EWA") == 8)) {
 			LOG.warn("we won't import " + courseCode + " as it is a SUP or EWA course in year " + term);
 			return;
 		}
