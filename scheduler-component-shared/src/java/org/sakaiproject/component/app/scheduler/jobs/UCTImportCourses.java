@@ -4,9 +4,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -139,9 +136,11 @@ public class UCTImportCourses implements Job {
 	private void createCourse(String courseCode, String term, String descr, String setId, Date startDate, Date endDate) {
 		LOG.info("createCourse(" + courseCode + "," + term + "," + descr + "," + setId );
 
-		//if this is a EWA or SUP course ignore
-		if (courseCode.lastIndexOf("SUP") == 8 ||courseCode.lastIndexOf("EWA") == 8) {
-			LOG.warn("we won't import " + courseCode + " as it is a SUP or EWA course");
+		//if this is a EWA or SUP course ignore if before 2012
+		int yearNumeric = Integer.valueOf(term).intValue();
+		
+		if (yearNumeric > 2011 && (courseCode.lastIndexOf("SUP") == 8 ||courseCode.lastIndexOf("EWA") == 8)) {
+			LOG.warn("we won't import " + courseCode + " as it is a SUP or EWA course in year " + term);
 			return;
 		}
 
