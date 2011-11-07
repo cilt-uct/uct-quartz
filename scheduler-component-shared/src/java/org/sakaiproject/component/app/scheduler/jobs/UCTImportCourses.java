@@ -4,9 +4,11 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -105,10 +107,11 @@ public class UCTImportCourses implements Job {
 				//date is in 11, 12
 				Date startDate = row.getCell(13).getDateCellValue();
 				Date endDate = row.getCell(14).getDateCellValue();
-				if ("LG01".equals(row.getCell(4).getStringCellValue()) || "RG01".equals(row.getCell(4).getStringCellValue()) || "1".equals(row.getCell(4).getStringCellValue())) {
+				String sectionType = row.getCell(4).getStringCellValue();
+				if (doSectionType(sectionType)) {
 					this.createCourse(row.getCell(7).getStringCellValue() + row.getCell(8).getStringCellValue(), session, row.getCell(10).getStringCellValue(), row.getCell(7).getStringCellValue(), startDate, endDate);
 				} else {
-					LOG.info(row.getCell(7).getStringCellValue() + row.getCell(8).getStringCellValue() + " is of type " + row.getCell(12).getStringCellValue() + " with id " + row.getCell(4).getStringCellValue() +  " so ignoring");
+					LOG.info(row.getCell(7).getStringCellValue() + row.getCell(8).getStringCellValue() + " is of type " + row.getCell(12).getStringCellValue() + " with id " + sectionType +  " so ignoring");
 				}
 			} 
 
@@ -130,6 +133,23 @@ public class UCTImportCourses implements Job {
 
 		}
 
+	}
+
+	private boolean doSectionType(String sectionType) {
+		if (sectionType == null) {
+			return false;
+		}
+		
+		//TODO set this by string injection
+		List<String> sections = new ArrayList<String>();
+		sections.add("LG01");
+		sections.add("RG01");
+		sections.add("1");
+		sections.add("EG");
+		sections.add("EG001");
+		sections.add("EWA");
+		
+		return sections.contains(sectionType);
 	}
 
 
