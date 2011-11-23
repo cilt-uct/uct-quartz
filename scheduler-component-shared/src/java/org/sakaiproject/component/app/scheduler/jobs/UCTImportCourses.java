@@ -94,7 +94,8 @@ public class UCTImportCourses implements Job {
 			HSSFWorkbook workBook = new HSSFWorkbook (fileSystem);
 			HSSFSheet sheet = workBook.getSheetAt(0);
 			Iterator<Row> rows = sheet.rowIterator ();
-			//we need to skip the first 2 rows
+			//we need to skip the first 3 rows
+			rows.next();
 			rows.next();
 			rows.next();
 			
