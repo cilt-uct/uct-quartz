@@ -63,6 +63,7 @@ public class UCTImportCourses implements Job {
 
 		//importFile(filePath + "2010_courses.xls", "2010");
 		importFile(filePath + "2011_courses.xls", "2011");
+		importFile(filePath + "2011S_courses.xls", "2011");
 		importFile(filePath + "2012_courses.xls", "2012");
 	}
 
