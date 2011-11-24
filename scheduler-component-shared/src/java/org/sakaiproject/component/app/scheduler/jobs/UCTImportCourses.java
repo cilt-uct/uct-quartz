@@ -151,6 +151,7 @@ public class UCTImportCourses implements Job {
 		sections.add("EG");
 		sections.add("EG001");
 		sections.add("EWA");
+		sections.add("FG01");
 		
 		return sections.contains(sectionType);
 	}
