@@ -50,7 +50,8 @@ public class CleanOrphanedContent implements Job {
 	public void setDoCleanUp(Boolean doCleanUp) {
 		this.doCleanUp = doCleanUp;
 	}
-
+	
+	@SuppressWarnings("unchecked")
 	public void execute(JobExecutionContext context)
 	throws JobExecutionException {
 
