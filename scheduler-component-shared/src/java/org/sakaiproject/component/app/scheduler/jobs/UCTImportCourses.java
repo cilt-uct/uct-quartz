@@ -152,6 +152,8 @@ public class UCTImportCourses implements Job {
 		sections.add("EG001");
 		sections.add("EWA");
 		sections.add("FG01");
+		//Clinical courses in HS
+		sections.add("CLN");
 		
 		return sections.contains(sectionType);
 	}
