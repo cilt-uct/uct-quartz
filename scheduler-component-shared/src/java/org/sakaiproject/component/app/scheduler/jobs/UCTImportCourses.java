@@ -53,17 +53,12 @@ public class UCTImportCourses implements Job {
 		filePath = fp;
 	}
 
-	private String term;
-	public void setTerm(String t) {
-		term = t;
-	}
-
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		///data/sakai/import/2010_courses.csv
 
 		//importFile(filePath + "2010_courses.xls", "2010");
-		importFile(filePath + "2011_courses.xls", "2011");
-		importFile(filePath + "2011S_courses.xls", "2011");
+		//importFile(filePath + "2011_courses.xls", "2011");
+		//importFile(filePath + "2011S_courses.xls", "2011");
 		importFile(filePath + "2012_courses.xls", "2012");
 	}
 
@@ -153,7 +148,7 @@ public class UCTImportCourses implements Job {
 		sections.add("EWA");
 		sections.add("FG01");
 		//Clinical courses in HS
-		sections.add("CLN");
+		sections.add("CG01");
 		
 		return sections.contains(sectionType);
 	}
