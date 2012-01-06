@@ -223,9 +223,6 @@
 			<ref
 				bean="org.sakaiproject.coursemanagement.api.CourseManagementAdministration" />
 		</property>
-		<property name="term">
-			<value>2010</value>
-		</property>
 		<property name="filePath">
 			<value>/data/sakai/otherdata/import/</value>
 		</property>
