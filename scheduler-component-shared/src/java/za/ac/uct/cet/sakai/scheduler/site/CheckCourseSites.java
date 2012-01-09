@@ -21,6 +21,7 @@ import org.sakaiproject.exception.TypeException;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.site.api.ToolConfiguration;
+import org.sakaiproject.site.api.SiteService.SortType;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
 import org.sakaiproject.user.api.User;
@@ -129,11 +130,11 @@ public class CheckCourseSites implements Job {
 				String term = rp.getProperty("term");
 				LOG.info("found term " + term);
 				if (term == null || Integer.valueOf(term).intValue() < 2011) {
-					
+					LOG.info("checking for search tool");
 					//find the search tool
 					ToolConfiguration tc = site.getTool("sakai.search");
 					if (tc != null) {
-						LOG.info("removing search page from " + site.getTitle());
+						LOG.info("removing search page from " + site.getTitle() + " in  term " + term);
 						site.removePage(tc.getContainingPage());
 					}
 					siteService.save(site);
