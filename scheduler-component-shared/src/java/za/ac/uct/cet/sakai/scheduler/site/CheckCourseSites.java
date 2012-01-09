@@ -1,6 +1,7 @@
 package za.ac.uct.cet.sakai.scheduler.site;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -59,6 +60,8 @@ public class CheckCourseSites implements Job {
 		this.contentHostingService = contentHostingService;
 	}
 
+	
+	
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		//set the user information into the current session
 		Session sakaiSession = sessionManager.getCurrentSession();
@@ -128,16 +131,20 @@ public class CheckCourseSites implements Job {
 				site = siteService.getSite(s1.getId());
 				ResourceProperties rp = site.getProperties();
 				String term = rp.getProperty("term");
-				LOG.info("found term " + term);
+				LOG.info("found term " + term + " for " + site.getTitle());
 				if (term == null || Integer.valueOf(term).intValue() < 2011) {
 					LOG.info("checking for search tool");
 					//find the search tool
-					ToolConfiguration tc = site.getTool("sakai.search");
-					if (tc != null) {
+					Collection<ToolConfiguration> tc = site.getTools("sakai.search");
+					LOG.info("got " + tc.size() + " matching configs");
+					Iterator<ToolConfiguration> itar = tc.iterator();
+					while (itar.hasNext()) {
+						ToolConfiguration toolConfig = itar.next();
 						LOG.info("removing search page from " + site.getTitle() + " in  term " + term);
-						site.removePage(tc.getContainingPage());
-					}
-					siteService.save(site);
+						site.removePage(toolConfig.getContainingPage());
+						siteService.save(site);
+					} 
+					
 				}
 				
 			} catch (IdUnusedException e) {
