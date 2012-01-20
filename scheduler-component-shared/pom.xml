@@ -94,12 +94,6 @@
 			<groupId>org.sakaiproject.common</groupId>
 			<artifactId>sakai-common-manager-api</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>${sakai.hibernate.groupId}</groupId>
-			<artifactId>${sakai.hibernate.artifactId}</artifactId>
-			<version>${sakai.hibernate.version}</version>
-			<scope>provided</scope>
-		</dependency>
 		<!-- needed for generating CSVs for export -->
         <dependency>
             <groupId>net.sf.opencsv</groupId>
