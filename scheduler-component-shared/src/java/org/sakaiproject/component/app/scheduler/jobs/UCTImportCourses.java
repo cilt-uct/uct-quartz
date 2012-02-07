@@ -149,6 +149,8 @@ public class UCTImportCourses implements Job {
 		sections.add("FG01");
 		//Clinical courses in HS
 		sections.add("CG01");
+		//prac groups - used in music and drama
+		sections.add("PG01");
 		
 		return sections.contains(sectionType);
 	}
