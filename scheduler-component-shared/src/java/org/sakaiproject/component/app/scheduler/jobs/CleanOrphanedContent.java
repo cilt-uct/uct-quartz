@@ -79,6 +79,14 @@ public class CleanOrphanedContent implements Job {
 		sql = "select collection_id from CONTENT_COLLECTION where in_collection='/group/' and replace(mid(collection_id,7),'/','') not in (select site_id from SAKAI_SITE) and length(collection_id)=length('/group/ffdd45d6-9e1d-4328-8082-646472c8b325/'); ";
 		res = sqlService.dbRead(sql);
 		long siteBytes = getBytesInCollection(res);
+		
+		
+		/**
+		 * Dropbox collection
+		 */
+		sql = "select collection_id from CONTENT_COLLECTION where in_collection='/group-user/' and replace(mid(collection_id,12),'/','') not in (select site_id from SAKAI_SITE) and length(collection_id)=length('/group-user/ffdd45d6-9e1d-4328-8082-646472c8b325/');";
+		res = sqlService.dbRead(sql);
+		long dbBytes = getBytesInCollection(res);
 
 		/*
 		sql = "select collection_id from CONTENT_COLLECTION where in_collection='/attachment/' and replace(mid(collection_id,13),'/','') not in (select site_id from SAKAI_SITE); ";
@@ -88,6 +96,7 @@ public class CleanOrphanedContent implements Job {
 		log.info("Orphaned content in user collections: " + formatSize(userBytes * 1024));
 		//log.info("Orphaned content in attachment collections: " + attachBytes);
 		log.info("Orphaned content in site collections: " + formatSize(siteBytes * 1024));
+		log.info("Orphaned content in dropBox collections: " + formatSize(dbBytes * 1024));
 		log.info("Orphaned my workspace sites: " + orphanedSites);
 	}
 
