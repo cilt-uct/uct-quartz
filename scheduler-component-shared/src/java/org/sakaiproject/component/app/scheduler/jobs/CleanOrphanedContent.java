@@ -5,9 +5,9 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import org.quartz.StatefulJob;
 import org.sakaiproject.content.api.ContentCollection;
 import org.sakaiproject.content.api.ContentHostingService;
 import org.sakaiproject.db.api.SqlService;
@@ -21,7 +21,7 @@ import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
 
-public class CleanOrphanedContent implements Job {
+public class CleanOrphanedContent implements StatefulJob {
 
 	private final String ADMIN = "admin";
 	private static final Log log = LogFactory.getLog(CleanOrphanedContent.class);
@@ -51,7 +51,7 @@ public class CleanOrphanedContent implements Job {
 		this.doCleanUp = doCleanUp;
 	}
 	
-	@SuppressWarnings("unchecked")
+	
 	public void execute(JobExecutionContext context)
 	throws JobExecutionException {
 
