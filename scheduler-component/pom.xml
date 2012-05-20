@@ -25,11 +25,11 @@
 	<artifactId>uctsakai-comp-shared-scheduler</artifactId>
 	<version>${project.version}</version>
   	</dependency>
-      <dependency>
+<!--      <dependency>
       <groupId>openldap</groupId>
       <artifactId>ldap</artifactId>
       <version>2005.03.29</version>
-    </dependency>
+    </dependency> -->
    </dependencies>
 
 </project>
