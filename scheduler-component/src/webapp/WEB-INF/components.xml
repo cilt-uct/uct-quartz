@@ -864,6 +864,7 @@
 		<property name="siteService" ref="org.sakaiproject.site.api.SiteService"/>
 		<property name="serverConfigurationService" ref="org.sakaiproject.component.api.ServerConfigurationService"/>
 		<property name="threadLocalManager" ref="org.sakaiproject.thread_local.api.ThreadLocalManager"/>
+		<property name="emailService" ref="org.sakaiproject.email.api.EmailService" />
 	</bean>
 	
 	
@@ -1053,6 +1054,7 @@
 		<property name="sqlService" ref="org.sakaiproject.db.api.SqlService"/>
 		<property name="contentHostingService" ref="org.sakaiproject.content.api.ContentHostingService"/>
 		<property name="siteService" ref="org.sakaiproject.site.api.SiteService"/>
+		<property name="emailService" ref="org.sakaiproject.email.api.EmailService" />
 	</bean>
 	
 	
