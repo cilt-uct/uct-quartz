@@ -111,7 +111,7 @@ public class CleanOldUserData implements Job{
 				ContentCollection collection = contentHostingService.getCollection(collectionId);
 				hasCollection++;
 				long bodySize = collection.getBodySizeK();
-				LOG.info("user: " + userId + " has a collection of " + bodySize +"kb");
+				LOG.info("user: " + userId + " has a collection of " + bodySize +"kb " + "(" + i + "/" + users.size() + ")");
 				totalSize = totalSize + bodySize;
 				//remove the collection
 				try {
