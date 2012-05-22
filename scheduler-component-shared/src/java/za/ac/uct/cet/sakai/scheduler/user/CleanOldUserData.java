@@ -13,6 +13,7 @@ import org.quartz.JobExecutionException;
 import org.sakaiproject.content.api.ContentCollection;
 import org.sakaiproject.content.api.ContentHostingService;
 import org.sakaiproject.db.api.SqlService;
+import org.sakaiproject.email.api.EmailService;
 import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.exception.InUseException;
@@ -61,6 +62,11 @@ public class CleanOldUserData implements Job{
 	private SiteService siteService;
 	public void setSiteService(SiteService siteService) {
 		this.siteService = siteService;
+	}
+	
+	private EmailService emailService;
+	public void setEmailService(EmailService emailService) {
+		this.emailService = emailService;
 	}
 
 
@@ -169,7 +175,11 @@ public class CleanOldUserData implements Job{
 		}
 		LOG.info("checked " + users.size() + " accounts of which " + noCollection + " had no content collection, " + hasCollection + " had a collection");
 		LOG.info("total resource size: " + totalSize + "kb");
-		//TODO email that
+		//email that
+		String body = "checked " + users.size() + " accounts of which " + noCollection + " had no content collection, " + hasCollection + " had a collection\n";
+		body +=  "total resource size: " + totalSize + "kb";
+		emailService.send("help@vula.uct.ac.za", "help-team@vula.uct.ac.za", "Old user data cleaned", body, null, null, null);
+		
 	}
 
 

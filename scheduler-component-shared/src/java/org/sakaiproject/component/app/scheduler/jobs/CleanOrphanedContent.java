@@ -11,6 +11,7 @@ import org.quartz.StatefulJob;
 import org.sakaiproject.content.api.ContentCollection;
 import org.sakaiproject.content.api.ContentHostingService;
 import org.sakaiproject.db.api.SqlService;
+import org.sakaiproject.email.api.EmailService;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.exception.InUseException;
 import org.sakaiproject.exception.PermissionException;
@@ -51,7 +52,14 @@ public class CleanOrphanedContent implements StatefulJob {
 		this.doCleanUp = doCleanUp;
 	}
 	
+
+	private EmailService emailService;	
+	public void setEmailService(EmailService emailService) {
+		this.emailService = emailService;
+	}
+
 	
+
 	public void execute(JobExecutionContext context)
 	throws JobExecutionException {
 
@@ -98,6 +106,13 @@ public class CleanOrphanedContent implements StatefulJob {
 		log.info("Orphaned content in site collections: " + formatSize(siteBytes * 1024));
 		log.info("Orphaned content in dropBox collections: " + formatSize(dbBytes * 1024));
 		log.info("Orphaned my workspace sites: " + orphanedSites);
+		
+		String body = "Orphaned content in user collections: " + formatSize(userBytes * 1024) + "\n";
+		body += "Orphaned content in site collections: " + formatSize(siteBytes * 1024) + "\n";
+		body += "Orphaned content in dropBox collections: " + formatSize(dbBytes * 1024) + "\n";
+		body += "Orphaned my workspace sites: " + orphanedSites;
+			
+		emailService.send("help@vula.uct.ac.za", "help-team@vula.uct.ac.za", "Orphaned data cleaned", body, null, null, null);
 	}
 
 
