@@ -1,5 +1,6 @@
 package za.ac.uct.cet.sakai.scheduler.user;
 
+import java.text.NumberFormat;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -177,7 +178,7 @@ public class CleanOldUserData implements Job{
 		LOG.info("total resource size: " + totalSize + "kb");
 		//email that
 		String body = "checked " + users.size() + " accounts of which " + noCollection + " had no content collection, " + hasCollection + " had a collection\n";
-		body +=  "total resource size: " + totalSize + "kb";
+		body +=  "total resource size: " + formatSize(totalSize * 1024);
 		emailService.send("help@vula.uct.ac.za", "help-team@vula.uct.ac.za", "Old user data cleaned", body, null, null, null);
 		
 	}
@@ -190,5 +191,39 @@ public class CleanOldUserData implements Job{
 		rp.addProperty(WORKSPACE_CONTENT_REMOVED, fmt.print(dt));
 		
 	}
+	
+	/**
+	 * Utility method to get a nice short filesize string.
+	 * @param size_long The size to be displayed (bytes).
+	 * @return A short human readable filesize.
+	 */
+	private static String formatSize(long size_long) {
+		// This method needs to be moved somewhere more sensible.
+		String size = "";
+		NumberFormat formatter = NumberFormat.getInstance();
+		formatter.setMaximumFractionDigits(1);
+		if(size_long > 700000000L)
+		{
+
+			size = formatter.format(1.0 * size_long / (1024L * 1024L * 1024L)) + "G";
+
+		}
+		else if(size_long > 700000L)
+		{
+			
+			size = formatter.format(1.0 * size_long / (1024L * 1024L)) + "Mb";
+
+		}
+		else if(size_long > 700L)
+		{		
+			size = formatter.format(1.0 * size_long / 1024L) + "kb";
+		}
+		else 
+		{
+			size = formatter.format(size_long) +"b";
+		}
+		return size;
+	}
+
 
 }

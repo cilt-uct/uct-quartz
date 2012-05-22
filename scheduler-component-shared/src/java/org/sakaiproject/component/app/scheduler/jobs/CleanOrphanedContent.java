@@ -181,7 +181,7 @@ public class CleanOrphanedContent implements StatefulJob {
 	 * @param size_long The size to be displayed (bytes).
 	 * @return A short human readable filesize.
 	 */
-	public static String formatSize(long size_long) {
+	private static String formatSize(long size_long) {
 		// This method needs to be moved somewhere more sensible.
 		String size = "";
 		NumberFormat formatter = NumberFormat.getInstance();
