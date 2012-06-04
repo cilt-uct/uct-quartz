@@ -153,7 +153,9 @@ public class UCTImportCourses implements Job {
 		//prac groups - used in music and drama
 		sections.add("PG01");
 		
-		return sections.contains(sectionType);
+		//The data seems to random we need to process it all yes
+		//return sections.contains(sectionType);
+		return true;
 	}
 
 
