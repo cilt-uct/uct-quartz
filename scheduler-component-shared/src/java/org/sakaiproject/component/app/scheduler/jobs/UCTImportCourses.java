@@ -141,6 +141,7 @@ public class UCTImportCourses implements Job {
 		//TODO set this by string injection
 		List<String> sections = new ArrayList<String>();
 		sections.add("LG01");
+		sections.add("LECT");
 		sections.add("RG01");
 		sections.add("1");
 		sections.add("EG");
