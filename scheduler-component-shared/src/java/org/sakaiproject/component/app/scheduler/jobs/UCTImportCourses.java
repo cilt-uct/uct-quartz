@@ -105,7 +105,9 @@ public class UCTImportCourses implements Job {
 				//date is in 11, 12
 				Date startDate = row.getCell(13).getDateCellValue();
 				Date endDate = row.getCell(14).getDateCellValue();
-				String sectionType = row.getCell(4).getStringCellValue();
+				
+				//VULA-1604 this should be "Component Type"
+				String sectionType = row.getCell(12).getStringCellValue();
 				if (doSectionType(sectionType)) {
 					this.createCourse(row.getCell(7).getStringCellValue() + row.getCell(8).getStringCellValue(), session, row.getCell(10).getStringCellValue(), row.getCell(7).getStringCellValue(), startDate, endDate);
 				} else {
@@ -138,23 +140,11 @@ public class UCTImportCourses implements Job {
 			return false;
 		}
 		
-		//TODO set this by string injection
-		List<String> sections = new ArrayList<String>();
-		sections.add("LG01");
-		sections.add("LECT");
-		sections.add("RG01");
-		sections.add("1");
-		sections.add("EG");
-		sections.add("EG001");
-		sections.add("EWA");
-		sections.add("FG01");
-		//Clinical courses in HS
-		sections.add("CG01");
-		//prac groups - used in music and drama
-		sections.add("PG01");
+		//we only ignore type TUT
+		if (sectionType.equals("TUT")) {
+			return false;
+		}
 		
-		//The data seems to random we need to process it all yes
-		//return sections.contains(sectionType);
 		return true;
 	}
 
