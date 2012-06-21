@@ -59,7 +59,7 @@ public class ClearorphanedProfiles implements Job {
 			
 		}
 		
-		log.info("Removed " + count + " orphaned pofiles");
+		log.info("Removed " + count + " orphaned profiles");
 	}
 	
 }
