@@ -149,6 +149,9 @@ public class UCTImportCourses implements Job {
 	}
 
 
+	private List<String> accadTerms = new ArrayList<String>();
+	private List<String> courseSets = new ArrayList<String>();
+	
 	private void createCourse(String courseCode, String term, String descr, String setId, Date startDate, Date endDate) {
 		LOG.info("createCourse(" + courseCode + "," + term + "," + descr + "," + setId );
 
@@ -181,12 +184,24 @@ public class UCTImportCourses implements Job {
 		}
 
 		//does the academic session exist
-		if (!courseManagementService.isAcademicSessionDefined(term))
-			courseAdmin.createAcademicSession(term, term,term + " academic year", new Date(), yearEnd);
+		if (!accadTerms.contains(term)) {
+			if (!courseManagementService.isAcademicSessionDefined(term)) {
+				courseAdmin.createAcademicSession(term, term,term + " academic year", new Date(), yearEnd);
+				accadTerms.add(term);
+			} else {
+				accadTerms.add(term);
+			}
+		}
 
 		//does the course set exist?
-		if (!courseManagementService.isCourseSetDefined(setId)) 
-			courseAdmin.createCourseSet(setId, setId, setId, setCategory, null);
+		if (!courseSets.contains(setId)) {
+			if (!courseManagementService.isCourseSetDefined(setId)) { 
+				courseAdmin.createCourseSet(setId, setId, setId, setCategory, null);
+				courseSets.add(setId);
+			} else {
+				courseSets.add(setId);
+			}
+		}
 
 		if (!courseManagementService.isCanonicalCourseDefined(courseCode)) {
 			courseAdmin.createCanonicalCourse(courseCode, courseCode, descr);
