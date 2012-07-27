@@ -132,7 +132,7 @@ public class CheckCourseSites implements Job {
 				ResourceProperties rp = site.getProperties();
 				String term = rp.getProperty("term");
 				LOG.info("found term " + term + " for " + site.getTitle());
-				if (term == null || Integer.valueOf(term).intValue() < 2011) {
+				if (term == null || Integer.valueOf(term).intValue() < 2012) {
 					LOG.info("checking for search tool");
 					//find the search tool
 					Collection<ToolConfiguration> tc = site.getTools("sakai.search");

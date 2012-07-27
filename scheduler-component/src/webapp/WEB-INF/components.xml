@@ -1140,6 +1140,33 @@
 		</property>
 	</bean>
 	
+		<!-- Remove search tools -->
+	<bean id="removeSearchTool"
+	class="za.ac.uct.cet.sakai.scheduler.site.RemoveSearchTool">
+	<property name="sessionManager">
+		<ref bean="org.sakaiproject.tool.api.SessionManager" />
+	</property>
+	<property name="siteService">
+		<ref bean="org.sakaiproject.site.api.SiteService" />
+	</property>
+</bean>
 	
+	
+
+	<bean
+		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerCheckCourseSites"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		singleton="true" init-method="init">
+		<property name="beanId">
+			<value>removeSearchTool</value>
+		</property>
+		<property name="jobName">
+			<value>Remove search Tool</value>
+		</property>
+		<property name="schedulerManager">
+			<ref
+				bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+	</bean>
 	
 </beans>
