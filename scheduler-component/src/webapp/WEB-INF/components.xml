@@ -1154,7 +1154,7 @@
 	
 
 	<bean
-		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerCheckCourseSites"
+		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerRemoveSearchTool"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
 		singleton="true" init-method="init">
 		<property name="beanId">
