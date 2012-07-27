@@ -27,12 +27,12 @@ public class RemoveSearchTool implements Job{
 	public void setSiteService(SiteService s) {
 		this.siteService = s;
 	}
-	
+
 	private SessionManager sessionManager;
 	public void setSessionManager(SessionManager s) {
 		this.sessionManager = s;
 	}
-	
+
 	public void setMinTermId(int minTermId) {
 		this.minTermId = minTermId;
 	}
@@ -49,16 +49,9 @@ public class RemoveSearchTool implements Job{
 		sakaiSession.setUserId("admin");
 		sakaiSession.setUserEid("admin");
 
-		//if this is before 2011 remove the search tool
-		//site will be lazily loaded
-		List<Site> sites = siteService.getSites(SiteService.SelectionType.NON_USER, "course", null, null, SortType.NONE, null);
-		for (int i =0 ; i< sites.size(); i++ ) {
-			Site s1 = sites.get(i);
-			checkRemoveCourseSites(s1);
 
-		}
 
-		sites = siteService.getSites(SiteService.SelectionType.NON_USER, "project", null, null, SortType.NONE, null);
+		List<Site> sites = siteService.getSites(SiteService.SelectionType.NON_USER, "project", null, null, SortType.NONE, null);
 		for (int i =0 ; i< sites.size(); i++ ) {
 			Site s1 = sites.get(i);
 			checkRemoveProjectSites(s1);
@@ -70,7 +63,16 @@ public class RemoveSearchTool implements Job{
 			Site s1 = sites.get(i);
 			checkRemoveProjectSites(s1);
 
-		}		
+		}
+
+		//if this is before 2011 remove the search tool
+		//site will be lazily loaded
+		sites = siteService.getSites(SiteService.SelectionType.NON_USER, "course", null, null, SortType.NONE, null);
+		for (int i =0 ; i< sites.size(); i++ ) {
+			Site s1 = sites.get(i);
+			checkRemoveCourseSites(s1);
+
+		}
 
 	}
 
