@@ -25,6 +25,7 @@ import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.exception.PermissionException;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SiteService;
+import org.sakaiproject.site.api.ToolConfiguration;
 import org.sakaiproject.site.api.SiteService.SortType;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
@@ -168,6 +169,13 @@ public class JoinableSiteJob implements Job {
 						s.setPublished(false);
 						ResourceProperties rp = s.getProperties();
 						rp.addProperty(PROP_ARCHIVE, "true");
+						Collection<ToolConfiguration> tc = s.getTools("sakai.search");
+						Iterator<ToolConfiguration> itar = tc.iterator();
+						while (itar.hasNext()) {
+							ToolConfiguration toolConfig = itar.next();
+							LOG.info("removing search page from " + s.getTitle());
+							s.removePage(toolConfig.getContainingPage());
+						}
 						try {
 							siteService.save(s);
 						} catch (IdUnusedException e) {
