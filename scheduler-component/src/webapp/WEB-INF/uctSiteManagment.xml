@@ -6,7 +6,7 @@
 
 <!--  Maintain the SRC site -->
 	<bean id="maintainSrc"
-		class="org.sakaiproject.component.app.scheduler.jobs.MaintainSRCSite">
+		class="za.ac.uct.cet.sakai.scheduler.src.MaintainSRCSite">
 		<property name="sessionManager">
 			<ref bean="org.sakaiproject.tool.api.SessionManager" />
 		</property>
