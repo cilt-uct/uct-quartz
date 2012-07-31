@@ -8,6 +8,8 @@ import org.apache.commons.logging.LogFactory;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.StatefulJob;
+import org.sakaiproject.chat2.model.ChatChannel;
+import org.sakaiproject.chat2.model.ChatManager;
 import org.sakaiproject.content.api.ContentCollection;
 import org.sakaiproject.content.api.ContentHostingService;
 import org.sakaiproject.db.api.SqlService;
@@ -58,7 +60,10 @@ public class CleanOrphanedContent implements StatefulJob {
 		this.emailService = emailService;
 	}
 
-	
+	private ChatManager chatManager;
+	public void setChatManager(ChatManager chatManager) {
+		this.chatManager = chatManager;
+	}
 
 	public void execute(JobExecutionContext context)
 	throws JobExecutionException {
@@ -101,6 +106,33 @@ public class CleanOrphanedContent implements StatefulJob {
 		res = sqlService.dbRead(sql);
 		long attachBytes = getBytesInCollection(res);
 		 */
+		
+		
+		
+		//orphaned chat channels
+		sql = "select CHAT2_CHANNEL.channel_id from CHAT2_CHANNEL where context not in (select site_id from SAKAI_SITE);";
+		res = sqlService.dbRead(sql);
+		for (int i =0; i < res.size(); i++) {
+			ChatChannel channel = chatManager.getChatChannel(res.get(i));
+			try {
+				chatManager.deleteChannel(channel);
+			} catch (PermissionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		log.info("Orphaned content in user collections: " + formatSize(userBytes * 1024));
 		//log.info("Orphaned content in attachment collections: " + attachBytes);
 		log.info("Orphaned content in site collections: " + formatSize(siteBytes * 1024));
@@ -111,7 +143,11 @@ public class CleanOrphanedContent implements StatefulJob {
 		body += "Orphaned content in site collections: " + formatSize(siteBytes * 1024) + "\n";
 		body += "Orphaned content in dropBox collections: " + formatSize(dbBytes * 1024) + "\n";
 		body += "Orphaned my workspace sites: " + orphanedSites;
-			
+		
+		
+		
+		
+		
 		emailService.send("help@vula.uct.ac.za", "help-team@vula.uct.ac.za", "Orphaned data cleaned", body, null, null, null);
 	}
 

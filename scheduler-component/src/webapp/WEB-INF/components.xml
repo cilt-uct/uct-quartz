@@ -836,6 +836,7 @@
 		<property name="doCleanUp" value="true"/>
 		<property name="siteService" ref="org.sakaiproject.site.api.SiteService"/>
 		<property name="emailService" ref="org.sakaiproject.email.api.EmailService" />
+		<property name="chatManager" ref="org.sakaiproject.chat2.model.ChatManager"/>
 	</bean>
 	
 	

@@ -134,6 +134,10 @@
 			<type>jar</type>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.sakaiproject</groupId>
+			<artifactId>sakai-chat-api</artifactId>
+		</dependency>
 	</dependencies>
 	<build>
 		<resources>
