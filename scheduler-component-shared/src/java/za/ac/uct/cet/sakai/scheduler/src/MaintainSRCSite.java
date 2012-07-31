@@ -43,7 +43,7 @@ public class MaintainSRCSite implements StatefulJob {
 				DateTime cutOff = new DateTime(2012, 1, 1, 0, 1);
 				
 				//clear all chat messages before the current year
-				List<ChatChannel> channels = chatManager.getContextChannels(context, true);
+				List<ChatChannel> channels = chatManager.getContextChannels(context, false);
 				for (int i = 0; i < channels.size(); i++) {
 					ChatChannel channel = channels.get(i);
 					log.info("got channel: " + channel.getTitle());
