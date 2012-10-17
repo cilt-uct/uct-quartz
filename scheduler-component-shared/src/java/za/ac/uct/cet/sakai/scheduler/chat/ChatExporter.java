@@ -84,7 +84,8 @@ public class ChatExporter implements Job {
 			String fileName = path + s.getTitle() + ".xls";
 			for (int i = 0; i < channels.size(); i++) {
 				ChatChannel channel = channels.get(i); 
-				HSSFSheet mySheet = myWorkBook.createSheet(channel.getTitle());
+				
+				HSSFSheet mySheet = myWorkBook.createSheet(escapeSheetName(channel.getTitle()));
 
 
 
@@ -128,5 +129,17 @@ public class ChatExporter implements Job {
 			}
 
 		}
+	}
+	
+	/**
+	 * Escape a title for a worksheet name
+	 * @param title
+	 * @return
+	 */
+	private String escapeSheetName(String title) {
+		title = title.replace("[", "");
+		title = title.replace("]", "");		
+		
+		return title;
 	}
 }
