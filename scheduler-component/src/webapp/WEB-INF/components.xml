@@ -1176,4 +1176,40 @@
 		</property>
 	</bean>
 	
+	
+			<!-- Export Chats -->
+	<bean id="exportChats"
+	class="za.ac.uct.cet.sakai.scheduler.chat.ChatExporter">
+	<property name="sessionManager">
+		<ref bean="org.sakaiproject.tool.api.SessionManager" />
+	</property>
+	<property name="chatManager">
+		<ref bean="org.sakaiproject.chat2.model.ChatManager" />
+	</property>
+	<property name="siteService">
+		<ref bean="org.sakaiproject.site.api.SiteService" />
+	</property>
+	<property name="userDirectoryService">
+		<ref bean="org.sakaiproject.user.api.UserDirectoryService" />
+	</property>
+</bean>
+	
+	
+
+	<bean
+		id="org.sakaiproject.api.app.scheduler.JobBeanWrapperexportChats"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		singleton="true" init-method="init">
+		<property name="beanId">
+			<value>exportChats</value>
+		</property>
+		<property name="jobName">
+			<value>Export Chats</value>
+		</property>
+		<property name="schedulerManager">
+			<ref
+				bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+	</bean>
+	
 </beans>
