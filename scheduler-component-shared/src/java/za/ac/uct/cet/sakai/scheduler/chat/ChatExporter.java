@@ -143,7 +143,7 @@ public class ChatExporter implements Job {
 
 					HSSFCellStyle cs = myWorkBook.createCellStyle();
 					HSSFDataFormat df = myWorkBook.createDataFormat();
-					cs.setDataFormat(df.getFormat("d-mmm-yy"));
+					cs.setDataFormat(df.getFormat("m/d/yy h:mm"));
 					dateCell.setCellStyle(cs);
 
 					
