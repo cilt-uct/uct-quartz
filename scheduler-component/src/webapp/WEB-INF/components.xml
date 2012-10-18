@@ -1192,6 +1192,7 @@
 	<property name="userDirectoryService">
 		<ref bean="org.sakaiproject.user.api.UserDirectoryService" />
 	</property>
+	<property name="userAliasLogic" ref="org.sakaiproject.useralias.logic.UserAliasLogic" />
 </bean>
 	
 	

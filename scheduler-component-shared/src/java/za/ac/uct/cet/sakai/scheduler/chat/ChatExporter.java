@@ -9,6 +9,8 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -26,6 +28,8 @@ import org.sakaiproject.tool.api.SessionManager;
 import org.sakaiproject.user.api.User;
 import org.sakaiproject.user.api.UserDirectoryService;
 import org.sakaiproject.user.api.UserNotDefinedException;
+import org.sakaiproject.useralias.logic.UserAliasLogic;
+import org.sakaiproject.useralias.model.UserAliasItem;
 
 public class ChatExporter implements Job {
 
@@ -49,6 +53,12 @@ public class ChatExporter implements Job {
 
 	public void setUserDirectoryService(UserDirectoryService userDirectoryService) {
 		this.userDirectoryService = userDirectoryService;
+	}
+
+	private UserAliasLogic userAliasLogic;
+	
+	public void setUserAliasLogic(UserAliasLogic userAliasLogic) {
+		this.userAliasLogic = userAliasLogic;
 	}
 
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
@@ -101,10 +111,14 @@ public class ChatExporter implements Job {
 					HSSFCell firstCell = myRow.createCell(0);
 					//we need this user
 					String displayName = message.getOwner();
-					User u;
+					User u = null;
 					try {
 						u = userDirectoryService.getUser(message.getOwner());
-						displayName = u.getDisplayName();
+						displayName = getAliasName(message.getOwner(), context);
+						if (displayName == null) {
+							
+							displayName = u.getDisplayName();
+						}
 					} catch (UserNotDefinedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -112,15 +126,26 @@ public class ChatExporter implements Job {
 
 					firstCell.setCellValue(displayName);
 
-					HSSFCell dateCell = myRow.createCell(1);
+					HSSFCell eid = myRow.createCell(1);
+					eid.setCellValue(u.getEid());
+					
+							
+							
+					HSSFCell dateCell = myRow.createCell(2);
 					dateCell.setCellValue(message.getMessageDate());
-
-					HSSFCell bodyCell = myRow.createCell(2);
+					
+					HSSFCellStyle cs = myWorkBook.createCellStyle();
+					  HSSFDataFormat df = myWorkBook.createDataFormat();
+					  cs.setDataFormat(df.getFormat("d-mmm-yy"));
+					
+					
+					HSSFCell bodyCell = myRow.createCell(3);
 					bodyCell.setCellValue(message.getBody());
+					
 
 					rowNum++;
 				}
-
+				mySheet.autoSizeColumn(3);
 				try{
 					FileOutputStream out = new FileOutputStream(fileName);
 					myWorkBook.write(out);
@@ -131,6 +156,14 @@ public class ChatExporter implements Job {
 		}
 	}
 	
+	private String getAliasName(String owner, String context) {
+		UserAliasItem  uai = userAliasLogic.getUserAliasItemByIdForContext(owner, context);
+		if (uai != null) {
+			return uai.getFirstName() + " " + uai.getLastName();
+		}
+		return null;
+	}
+
 	/**
 	 * Escape a title for a worksheet name
 	 * @param title
