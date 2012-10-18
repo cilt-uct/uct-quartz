@@ -104,7 +104,7 @@ public class ChatExporter implements Job {
 				headerR.createCell(0).setCellValue("Name");
 				headerR.createCell(1).setCellValue("User Id");
 				headerR.createCell(2).setCellValue("Date");
-				headerR.createCell(0).setCellValue("Mesage");
+				headerR.createCell(3).setCellValue("Mesage");
 
 				Set<ChatMessage> messages = channel.getMessages();
 				Iterator<ChatMessage> iter= messages.iterator();
