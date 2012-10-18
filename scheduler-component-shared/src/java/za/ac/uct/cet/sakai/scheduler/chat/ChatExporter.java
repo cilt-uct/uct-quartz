@@ -96,13 +96,19 @@ public class ChatExporter implements Job {
 				ChatChannel channel = channels.get(i); 
 				
 				HSSFSheet mySheet = myWorkBook.createSheet(escapeSheetName(channel.getTitle()));
-
-
-
+				int rowNum = 0;
+				//set the headers
+				HSSFRow headerR = mySheet.createRow(rowNum);
+				rowNum++;
+				
+				headerR.createCell(0).setCellValue("Name");
+				headerR.createCell(1).setCellValue("User Id");
+				headerR.createCell(2).setCellValue("Date");
+				headerR.createCell(0).setCellValue("Mesage");
 
 				Set<ChatMessage> messages = channel.getMessages();
 				Iterator<ChatMessage> iter= messages.iterator();
-				int rowNum = 0;
+				
 				while (iter.hasNext()) {
 					ChatMessage message = iter.next();
 					log.info(message.getBody());
@@ -122,6 +128,7 @@ public class ChatExporter implements Job {
 					} catch (UserNotDefinedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
+						
 					}
 
 					firstCell.setCellValue(displayName);
@@ -133,11 +140,12 @@ public class ChatExporter implements Job {
 							
 					HSSFCell dateCell = myRow.createCell(2);
 					dateCell.setCellValue(message.getMessageDate());
-					
+
 					HSSFCellStyle cs = myWorkBook.createCellStyle();
-					  HSSFDataFormat df = myWorkBook.createDataFormat();
-					  cs.setDataFormat(df.getFormat("d-mmm-yy"));
-					
+					HSSFDataFormat df = myWorkBook.createDataFormat();
+					cs.setDataFormat(df.getFormat("d-mmm-yy"));
+					dateCell.setCellStyle(cs);
+
 					
 					HSSFCell bodyCell = myRow.createCell(3);
 					bodyCell.setCellValue(message.getBody());
@@ -154,10 +162,11 @@ public class ChatExporter implements Job {
 			}
 
 		}
+		log.info("Export Completed");
 	}
 	
 	private String getAliasName(String owner, String context) {
-		UserAliasItem  uai = userAliasLogic.getUserAliasItemByIdForContext(owner, context);
+		UserAliasItem  uai = userAliasLogic.getUserAliasItemByIdForContext(owner, "/site/" + context);
 		if (uai != null) {
 			return uai.getFirstName() + " " + uai.getLastName();
 		}
