@@ -144,6 +144,8 @@ public class UCTImportCourses implements Job {
 		//we only ignore type TUT
 		if (sectionType.equals("TUT")) {
 			return false;
+		} else if ("SPE".equals(sectionType)) {
+			return false;
 		}
 		
 		return true;
