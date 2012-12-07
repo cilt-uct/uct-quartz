@@ -12,6 +12,7 @@
 			<ref
 				bean="org.sakaiproject.coursemanagement.api.CourseManagementService" />
 		</property>
+		
 		<property name="courseManagementAdministration">
 			<ref
 				bean="org.sakaiproject.coursemanagement.api.CourseManagementAdministration" />
