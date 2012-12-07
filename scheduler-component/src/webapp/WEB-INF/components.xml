@@ -6,7 +6,7 @@
 
 <beans>
 	<import resource="uctSiteManagment.xml" />
-
+	<import resource="uctUserManagment.xml" />
 
 	<!-- course site owners -->
 
