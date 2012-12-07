@@ -91,7 +91,7 @@ public class ProccessPSUpdates implements Job {
 		sakaiSession.setUserEid(ADMIN);
 		UserCourseRegistrations userCourseRegistrations = getNextUserCourseRegistrations();
 		if (userCourseRegistrations == null) {
-			log.info("no registrations found!");
+			log.debug("no registrations found!");
 			return;
 		}
 		updateCourses(userCourseRegistrations);
@@ -115,15 +115,15 @@ public class ProccessPSUpdates implements Job {
 	 * @param userCourseRegistrations
 	 */
 	private void updateCourses(UserCourseRegistrations userCourseRegistrations) {
-		log.info("updateCourses(UserCourseRegistrations userCourseRegistrations)");
+		log.debug("updateCourses(UserCourseRegistrations userCourseRegistrations)");
 		//Remove any ;courses that we're not interested in
 		
 		List<String> incomingList = userCourseRegistrations.getCourseRegistrations();
-		log.info("initial incoming list: " + incomingList.size());
+		log.debug("initial incoming list: " + incomingList.size());
 		for (int i = 0; i < incomingList.size(); i++) {
 			String courseCode = incomingList.get(i);
 			if (!isAfterVula(courseCode)) {
-				log.info("removing " + courseCode + " from incoming list");
+				log.debug("removing " + courseCode + " from incoming list");
 				incomingList.remove(courseCode);
 			}
 		}
@@ -143,26 +143,26 @@ public class ProccessPSUpdates implements Job {
 			
  		}
  		
- 		log.info("have a list of " + enrolledSectionEids.size() + " eids from CM");
+ 		log.debug("have a list of " + enrolledSectionEids.size() + " eids from CM");
  		//build a list of drops - in the CM list but not in incoming
  		for (int i = 0; i < enrolledSectionEids.size(); i++) {
  			String eid = enrolledSectionEids.get(i);
  			if (!incomingList.contains(eid)) {
- 				log.info(i + ". looks like user dropped " + eid);
+ 				log.debug(i + ". looks like user dropped " + eid);
  				drops.add(eid);
  			} else {
- 				log.info(i +". looks like user is still registered for " + eid);
+ 				log.debug(i +". looks like user is still registered for " + eid);
  			}
  		}
- 		log.info("we have an incoming list of " + incomingList.size());
+ 		log.debug("we have an incoming list of " + incomingList.size());
 		
 		for (int i = 0; i < incomingList.size(); i++) {
 			String courseCode =  incomingList.get(i);
 			if (! enrolledSectionEids.contains(courseCode)) {
-				log.info("looks like use added " + courseCode);
+				log.debug("looks like use added " + courseCode);
 				adds.add(courseCode);
 			} else {
-				log.info(i + ". looks like user is already registered for " + courseCode);
+				log.debug(i + ". looks like user is already registered for " + courseCode);
 			}
 		 }
  		
@@ -421,12 +421,12 @@ public class ProccessPSUpdates implements Job {
 	
 	private void getCanonicalCourse(String courseEid) {
 		String courseCode = courseEid.substring(0, "PSY2006F".length());
-		log.info("get Cannonical course:" + courseCode);
+		log.debug("get Cannonical course:" + courseCode);
 		try {
 			courseManagementService.getCanonicalCourse(courseCode);
 		}
 		catch (IdNotFoundException id) {
-			log.info("creating canonicalcourse " + courseCode);
+			log.debug("creating canonicalcourse " + courseCode);
 			courseAdmin.createCanonicalCourse(courseCode, "something", "something else");
 		}
 	}
