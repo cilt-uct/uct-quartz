@@ -12,9 +12,9 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
-import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import org.quartz.StatefulJob;
 import org.sakaiproject.coursemanagement.api.CourseManagementAdministration;
 import org.sakaiproject.coursemanagement.api.CourseManagementService;
 import org.sakaiproject.coursemanagement.api.EnrollmentSet;
@@ -35,7 +35,7 @@ import org.sakaiproject.tool.api.SessionManager;
  * @author dhorwitz
  *
  */
-public class ProccessPSUpdates implements Job {
+public class ProccessPSUpdates implements StatefulJob {
 
 
 	private static final Log log = LogFactory.getLog(ProccessPSUpdates.class);
