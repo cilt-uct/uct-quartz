@@ -121,14 +121,20 @@ public class ProccessPSUpdates implements StatefulJob {
 		//Remove any ;courses that we're not interested in
 		
 		List<String> incomingList = userCourseRegistrations.getCourseRegistrations();
+		List<String> incomingListFixed = new ArrayList<String>();
 		log.debug("initial incoming list: " + incomingList.size());
+		
 		for (int i = 0; i < incomingList.size(); i++) {
 			String courseCode = incomingList.get(i);
-			if (!isAfterVula(courseCode)) {
+			String fixedCourseCode = fixCourseCode(courseCode);
+			if (!isAfterVula(fixedCourseCode)) {
 				log.debug("removing " + courseCode + " from incoming list");
-				incomingList.remove(courseCode);
+				continue;
 			}
+			
+			incomingListFixed.add(fixedCourseCode);
 		}
+		
 		
 		Set<Section> sections = courseManagementService.findEnrolledSections(userCourseRegistrations.getUserId());
 		List<Section> filteredList = filterCMSectionList(sections);
@@ -149,7 +155,7 @@ public class ProccessPSUpdates implements StatefulJob {
  		//build a list of drops - in the CM list but not in incoming
  		for (int i = 0; i < enrolledSectionEids.size(); i++) {
  			String eid = enrolledSectionEids.get(i);
- 			if (!incomingList.contains(eid)) {
+ 			if (!incomingListFixed.contains(eid)) {
  				log.debug(i + ". looks like user dropped " + eid);
  				drops.add(eid);
  			} else {
@@ -158,8 +164,8 @@ public class ProccessPSUpdates implements StatefulJob {
  		}
  		log.debug("we have an incoming list of " + incomingList.size());
 		
-		for (int i = 0; i < incomingList.size(); i++) {
-			String courseCode =  incomingList.get(i);
+		for (int i = 0; i < incomingListFixed.size(); i++) {
+			String courseCode =  incomingListFixed.get(i);
 			if (! enrolledSectionEids.contains(courseCode)) {
 				log.debug("looks like use added " + courseCode);
 				adds.add(courseCode);
@@ -173,6 +179,22 @@ public class ProccessPSUpdates implements StatefulJob {
 		proccessDrops(drops, userCourseRegistrations.getUserId());
 	}
 	
+	/**
+	 * Pre 2005 course codes where i digit shorter. PS returns
+	 * them padded with a space
+	 * @param courseCode
+	 * @return
+	 */
+	private String fixCourseCode(String courseCode) {
+		if (courseCode == null) {
+			return null;
+		}
+		
+		return courseCode.replace(" ", "");
+				
+	}
+
+
 	/**
 	 * Process the list of course drops
 	 * @param drops
@@ -224,11 +246,22 @@ public class ProccessPSUpdates implements StatefulJob {
 	 */
 	private boolean doSection(Section section) {
 		String eid = section.getEid();
-		
+		Integer term = getTermIntFromCourseEid(eid);
 		//if the length is not right junk is
-		if (eid.length() != "PSY3007S,2010".length()) {
-			log.warn("we don't work with " + eid);
-			return false;
+		if (term.intValue() > 2005) {
+			if (eid.length() == "PSY3007SSUP,2010".length()) {
+				return true;
+			} else	if (eid.length() != "PSY3007S,2010".length()) {
+				log.warn("we don't work with " + eid);
+				return false;
+			}
+		} else {
+			if (eid.length() == "PSY307SSUP,2010".length()) {
+				return true;
+			} else	if (eid.length() != "PSY307S,2010".length()) {
+				log.warn("we don't work with " + eid);
+				return false;
+			}
 		}
 		
 		if (eid.indexOf("_STUD") > 0) {
@@ -248,14 +281,20 @@ public class ProccessPSUpdates implements StatefulJob {
 	 * @return true if the course code is for a date after the launch of vula
 	 */
 	private boolean isAfterVula(String courseCode) {
-		String[] fields = courseCode.split(",");
-		String yearS =fields[1]; 
-		Integer year = Integer.valueOf(yearS);
+		Integer year = getTermIntFromCourseEid(courseCode);
 		if (year >= earliestCourseYear) {
 			return true;
 		}
 		log.warn("Ignoring course " + courseCode + " as it predates Vula");
 		return false;
+	}
+
+
+	private Integer getTermIntFromCourseEid(String courseCode) {
+		String[] fields = courseCode.split(",");
+		String yearS =fields[1]; 
+		Integer year = Integer.valueOf(yearS);
+		return year;
 	}
 
 
