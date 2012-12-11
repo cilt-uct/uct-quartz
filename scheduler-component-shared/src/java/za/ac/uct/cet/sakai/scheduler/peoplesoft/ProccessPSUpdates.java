@@ -90,13 +90,15 @@ public class ProccessPSUpdates implements StatefulJob {
 		sakaiSession.setUserId(ADMIN);
 		sakaiSession.setUserEid(ADMIN);
 		UserCourseRegistrations userCourseRegistrations = getNextUserCourseRegistrations();
-		if (userCourseRegistrations == null) {
-			log.debug("no registrations found!");
-			return;
+		while (userCourseRegistrations != null) {
+
+			updateCourses(userCourseRegistrations);
+			//TODO we should set a flag on the users properties
+			removeUserDetails(userCourseRegistrations);
+			userCourseRegistrations = getNextUserCourseRegistrations();
+			
 		}
-		updateCourses(userCourseRegistrations);
-		//TODO we should set a flag on the users properties
-		removeUserDetails(userCourseRegistrations);
+		log.info("done!");
 	}
 	
 	/**
