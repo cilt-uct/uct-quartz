@@ -12,6 +12,8 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.StatefulJob;
@@ -24,12 +26,18 @@ import org.sakaiproject.db.api.SqlReader;
 import org.sakaiproject.db.api.SqlReaderFinishedException;
 import org.sakaiproject.db.api.SqlService;
 import org.sakaiproject.email.api.EmailService;
+import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
+import org.sakaiproject.user.api.UserDirectoryService;
+import org.sakaiproject.user.api.UserEdit;
+import org.sakaiproject.user.api.UserLockedException;
+import org.sakaiproject.user.api.UserNotDefinedException;
+import org.sakaiproject.user.api.UserPermissionException;
 
 
 /**
- * Import course code updates from the incomming queue and 
+ * Import course code updates from the incoming queue and 
  * update the users memberships in CM
  * 
  * @author dhorwitz
@@ -57,8 +65,13 @@ public class ProccessPSUpdates implements StatefulJob {
 	private CourseManagementAdministration courseAdmin;
 	private SqlService sqlService;
 	private EmailService emailService;
+	private UserDirectoryService userDirectoryService;
 	
-	
+
+
+	public void setUserDirectoryService(UserDirectoryService userDirectoryService) {
+		this.userDirectoryService = userDirectoryService;
+	}
 
 
 	public void setEmailService(EmailService emailService) {
@@ -95,12 +108,38 @@ public class ProccessPSUpdates implements StatefulJob {
 			updateCourses(userCourseRegistrations);
 			//TODO we should set a flag on the users properties
 			removeUserDetails(userCourseRegistrations);
+			//set the user flag
+			updateUserSynchFlag(userCourseRegistrations.getUserId());
 			userCourseRegistrations = getNextUserCourseRegistrations();
 			
 		}
 		log.info("done!");
 	}
 	
+	private void updateUserSynchFlag(String userEId) {
+		String userId;
+		try {
+			userId = userDirectoryService.getUserId(userEId);
+			UserEdit user = userDirectoryService.editUser(userId);
+			ResourceProperties rp = user.getProperties();
+			DateTime dt = new DateTime();
+			DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
+			rp.addProperty("PS_MEMEBERSHIPS_SYNCHED", fmt.print(dt));
+		} catch (UserNotDefinedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UserPermissionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UserLockedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+	}
+
+
 	/**
 	 * remove the details from the database releated to this user object
 	 * @param userCourseRegistrations

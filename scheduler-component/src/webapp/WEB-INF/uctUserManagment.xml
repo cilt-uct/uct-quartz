@@ -18,6 +18,7 @@
 		</property>
 		<property name="sqlService" ref="org.sakaiproject.db.api.SqlService"/>
 		<property name="emailService" ref="org.sakaiproject.email.api.EmailService"/>
+		<property name="userDirectoryService" ref="org.sakaiproject.user.api.UserDirectoryService" />
 	</bean>
 
 	<bean
