@@ -40,7 +40,7 @@ public class RemoveSearchTool implements Job{
 	/*
 	 * The minimum term for keeping the searhc tool
 	 */
-	private int minTermId = 2012;
+	private int minTermId = 2013;
 
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 

@@ -40,7 +40,7 @@ public class MaintainSRCSite implements StatefulJob {
 				sakaiSession.setUserEid(ADMIN);
 				
 				//the cut of date
-				DateTime cutOff = new DateTime(2012, 1, 1, 0, 1);
+				DateTime cutOff = new DateTime(2013, 1, 1, 0, 1);
 				
 				//clear all chat messages before the current year
 				List<ChatChannel> channels = chatManager.getContextChannels(context, false);
