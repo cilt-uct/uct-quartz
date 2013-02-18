@@ -364,7 +364,7 @@ public class ProccessPSUpdates implements StatefulJob {
 						String c = result.getString(2);
 						courses.add(c);
 						updated = new DateTime(result.getDate(3));
-						user = result.getString(1);
+						user = result.getString(1).toLowerCase();
 					}
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
