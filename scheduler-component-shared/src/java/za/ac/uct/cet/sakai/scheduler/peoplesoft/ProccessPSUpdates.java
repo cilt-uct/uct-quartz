@@ -29,6 +29,7 @@ import org.sakaiproject.email.api.EmailService;
 import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
+import org.sakaiproject.user.api.UserAlreadyDefinedException;
 import org.sakaiproject.user.api.UserDirectoryService;
 import org.sakaiproject.user.api.UserEdit;
 import org.sakaiproject.user.api.UserLockedException;
@@ -125,6 +126,7 @@ public class ProccessPSUpdates implements StatefulJob {
 			DateTime dt = new DateTime();
 			DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
 			rp.addProperty("PS_MEMEBERSHIPS_SYNCHED", fmt.print(dt));
+			userDirectoryService.commitEdit(user);
 		} catch (UserNotDefinedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -132,6 +134,9 @@ public class ProccessPSUpdates implements StatefulJob {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (UserLockedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UserAlreadyDefinedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
