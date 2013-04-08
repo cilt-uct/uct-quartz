@@ -21,7 +21,6 @@ import org.sakaiproject.db.api.SqlService;
 import org.sakaiproject.email.api.EmailService;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
-import org.sakaiproject.user.api.UserDirectoryService;
 
 
 /**
@@ -101,6 +100,8 @@ public class ProccessFinAidUpdates implements StatefulJob {
 		
 		//we now need to drop students no longer on the list
 		removeDroppedUsers(users);
+		//remove the details from the tmp table
+		removeUserDetails();
 		
 	}
 
@@ -143,6 +144,11 @@ public class ProccessFinAidUpdates implements StatefulJob {
 	}
 
 	
+	private void removeUserDetails() {
+		String sql = "delete from FINAID_UPDATED_USERS";
+		sqlService.dbWrite(sql, new Object[]{});
+
+	}
 	
 	/**
 	 * 
