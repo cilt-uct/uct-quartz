@@ -38,4 +38,39 @@
 	</bean>
 
 
+<!-- PROCCESS FinAid DATA-->
+	<bean id="proccessFinAidData"
+		class="za.ac.uct.cet.sakai.scheduler.peoplesoft.ProccessFinAidUpdates">
+		<property name="sessionManager">
+			<ref bean="org.sakaiproject.tool.api.SessionManager" />
+		</property>
+		<property name="courseManagementService">
+			<ref
+				bean="org.sakaiproject.coursemanagement.api.CourseManagementService" />
+		</property>
+		<property name="courseManagementAdministration">
+			<ref
+				bean="org.sakaiproject.coursemanagement.api.CourseManagementAdministration" />
+		</property>
+		<property name="sqlService" ref="org.sakaiproject.db.api.SqlService"/>
+		<property name="emailService" ref="org.sakaiproject.email.api.EmailService"/>
+	</bean>
+
+	<bean
+		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerProcessFinAidData"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		singleton="true" init-method="init">
+		<property name="beanId">
+			<value>proccessFinAidData</value>
+		</property>
+		<property name="jobName">
+			<value>process FinAid data</value>
+		</property>
+		<property name="schedulerManager">
+			<ref
+				bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+	</bean>
+
+
 </beans>
