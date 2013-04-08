@@ -176,7 +176,7 @@ public class ProccessFinAidUpdates implements StatefulJob {
 			String setId = courseCode.substring(0,3);
 			setCategory = "Department";			
 			
-			String courseEid = courseCode;
+			String courseEid = courseCode + "," + term;
 			
 			//do we have a academic session?
 			if (!courseManagementService.isAcademicSessionDefined(term)) {
