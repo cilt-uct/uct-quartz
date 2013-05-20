@@ -167,18 +167,19 @@ public class ProccessPSUpdates implements StatefulJob {
 		List<String> incomingList = userCourseRegistrations.getCourseRegistrations();
 		List<String> incomingListFixed = new ArrayList<String>();
 		log.debug("initial incoming list: " + incomingList.size());
-		
-		for (int i = 0; i < incomingList.size(); i++) {
-			String courseCode = incomingList.get(i);
-			String fixedCourseCode = fixCourseCode(courseCode);
-			if (!isAfterVula(fixedCourseCode)) {
-				log.debug("removing " + courseCode + " from incoming list");
-				continue;
+		//if the student has no course reg there will be 1 course with the ied "null)
+		if (!hasNoCourses(incomingList)) {
+			for (int i = 0; i < incomingList.size(); i++) {
+				String courseCode = incomingList.get(i);
+				String fixedCourseCode = fixCourseCode(courseCode);
+				if (!isAfterVula(fixedCourseCode)) {
+					log.debug("removing " + courseCode + " from incoming list");
+					continue;
+				}
+
+				incomingListFixed.add(fixedCourseCode);
 			}
-			
-			incomingListFixed.add(fixedCourseCode);
 		}
-		
 		
 		Set<Section> sections = courseManagementService.findEnrolledSections(userCourseRegistrations.getUserId());
 		List<Section> filteredList = filterCMSectionList(sections);
@@ -223,6 +224,16 @@ public class ProccessPSUpdates implements StatefulJob {
 		proccessDrops(drops, userCourseRegistrations.getUserId());
 	}
 	
+	private boolean hasNoCourses(List<String> incomingList) {
+		if (incomingList.size() == 1 && "null".equals(incomingList.get(0))) {
+			return true;
+		}
+		
+		
+		return false;
+	}
+
+
 	/**
 	 * Pre 2005 course codes where i digit shorter. PS returns
 	 * them padded with a space
