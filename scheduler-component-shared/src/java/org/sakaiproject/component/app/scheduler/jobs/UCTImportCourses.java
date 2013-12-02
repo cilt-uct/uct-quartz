@@ -54,13 +54,8 @@ public class UCTImportCourses implements Job {
 	}
 
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
-		///data/sakai/import/2010_courses.csv
-
-		//importFile(filePath + "2010_courses.xls", "2010");
-		//importFile(filePath + "2011_courses.xls", "2011");
-		//importFile(filePath + "2011S_courses.xls", "2011");
-		importFile(filePath + "2012_courses.xls", "2012");
-		importFile(filePath + "2013_courses.xls", "2013");
+		// Course data spreadsheet typically in /data/sakai/otherdata/import/201x_courses.csv
+		importFile(filePath + "2014_courses.xls", "2014");
 	}
 
 	private void importFile(String file, String session) {
