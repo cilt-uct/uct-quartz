@@ -136,6 +136,7 @@
 	<dependency>
 	<groupId>org.sakaiproject</groupId>
 	<artifactId>sakai-chat-api</artifactId>
+			<version>10-SNAPSHOT</version>
 	</dependency>
 	
 		<dependency>
