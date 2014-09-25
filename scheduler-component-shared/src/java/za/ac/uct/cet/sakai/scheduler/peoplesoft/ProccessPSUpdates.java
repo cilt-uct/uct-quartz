@@ -307,20 +307,20 @@ public class ProccessPSUpdates implements StatefulJob {
 			if (eid.length() == "PSY3007SSUP,2010".length()) {
 				return true;
 			} else	if (eid.length() != "PSY3007S,2010".length()) {
-				log.warn("we don't work with " + eid);
+				log.debug("we don't work with " + eid);
 				return false;
 			}
 		} else {
 			if (eid.length() == "PSY307SSUP,2010".length()) {
 				return true;
 			} else	if (eid.length() != "PSY307S,2010".length()) {
-				log.warn("we don't work with " + eid);
+				log.debug("we don't work with " + eid);
 				return false;
 			}
 		}
 		
 		if (eid.indexOf("_STUD") > 0) {
-			log.warn(eid + " looks like a faculty group");
+			log.debug(eid + " looks like a faculty group");
 			return false;
 		}
 		
@@ -340,7 +340,7 @@ public class ProccessPSUpdates implements StatefulJob {
 		if (year >= earliestCourseYear) {
 			return true;
 		}
-		log.warn("Ignoring course " + courseCode + " as it predates Vula");
+		log.debug("Ignoring course " + courseCode + " as it predates Vula");
 		return false;
 	}
 
