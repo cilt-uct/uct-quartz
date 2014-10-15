@@ -44,10 +44,10 @@ import org.sakaiproject.user.api.UserPermissionException;
  * @author dhorwitz
  *
  */
-public class ProccessPSUpdates implements StatefulJob {
+public class ProcessPSUpdates implements StatefulJob {
 
 
-	private static final Log log = LogFactory.getLog(ProccessPSUpdates.class);
+	private static final Log log = LogFactory.getLog(ProcessPSUpdates.class);
 
 	private static final String ADMIN = "admin";
 	

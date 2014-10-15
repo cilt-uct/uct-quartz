@@ -30,10 +30,10 @@ import org.sakaiproject.tool.api.SessionManager;
  * @author dhorwitz
  *
  */
-public class ProccessFinAidUpdates implements StatefulJob {
+public class ProcessFinAidUpdates implements StatefulJob {
 
 
-	private static final Log log = LogFactory.getLog(ProccessFinAidUpdates.class);
+	private static final Log log = LogFactory.getLog(ProcessFinAidUpdates.class);
 
 	private static final String ADMIN = "admin";
 
