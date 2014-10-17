@@ -32,9 +32,7 @@ import org.sakaiproject.tool.api.SessionManager;
  */
 public class ProcessFinAidUpdates implements StatefulJob {
 
-
 	private static final Log log = LogFactory.getLog(ProcessFinAidUpdates.class);
-
 	private static final String ADMIN = "admin";
 
 
@@ -47,13 +45,9 @@ public class ProcessFinAidUpdates implements StatefulJob {
 	private SqlService sqlService;
 	private EmailService emailService;
 	
-
-
 	
 	private final String courseCode = "FINAID";
-	private final String term = "2013";
-
-	
+	private final String term = "2014";
 
 	public void setEmailService(EmailService emailService) {
 		this.emailService = emailService;
@@ -79,30 +73,32 @@ public class ProcessFinAidUpdates implements StatefulJob {
 	}
 
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
+
+		log.info("Updating FinAid users");
+
 		// set the user information into the current session
 		Session sakaiSession = sessionManager.getCurrentSession();
 		sakaiSession.setUserId(ADMIN);
 		sakaiSession.setUserEid(ADMIN);
 		
 		List<String> users = getQueuedUsers();
+
 		if (users.size() == 0) {
-			log.warn("no queued FinAid users");
+			log.info("no queued FinAid users");
 			return;
 		}
 		
-		
-		//ADD all the users
+		// Add all the users
 		for (int i = 0; i < users.size(); i++) {
 			String userEid = users.get(i);
 			registerUser(userEid);
 		}
 		
-		
 		//we now need to drop students no longer on the list
 		removeDroppedUsers(users);
+
 		//remove the details from the tmp table
 		removeUserDetails();
-		
 	}
 
 	//Remove from CM students who have dropped the course
@@ -114,7 +110,7 @@ public class ProcessFinAidUpdates implements StatefulJob {
 			Enrollment thisOne = it.next();
 			String user = thisOne.getUserId();
 			if (!users.contains(user)) {
-				log.warn("dropping user " + user + " from " + courseCode);
+				log.info("dropping user " + user + " from " + courseCode);
 				courseAdmin.removeCourseOfferingMembership(user, courseEid);
 				courseAdmin.removeSectionMembership(user, courseEid);
 				courseAdmin.removeEnrollment(user, courseEid);
@@ -128,7 +124,6 @@ public class ProcessFinAidUpdates implements StatefulJob {
 	private void registerUser(String userEid) {
 		String setCategory = "special";
 		addUserToCourse(userEid, courseCode, term, setCategory);
-		
 	}
 
 
@@ -158,14 +153,12 @@ public class ProcessFinAidUpdates implements StatefulJob {
 	 * @param setCategory
 	 */
 	private void addUserToCourse(String userId, String courseCode, String term, String setCategory) {
+
 		log.debug("addUserToCourse(" + userId +", " + courseCode + "," + term + "," + setCategory + ")");
 		
-
 		try {
 
-
 			courseCode = courseCode.toUpperCase().trim();
-			
 			
 			if (courseCode == null || courseCode.length() == 0) {
 				return;
@@ -187,6 +180,7 @@ public class ProcessFinAidUpdates implements StatefulJob {
 				Date end = cal.getTime();
 				courseAdmin.createAcademicSession(term, term, term, start, end);
 			}
+
 			//does the course set exist?
 			if (!courseManagementService.isCourseSetDefined(setId)) 
 				courseAdmin.createCourseSet(setId, setId, setId, setCategory, null);
@@ -196,7 +190,6 @@ public class ProcessFinAidUpdates implements StatefulJob {
 				courseAdmin.createCanonicalCourse(courseCode, courseCode, courseCode);
 				courseAdmin.addCanonicalCourseToCourseSet(setId, courseCode);
 			}
-
 
 			if (!courseManagementService.isCourseOfferingDefined(courseEid)) {
 				log.info("creating course offering for " + courseCode + " in year " + term);
@@ -246,7 +239,7 @@ public class ProcessFinAidUpdates implements StatefulJob {
 			}
 
 
-			log.info("adding this student to " + courseEid);
+			log.info("Adding student " + userId + " to " + courseEid);
 			courseAdmin.addOrUpdateSectionMembership(userId, role, courseEid, "enrolled");
 			courseAdmin.addOrUpdateEnrollment(userId, courseEid, "enrolled", "NA", "0");
 			//now add the user to a section of the same name
@@ -271,8 +264,8 @@ public class ProcessFinAidUpdates implements StatefulJob {
 
 		}
 
-
 	}
+
 	private void getCanonicalCourse(String courseEid) {
 		String courseCode = courseEid.substring(0, "PSY2006F".length());
 		log.debug("get Cannonical course:" + courseCode);

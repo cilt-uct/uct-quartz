@@ -3,8 +3,8 @@
 <beans>
 
 <!-- PROCCESS NEW USER DATA-->
-	<bean id="proccessPSData"
-		class="za.ac.uct.cet.sakai.scheduler.peoplesoft.ProccessPSUpdates">
+	<bean id="processPSData"
+		class="za.ac.uct.cet.sakai.scheduler.peoplesoft.ProcessPSUpdates">
 		<property name="sessionManager">
 			<ref bean="org.sakaiproject.tool.api.SessionManager" />
 		</property>
@@ -26,7 +26,7 @@
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
 		singleton="true" init-method="init">
 		<property name="beanId">
-			<value>proccessPSData</value>
+			<value>processPSData</value>
 		</property>
 		<property name="jobName">
 			<value>process PS data</value>
@@ -39,8 +39,8 @@
 
 
 <!-- PROCCESS FinAid DATA-->
-	<bean id="proccessFinAidData"
-		class="za.ac.uct.cet.sakai.scheduler.peoplesoft.ProccessFinAidUpdates">
+	<bean id="processFinAidData"
+		class="za.ac.uct.cet.sakai.scheduler.peoplesoft.ProcessFinAidUpdates">
 		<property name="sessionManager">
 			<ref bean="org.sakaiproject.tool.api.SessionManager" />
 		</property>
@@ -61,7 +61,7 @@
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
 		singleton="true" init-method="init">
 		<property name="beanId">
-			<value>proccessFinAidData</value>
+			<value>processFinAidData</value>
 		</property>
 		<property name="jobName">
 			<value>process FinAid data</value>
