@@ -115,7 +115,7 @@ public class ProcessFinAidUpdates implements StatefulJob {
 				courseAdmin.removeSectionMembership(user, courseEid);
 				courseAdmin.removeEnrollment(user, courseEid);
 			} else {
-				log.info("user " + user + " is still registered");
+				log.debug("user " + user + " is still registered");
 			}
 		}
 	}
