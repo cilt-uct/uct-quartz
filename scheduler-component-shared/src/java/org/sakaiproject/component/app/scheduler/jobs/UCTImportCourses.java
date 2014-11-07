@@ -31,7 +31,7 @@ public class UCTImportCourses implements Job {
 
 	private static final Log log = LogFactory.getLog(UCTImportCourses.class);
 
-	private static final IMPORT_YEAR = "2015";
+	private static final String IMPORT_YEAR = "2015";
 	
 	private static final String ADMIN = "admin";
 	private static final Log LOG = LogFactory.getLog(UCTImportCourses.class);
