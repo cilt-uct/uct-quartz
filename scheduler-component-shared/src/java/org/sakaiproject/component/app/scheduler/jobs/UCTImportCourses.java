@@ -74,7 +74,6 @@ public class UCTImportCourses implements Job {
 			log.info("opening: " + file);
 			fr = new FileInputStream(file);
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return;
 		}
@@ -89,6 +88,7 @@ public class UCTImportCourses implements Job {
 			HSSFWorkbook workBook = new HSSFWorkbook (fileSystem);
 			HSSFSheet sheet = workBook.getSheetAt(0);
 			Iterator<Row> rows = sheet.rowIterator ();
+
 			//we need to skip the first 3 rows
 			rows.next();
 			rows.next();
@@ -99,25 +99,24 @@ public class UCTImportCourses implements Job {
 				
 				/*
 				 * this should be a record of the format:
-				 * Course ID	Offer Nbr	Term	Session	Sect	Institution	Acad Group	Subject	Catalog	Career	Descr	Class Nbr	Component
-
+				 * 0: Course ID, 1: Offer Nbr, 2: Term, 3: Session, 4: Section, 5: Institution, 6: Acad Group, 7: Subject, 8: Catalog, 9: Career, 10: Descr, 11: Class Nbr, 12: Component, 13: Start Date, 14: End Date
 				 */
-				//date is in 11, 12
+				String subject = row.getCell(7).getStringCellValue();
+				String catalog = row.getCell(8).getStringCellValue();
+				String descr =  row.getCell(10).getStringCellValue();
+				String component = row.getCell(12).getStringCellValue();
 				Date startDate = row.getCell(13).getDateCellValue();
 				Date endDate = row.getCell(14).getDateCellValue();
-				
-				//VULA-1604 this should be "Component Type"
-				String sectionType = row.getCell(12).getStringCellValue();
-				if (doSectionType(sectionType)) {
-					this.createCourse(row.getCell(7).getStringCellValue() + row.getCell(8).getStringCellValue(), session, row.getCell(10).getStringCellValue(), row.getCell(7).getStringCellValue(), startDate, endDate);
+
+				if (doSectionType(component)) {
+					this.createCourse(subject + catalog, session, descr, subject, startDate, endDate);
 				} else {
-					LOG.info(row.getCell(7).getStringCellValue() + row.getCell(8).getStringCellValue() + " is of type " + row.getCell(12).getStringCellValue() + " with id " + sectionType +  " so ignoring");
+					LOG.info(subject + catalog + " is component " + component +  " so ignoring");
 				}
 			} 
 
 
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		finally {
@@ -126,7 +125,6 @@ public class UCTImportCourses implements Job {
 				try {
 					fr.close();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -136,32 +134,34 @@ public class UCTImportCourses implements Job {
 	}
 
 	private boolean doSectionType(String sectionType) {
+
 		if (sectionType == null) {
 			return false;
 		}
 		
-		//we only ignore type TUT
-		if (sectionType.equals("TUT")) {
+		if ("TUT".equals(sectionType)) {
 			return false;
-		} else if ("SPE".equals(sectionType)) {
+		}
+
+	 	if ("SPE".equals(sectionType)) {
 			return false;
 		}
 		
 		return true;
 	}
 
-
-	private List<String> accadTerms = new ArrayList<String>();
+	private List<String> acadTerms = new ArrayList<String>();
 	private List<String> courseSets = new ArrayList<String>();
 	
 	private void createCourse(String courseCode, String term, String descr, String setId, Date startDate, Date endDate) {
+
 		LOG.info("createCourse(" + courseCode + "," + term + "," + descr + "," + setId );
 
 		//if this is a EWA or SUP course ignore if before 2012
 		int yearNumeric = Integer.valueOf(term).intValue();
 		
 		if (yearNumeric < 2012 && (courseCode.lastIndexOf("SUP") == 8 ||courseCode.lastIndexOf("EWA") == 8)) {
-			LOG.warn("we won't import " + courseCode + " as it is a SUP or EWA course in year " + term);
+			LOG.info("we won't import " + courseCode + " as it is a SUP or EWA course in year " + term);
 			return;
 		}
 
@@ -186,12 +186,12 @@ public class UCTImportCourses implements Job {
 		}
 
 		//does the academic session exist
-		if (!accadTerms.contains(term)) {
+		if (!acadTerms.contains(term)) {
 			if (!courseManagementService.isAcademicSessionDefined(term)) {
 				courseAdmin.createAcademicSession(term, term,term + " academic year", new Date(), yearEnd);
-				accadTerms.add(term);
+				acadTerms.add(term);
 			} else {
-				accadTerms.add(term);
+				acadTerms.add(term);
 			}
 		}
 
