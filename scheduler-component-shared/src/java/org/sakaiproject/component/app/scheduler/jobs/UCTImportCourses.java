@@ -28,10 +28,14 @@ import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
 
 public class UCTImportCourses implements Job {
+
 	private static final Log log = LogFactory.getLog(UCTImportCourses.class);
 
+	private static final IMPORT_YEAR = "2015";
+	
 	private static final String ADMIN = "admin";
 	private static final Log LOG = LogFactory.getLog(UCTImportCourses.class);
+
 	private CourseManagementService courseManagementService;
 	private CourseManagementAdministration courseAdmin;
 
@@ -55,7 +59,7 @@ public class UCTImportCourses implements Job {
 
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		// Course data spreadsheet typically in /data/sakai/otherdata/import/201x_courses.csv
-		importFile(filePath + "2014_courses.xls", "2014");
+		importFile(filePath + IMPORT_YEAR + "_courses.xls", IMPORT_YEAR);
 	}
 
 	private void importFile(String file, String session) {
