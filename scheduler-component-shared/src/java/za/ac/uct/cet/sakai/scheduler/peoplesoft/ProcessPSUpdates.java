@@ -362,9 +362,9 @@ public class ProcessPSUpdates implements StatefulJob {
 		if (userIds == null || userIds.size() == 0 ) {
 			return null;
 		}
-		String userid = userIds.get(0);
+		final String userid = userIds.get(0).toLowerCase();
 		
-		String sql2 = "Select * from SPML_WSDL_IN where userid = ?";
+		String sql2 = "SELECT courseEid, MAX(queued) from SPML_WSDL_IN WHERE userid = ? GROUP BY courseEid";
 		
 		List<UserCourseRegistrations> ucrList = (List<UserCourseRegistrations>)sqlService.dbRead(sql2, new Object[]{userid}, new SqlReader() {
 			
@@ -373,14 +373,12 @@ public class ProcessPSUpdates implements StatefulJob {
 				UserCourseRegistrations ret = new UserCourseRegistrations(); 
 				List<String> courses = new ArrayList<String>();
 				DateTime updated = null;
-				String user = null;
 				try {
 					result.beforeFirst();
 					while (result.next()) {
-						String c = result.getString(2);
+						String c = result.getString(1);
 						courses.add(c);
-						updated = new DateTime(result.getDate(3));
-						user = result.getString(1).toLowerCase();
+						updated = new DateTime(result.getDate(2));
 					}
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
@@ -388,7 +386,7 @@ public class ProcessPSUpdates implements StatefulJob {
 				}
 				ret.setCourseRegistrations(courses);
 				ret.setLastUpdated(updated);
-				ret.setUserId(user);
+				ret.setUserId(userid);
 				
 				return ret;
 			}
