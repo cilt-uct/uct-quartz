@@ -13,6 +13,7 @@ import org.sakaiproject.authz.api.AuthzGroup;
 import org.sakaiproject.authz.api.AuthzGroupService;
 import org.sakaiproject.authz.api.Member;
 import org.sakaiproject.email.api.EmailService;
+import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.tool.api.Session;
@@ -103,7 +104,7 @@ private void addCourseOwners() {
 			Site thisSite = (Site)siteList.get(i);
 			LOG.debug(thisSite.getTitle() + "("+thisSite.getId()+")");
 			//ignore if type is null
-			if (thisSite.getType()!= null) {
+			if (wantSite(thisSite)) {
 				Set<Member> members = thisSite.getMembers();
 				Iterator<Member> it = members.iterator();
 				while (it.hasNext()){
@@ -219,10 +220,7 @@ private AuthzGroup cleanUpGroup(AuthzGroup group) {
 			//user doesn't exist remove the record
 			group.removeMember(member.getUserId());
 		}
-		
-		
 	}
-	
 	
 	return group;
 }
@@ -235,9 +233,33 @@ private boolean isInactiveType(String type) {
 	
 	return false;
 }
+
+private boolean wantSite(Site thisSite) {
+
+	if (thisSite.getType() == null) 
+		return false;
+
+	if ("course".equals(thisSite.getType())) {
 	
-	
-	
+		ResourceProperties sp = thisSite.getProperties();
+               	String term = sp.getProperty("term");
+
+		if (term == null) return false;
+
+                term = term.trim();
+		if ("2015".equals(term) || "2016".equals(term) || "2017".equals(term)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	if ("project".equals(thisSite.getType())) {
+		return true;
+	}
+
+	return false;
+}
 	
 	
 }
