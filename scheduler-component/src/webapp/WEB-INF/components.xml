@@ -242,7 +242,7 @@
 			<value>importCourses</value>
 		</property>
 		<property name="jobName">
-			<value>Import New Course Data</value>
+			<value>UCT Import New Course Data</value>
 		</property>
 		<property name="schedulerManager">
 			<ref
