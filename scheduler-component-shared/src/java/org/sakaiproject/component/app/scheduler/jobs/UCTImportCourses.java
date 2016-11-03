@@ -1,21 +1,20 @@
 package org.sakaiproject.component.app.scheduler.jobs;
 
-import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Set;
 
+import au.com.bytecode.opencsv.CSVReader;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
-import org.apache.poi.ss.usermodel.Row;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -29,10 +28,6 @@ import org.sakaiproject.tool.api.SessionManager;
 
 public class UCTImportCourses implements Job {
 
-	private static final Log log = LogFactory.getLog(UCTImportCourses.class);
-
-	private static final String IMPORT_YEAR = "2016";
-	
 	private static final String ADMIN = "admin";
 	private static final Log LOG = LogFactory.getLog(UCTImportCourses.class);
 
@@ -59,111 +54,60 @@ public class UCTImportCourses implements Job {
 
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		// Course data spreadsheet typically in /data/sakai/otherdata/import/201x_courses.csv
-		importFile(filePath + IMPORT_YEAR + "_courses.xls", IMPORT_YEAR);
+		importFile(filePath + "courseinfo.csv");
 	}
 
-	private void importFile(String file, String session) {
+	private void importFile(String file) {
 		// set the user information into the current session
 		Session sakaiSession = sessionManager.getCurrentSession();
 		sakaiSession.setUserId(ADMIN);
 		sakaiSession.setUserEid(ADMIN);
-		InputStream fr = null;
-		//CSVReader br = null;
-		POIFSFileSystem fileSystem = null;
+
+		CSVReader reader = null;
+
 		try {
-			log.info("opening: " + file);
-			fr = new FileInputStream(file);
+			reader = new CSVReader(new FileReader(file), ',' , '"' , 0);
+			LOG.info("Updating course information from " + file);
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			LOG.error("Cannot open file " + file + " for reading");	
 			return;
 		}
-		if (fr == null) {
-			return;
-		}
+       
+		DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
+		// Read CSV line by line
 		try {
-			
-			fileSystem = new POIFSFileSystem(fr);
-			
-			HSSFWorkbook workBook = new HSSFWorkbook (fileSystem);
-			HSSFSheet sheet = workBook.getSheetAt(0);
-			Iterator<Row> rows = sheet.rowIterator ();
-
-			//we need to skip the first 3 rows
-			rows.next();
-			rows.next();
-			rows.next();
-			
-			while (rows.hasNext()) { 
-				Row row = rows.next();
-				
-				/*
-				 * this should be a record of the format:
-				 * 0: Course ID, 1: Offer Nbr, 2: Term, 3: Session, 4: Section, 5: Institution, 6: Acad Group, 7: Subject, 8: Catalog, 9: Career, 10: Descr, 11: Class Nbr, 12: Component, 13: Start Date, 14: End Date
-				 */
-				String subject = row.getCell(7).getStringCellValue();
-				String catalog = row.getCell(8).getStringCellValue();
-				String descr =  row.getCell(10).getStringCellValue();
-				String component = row.getCell(12).getStringCellValue();
-				Date startDate = row.getCell(13).getDateCellValue();
-				Date endDate = row.getCell(14).getDateCellValue();
-
-				if (doSectionType(component)) {
-					this.createCourse(subject + catalog, session, descr, subject, startDate, endDate);
-				} else {
-					LOG.info(subject + catalog + " is component " + component +  " so ignoring");
-				}
-			} 
-
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		finally {
-			
-			if (fr != null) {
-				try {
-					fr.close();
-				} catch (IOException e) {
-					e.printStackTrace();
+			String[] nextLine;
+			while ((nextLine = reader.readNext()) != null) {
+				if (nextLine != null) {
+					try {
+						// ACC3023S,2016,"Management Accounting II",ACC,2016-07-18,2016-11-11
+						String course = nextLine[0];
+						String year = nextLine[1];
+						String descr =  nextLine[2];
+						String subject =  nextLine[3];
+						Date startDate = formatter.parse(nextLine[4]);
+						Date endDate = formatter.parse(nextLine[5]);
+						LOG.info("createCourse(" + course + "," + year + "," + descr + "," + subject + "," + 
+							nextLine[4] + "," +nextLine[5] + ")");
+						this.createCourse(course, year, descr, subject, startDate, endDate);
+					} catch (java.text.ParseException e) {
+						LOG.error("Skipping CSV record for " + nextLine[0] + " - cannot parse date formats");
+					}
 				}
 			}
-
-		}
-
-	}
-
-	private boolean doSectionType(String sectionType) {
-
-		if (sectionType == null) {
-			return false;
-		}
-		
-		if ("TUT".equals(sectionType)) {
-			return false;
-		}
-
-	 	if ("SPE".equals(sectionType)) {
-			return false;
-		}
-		
-		return true;
-	}
-
-	private List<String> acadTerms = new ArrayList<String>();
-	private List<String> courseSets = new ArrayList<String>();
-	
-	private void createCourse(String courseCode, String term, String descr, String setId, Date startDate, Date endDate) {
-
-		LOG.info("createCourse(" + courseCode + "," + term + "," + descr + "," + setId );
-
-		//if this is a EWA or SUP course ignore if before 2012
-		int yearNumeric = Integer.valueOf(term).intValue();
-		
-		if (yearNumeric < 2012 && (courseCode.lastIndexOf("SUP") == 8 ||courseCode.lastIndexOf("EWA") == 8)) {
-			LOG.info("we won't import " + courseCode + " as it is a SUP or EWA course in year " + term);
+		} catch (IOException e) {
+			LOG.error("Error reading CSV file " + file);	
 			return;
 		}
+
+		LOG.info("Finished");
+	}
+
+	private Set<String> acadTerms = new HashSet<String>();
+	private Set<String> courseSets = new HashSet<String>();
+	
+	private void createCourse(String courseCode, String term, String descr, String setId, Date startDate, Date endDate) {
 
 		String setCategory = "Department";
 		String courseEid = courseCode +","+term;
@@ -176,7 +120,6 @@ public class UCTImportCourses implements Job {
 			startDate = cal.getTime();
 		}
 
-
 		cal.set(Calendar.MONTH, Calendar.DECEMBER);
 		cal.set(Calendar.DAY_OF_MONTH, 31);
 		Date yearEnd = cal.getTime();
@@ -185,7 +128,7 @@ public class UCTImportCourses implements Job {
 			endDate = cal.getTime();
 		}
 
-		//does the academic session exist
+		// does the academic session exist
 		if (!acadTerms.contains(term)) {
 			if (!courseManagementService.isAcademicSessionDefined(term)) {
 				courseAdmin.createAcademicSession(term, term,term + " academic year", new Date(), yearEnd);
@@ -195,7 +138,7 @@ public class UCTImportCourses implements Job {
 			}
 		}
 
-		//does the course set exist?
+		// does the course set exist?
 		if (!courseSets.contains(setId)) {
 			if (!courseManagementService.isCourseSetDefined(setId)) { 
 				courseAdmin.createCourseSet(setId, setId, setId, setCategory, null);
@@ -211,39 +154,35 @@ public class UCTImportCourses implements Job {
 		}
 
 		if (!courseManagementService.isCourseOfferingDefined(courseEid)) {
+			// create new course
 			LOG.info("creating course offering for " + courseCode + " in year " + term);
 			courseAdmin.createCourseOffering(courseEid, courseCode + " - " + descr, courseEid + " - " + descr, "active", term, courseCode, startDate, endDate);
 
+			courseAdmin.addCourseOfferingToCourseSet(setId, courseEid);		 
+
+			EnrollmentSet enrolmentSet = null; 
+			if (!courseManagementService.isEnrollmentSetDefined(courseEid)) {
+				enrolmentSet = courseAdmin.createEnrollmentSet(courseEid, descr, descr, "category", "defaultEnrollmentCredits", courseEid, null);
+			} else {
+				enrolmentSet = courseManagementService.getEnrollmentSet(courseEid);
+			}
+
+			if (!courseManagementService.isSectionDefined(courseEid)) {
+				courseAdmin.createSection(courseEid, courseEid, descr, "course", null, courseEid, enrolmentSet.getEid());
+			} else {
+				Section section = courseManagementService.getSection(courseEid);
+				section.setEnrollmentSet(enrolmentSet);
+				section.setCategory("course");
+				courseAdmin.updateSection(section);
+			}
 		} else {
-			//update the name
+			// update the course details
 			CourseOffering co = courseManagementService.getCourseOffering(courseEid);
 			co.setTitle(courseEid + " - " + descr);
 			co.setDescription(courseCode + " - " + descr);
 			co.setStartDate(startDate);
 			co.setEndDate(endDate);
 			courseAdmin.updateCourseOffering(co);
-
 		}
-
-
-		courseAdmin.addCourseOfferingToCourseSet(setId, courseEid);		 
-
-		EnrollmentSet enrolmentSet = null; 
-		if (! courseManagementService.isEnrollmentSetDefined(courseEid))
-			enrolmentSet = courseAdmin.createEnrollmentSet(courseEid, descr, descr, "category", "defaultEnrollmentCredits", courseEid, null);
-		else
-			enrolmentSet = courseManagementService.getEnrollmentSet(courseEid);
-
-		if(! courseManagementService.isSectionDefined(courseEid)) {
-			courseAdmin.createSection(courseEid, courseEid, descr, "course", null, courseEid, enrolmentSet.getEid());
-		} else {
-			Section section = courseManagementService.getSection(courseEid);
-			section.setEnrollmentSet(enrolmentSet);
-			section.setCategory("course");
-			courseAdmin.updateSection(section);
-		}
-
-
 	}
-
 }
