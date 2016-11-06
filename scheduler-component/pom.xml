@@ -4,7 +4,7 @@
   <parent>
     <artifactId>uctjobs-base</artifactId>
     <groupId>org.sakaiproject.uct</groupId>
-    <version>2.0-SNAPSHOT</version>
+    <version>11-SNAPSHOT</version>
    <relativePath>../pom.xml</relativePath>
   </parent>
   <name>Sakai Scheduler Component</name>

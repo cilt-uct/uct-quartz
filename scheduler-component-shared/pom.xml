@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<artifactId>uctjobs-base</artifactId>
 		<groupId>org.sakaiproject.uct</groupId>
-		<version>2.0-SNAPSHOT</version>
+		<version>11-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<name>Sakai Scheduler Component scheduler</name>
@@ -17,10 +18,10 @@
 	<inceptionYear>2003</inceptionYear>
 	<packaging>jar</packaging>
 	<dependencies>
-                <dependency>
-                        <groupId>org.quartz-scheduler</groupId>
-                        <artifactId>quartz</artifactId>
-                </dependency>
+		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.sakaiproject.scheduler</groupId>
 			<artifactId>scheduler-api</artifactId>
@@ -89,16 +90,16 @@
 			<artifactId>sakai-common-manager-api</artifactId>
 		</dependency>
 		<!-- needed for generating CSVs for export -->
-        <dependency>
-            <groupId>net.sf.opencsv</groupId>
-            <artifactId>opencsv</artifactId>
-            <version>2.3</version>
-        </dependency>
-        <dependency>
-        	<groupId>org.apache.poi</groupId>
-        	<artifactId>poi</artifactId>
-        	<version>${sakai.poi.version}</version>
-        </dependency>
+		<dependency>
+			<groupId>net.sf.opencsv</groupId>
+			<artifactId>opencsv</artifactId>
+			<version>2.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>${sakai.poi.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>org.sakaiproject.emailtemplateservice</groupId>
 			<artifactId>emailtemplateservice-api</artifactId>
@@ -119,30 +120,23 @@
 		<dependency>
 			<groupId>org.sakaiproject.accountvalidator</groupId>
 			<artifactId>accountvalidator-api</artifactId>
-			<version>10-SNAPSHOT</version>
-			<type>jar</type>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
-		  <groupId>org.sakaiproject</groupId>
-		  <artifactId>sakai-chat-api</artifactId>
-		  <version>10-SNAPSHOT</version>
-	       </dependency>
-	
+			<groupId>org.sakaiproject</groupId>
+			<artifactId>sakai-chat-api</artifactId>
+			<version>11-SNAPSHOT</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.sakaiproject</groupId>
 			<artifactId>sakai-useralias-model-api</artifactId>
-			<version>0.4-SNAPSHOT</version>
 		</dependency>
-	
-	
 		<dependency>
 			<groupId>org.sakaiproject</groupId>
 			<artifactId>sakai-useralias-logic-api</artifactId>
-			<version>0.4-SNAPSHOT</version>
 		</dependency>
 
-	
+
 	</dependencies>
 	<build>
 		<resources>

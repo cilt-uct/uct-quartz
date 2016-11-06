@@ -1,63 +1,68 @@
 <?xml version="1.0"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <artifactId>master</artifactId>
-    <groupId>org.sakaiproject</groupId>
-    <version>10-SNAPSHOT</version>
-    <relativePath>../master/pom.xml</relativePath>
-  </parent>
-  <name>Sakai JobScheduler Project</name>
-  <groupId>org.sakaiproject.uct</groupId>
-  <artifactId>uctjobs-base</artifactId>
-  <version>2.0-SNAPSHOT</version>
-  <packaging>pom</packaging>
-  <modules>
-    <module>scheduler-component</module>
-    <module>scheduler-component-shared</module>
-   
-  </modules>
-<!-- We added all this to enable the Hudson build -->  
-     <repositories>
-    <repository>
-      <id>sakai-maven</id>
-      <name>Sakai Maven Repo</name>
-      <layout>default</layout>
-            <url>http://source.sakaiproject.org/maven2</url>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
-        <repository>
-      <id>sakai-maven-snapshots</id>
-      <name>Sakai Maven Repo</name>
-      <layout>default</layout>
-            <url>http://source.sakaiproject.org/maven2-snapshots</url>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </repository>
-   </repositories>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>master</artifactId>
+		<groupId>org.sakaiproject</groupId>
+		<version>11-SNAPSHOT</version>
+		<relativePath>../master/pom.xml</relativePath>
+	</parent>
+	<name>Sakai JobScheduler Project</name>
+	<groupId>org.sakaiproject.uct</groupId>
+	<artifactId>uctjobs-base</artifactId>
+	<version>11-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<modules>
+		<module>scheduler-component</module>
+		<module>scheduler-component-shared</module>
 
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-		<groupId>org.sakaiproject.emailtemplateservice
-		</groupId>
-		<artifactId>emailtemplateservice-api
-		</artifactId>
-		<version>10-SNAPSHOT</version>
-		<scope>provided</scope>
-	</dependency>
-    </dependencies>
-</dependencyManagement>
-     
+	</modules>
+	<!-- We added all this to enable the Hudson build -->
+	<repositories>
+		<repository>
+			<id>sakai-maven</id>
+			<name>Sakai Maven Repo</name>
+			<layout>default</layout>
+			<url>http://source.sakaiproject.org/maven2</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>sakai-maven-snapshots</id>
+			<name>Sakai Maven Repo</name>
+			<layout>default</layout>
+			<url>http://source.sakaiproject.org/maven2-snapshots</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
 
-  <scm>
-    <connection>scm:svn:https://source.sakaiproject.org/svn/master/branches/VULA-2132</connection>
-    <developerConnection>scm:svn:https://source.sakaiproject.org/svn/master/branches/VULA-2132</developerConnection>
-    <url>https://source.sakaiproject.org/svn/master/branches/VULA-2132</url>
-  </scm>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.sakaiproject</groupId>
+				<artifactId>sakai-useralias-model-api</artifactId>
+				<version>11-SNAPSHOT</version>
+				 <scope>provided</scope> 
+			</dependency>
+			<dependency>
+				<groupId>org.sakaiproject</groupId>
+				<artifactId>sakai-useralias-logic-api</artifactId>
+				<version>11-SNAPSHOT</version>
+				 <scope>provided</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+
+	<scm>
+		<connection>scm:svn:https://source.sakaiproject.org/svn/master/branches/VULA-2132</connection>
+		<developerConnection>scm:svn:https://source.sakaiproject.org/svn/master/branches/VULA-2132</developerConnection>
+		<url>https://source.sakaiproject.org/svn/master/branches/VULA-2132</url>
+	</scm>
 </project>
 
 
