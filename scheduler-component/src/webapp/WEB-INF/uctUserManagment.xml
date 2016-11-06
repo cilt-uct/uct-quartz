@@ -25,7 +25,7 @@
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerPORCCESSpsdATA"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
+		 init-method="init">
 		<property name="beanId">
 			<value>processPSData</value>
 		</property>
@@ -60,7 +60,7 @@
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerProcessFinAidData"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
+		 init-method="init">
 		<property name="beanId">
 			<value>processFinAidData</value>
 		</property>

@@ -31,7 +31,7 @@
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerUCTCourseSiteOwners"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
+		 init-method="init">
 		<property name="beanId">
 			<value>UCTCourseSiteOwners</value>
 		</property>
@@ -66,10 +66,11 @@
 		</property>
 	</bean>
 
+
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerCourseTabs"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
+		init-method="init">
 		<property name="beanId">
 			<value>courseTabs</value>
 		</property>
@@ -100,7 +101,7 @@
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerSaveRealms"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringStatefulJobBeanWrapper"
-		singleton="true" init-method="init">
+		init-method="init">
 		<property name="beanId">
 			<value>saveRealms</value>
 		</property>
@@ -134,7 +135,7 @@
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerSaveRealmsUpdate"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
+		 init-method="init">
 		<property name="beanId">
 			<value>saveRealmsUpdate</value>
 		</property>
@@ -170,7 +171,7 @@
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerSetQuotas"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
+		 init-method="init">
 		<property name="beanId">
 			<value>setQuotas</value>
 		</property>
@@ -201,7 +202,7 @@
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerFixEmails"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
+		 init-method="init">
 		<property name="beanId">
 			<value>fixEmails</value>
 		</property>
@@ -236,7 +237,7 @@
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerImportCourses"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
+		 init-method="init">
 		<property name="beanId">
 			<value>importCourses</value>
 		</property>
@@ -271,7 +272,7 @@
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerSynchresearchCourses"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
+		 init-method="init">
 		<property name="beanId">
 			<value>synchResearchCourses</value>
 		</property>
@@ -306,7 +307,7 @@
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerCleanCourses"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
+		 init-method="init">
 		<property name="beanId">
 			<value>cleanUpCourses</value>
 		</property>
@@ -340,7 +341,7 @@
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.updateorgNames"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
+		 init-method="init">
 		<property name="beanId">
 			<value>updateCoursesSets</value>
 		</property>
@@ -377,7 +378,7 @@
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerAddpageUserSite"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
+		 init-method="init">
 		<property name="beanId">
 			<value>addToolUserSite</value>
 		</property>
@@ -410,7 +411,7 @@
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerCheckAccounts"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
+		 init-method="init">
 		<property name="beanId">
 			<value>checkUsersExist</value>
 		</property>
@@ -431,7 +432,7 @@
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerStatefulTestJob"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringStatefulJobBeanWrapper"
-		singleton="true" init-method="init">
+		 init-method="init">
 		<property name="beanId">
 			<value>statefulTesJob</value>
 		</property>
@@ -458,7 +459,7 @@
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerundeletAssignment"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
+		 init-method="init">
 		<property name="beanId">
 			<value>undeleteAssingments</value>
 		</property>
@@ -484,7 +485,7 @@
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerClearRTTMail"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
+		 init-method="init">
 		<property name="beanId">
 			<value>clearRTTMail</value>
 		</property>
@@ -514,7 +515,7 @@
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerClearProfiles"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
+		 init-method="init">
 		<property name="beanId">
 			<value>cleanProfiles</value>
 		</property>
@@ -575,7 +576,7 @@
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerResetTypes"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
+		 init-method="init">
 		<property name="beanId">
 			<value>resetTypes</value>
 		</property>
@@ -612,7 +613,7 @@
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerScanForViruses"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
+		 init-method="init">
 		<property name="beanId">
 			<value>scanForViruses</value>
 		</property>
@@ -649,7 +650,7 @@
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerJoinableSites"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
+		 init-method="init">
 		<property name="beanId">
 			<value>checkJoinableSites</value>
 		</property>
@@ -686,7 +687,7 @@
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerCleanStudents"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
+		 init-method="init">
 		<property name="beanId">
 			<value>cleanUpInactiveStudents</value>
 		</property>
@@ -724,7 +725,7 @@
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerCleanStudentsFac"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
+		 init-method="init">
 		<property name="beanId">
 			<value>cleanUpFacOnlytudents</value>
 		</property>
@@ -755,7 +756,7 @@
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerNotifySMS"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
+		 init-method="init">
 		<property name="beanId">
 			<value>smsNotify</value>
 		</property>
@@ -787,7 +788,7 @@
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerToolPageUserSite"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
+		 init-method="init">
 		<property name="beanId">
 			<value>addToolUserSiteHome</value>
 		</property>
@@ -816,7 +817,7 @@
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerProfileNormalize"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
+		 init-method="init">
 		<property name="beanId">
 			<value>profileNormalized</value>
 		</property>
@@ -849,7 +850,7 @@
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerOrphenedContent"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
+		 init-method="init">
 		<property name="beanId">
 			<value>checkOContent</value>
 		</property>
@@ -878,7 +879,7 @@
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerSetCustomTitleFlags"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
+		 init-method="init">
 		<property name="beanId">
 			<value>setCustomTitleFlag</value>
 		</property>
@@ -911,7 +912,7 @@
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerSendbdaySms"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
+		 init-method="init">
 		<property name="beanId">
 			<value>sendBdSms</value>
 		</property>
@@ -944,7 +945,7 @@
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.uctCleanDeadUsers"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
+		 init-method="init">
 		<property name="beanId">
 			<value>cleanDeadGuests</value>
 		</property>
@@ -974,7 +975,7 @@
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.uctCleanInactiveEmail"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
+		 init-method="init">
 		<property name="beanId">
 			<value>cleanInactiveEmail</value>
 		</property>
@@ -1006,7 +1007,7 @@
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.uctCleanOfferStudents"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
+		 init-method="init">
 		<property name="beanId">
 			<value>cleanOfferStudents</value>
 		</property>
@@ -1036,7 +1037,7 @@
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.uctSetInactiveFlag"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
+		 init-method="init">
 		<property name="beanId">
 			<value>setInactiveFlag</value>
 		</property>
@@ -1068,7 +1069,7 @@
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.uctCheckUserResourceSize"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
+		 init-method="init">
 		<property name="beanId">
 			<value>checkUserResourceSize</value>
 		</property>
@@ -1096,7 +1097,7 @@
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.uctFixFormat"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
+		 init-method="init">
 		<property name="beanId">
 			<value>fixFlagFormat</value>
 		</property>
@@ -1133,7 +1134,7 @@
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerCheckCourseSites"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
+		 init-method="init">
 		<property name="beanId">
 			<value>checkCourseSites</value>
 		</property>
@@ -1162,7 +1163,7 @@
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerRemoveSearchTool"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
+		 init-method="init">
 		<property name="beanId">
 			<value>removeSearchTool</value>
 		</property>
@@ -1199,7 +1200,7 @@
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapperexportChats"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
+		 init-method="init">
 		<property name="beanId">
 			<value>exportChats</value>
 		</property>
