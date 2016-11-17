@@ -38,6 +38,11 @@
 				<enabled>true</enabled>
 			</snapshots>
 		</repository>
+		<repository>
+			<id>OSGeo</id>
+			<name>OSGeo Download Server</name>
+			<url>http://download.osgeo.org/webdav/geotools/</url>
+		</repository>
 	</repositories>
 
 	<dependencyManagement>

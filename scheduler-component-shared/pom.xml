@@ -10,7 +10,7 @@
 	</parent>
 	<name>Sakai Scheduler Component scheduler</name>
 	<groupId>org.sakaiproject.uct</groupId>
-	<artifactId>uctsakai-comp-shared-scheduler</artifactId>
+	<artifactId>uct-sakai-comp-shared-scheduler</artifactId>
 	<organization>
 		<name>Sakai Project</name>
 		<url>http://sakaiproject.org/</url>
