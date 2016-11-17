@@ -22,7 +22,7 @@
   <dependencies>
   	<dependency>
   	<groupId>org.sakaiproject.uct</groupId>
-	<artifactId>uctsakai-comp-shared-scheduler</artifactId>
+	<artifactId>uct-sakai-comp-shared-scheduler</artifactId>
 	<version>${project.version}</version>
   	</dependency>
    </dependencies>
