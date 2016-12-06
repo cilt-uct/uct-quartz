@@ -4,8 +4,8 @@
 
 
 <beans>
-	<import resource="uctSiteManagment.xml" />
-	<import resource="uctUserManagment.xml" />
+	<import resource="uctSiteManagement.xml" />
+	<import resource="uctUserManagement.xml" />
 
 	<!-- course site owners -->
 
@@ -36,7 +36,7 @@
 			<value>UCTCourseSiteOwners</value>
 		</property>
 		<property name="jobName">
-			<value>UCT CourseSite Owners</value>
+			<value>UCT: Update Course Site Owners membership</value>
 		</property>
 		<property name="schedulerManager">
 			<ref
@@ -75,7 +75,7 @@
 			<value>courseTabs</value>
 		</property>
 		<property name="jobName">
-			<value>Redo Course Tabs</value>
+			<value>UCT: Redo Course Tabs</value>
 		</property>
 		<property name="schedulerManager">
 			<ref
@@ -106,48 +106,13 @@
 			<value>saveRealms</value>
 		</property>
 		<property name="jobName">
-			<value>save course Realms</value>
+			<value>UCT: Save Course Realms</value>
 		</property>
 		<property name="schedulerManager">
 			<ref
 				bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
 		</property>
 	</bean>
-
-	<!-- Save Realms  For upgrade-->
-	<!--  deprecated<bean id="saveRealmsUpdate"
-		class="org.sakaiproject.component.app.scheduler.jobs.UCTSaveRealmsUpdate">
-		<property name="sessionManager">
-			<ref bean="org.sakaiproject.tool.api.SessionManager" />
-		</property>
-		<property name="siteService">
-			<ref bean="org.sakaiproject.site.api.SiteService" />
-		</property>
-		<property name="authzGroupService">
-			<ref bean="org.sakaiproject.authz.api.AuthzGroupService" />
-		</property>
-		<property name="groupProvider">
-			<ref bean="org.sakaiproject.authz.api.GroupProvider" />
-		</property>
-		
-	</bean>
-
-	<bean
-		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerSaveRealmsUpdate"
-		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		 init-method="init">
-		<property name="beanId">
-			<value>saveRealmsUpdate</value>
-		</property>
-		<property name="jobName">
-			<value>save course Realms for Update</value>
-		</property>
-		<property name="schedulerManager">
-			<ref
-				bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
-		</property>
-	</bean>
- -->
 
 	<!--  check site quota's -->
 	<bean id="setQuotas"
@@ -176,7 +141,7 @@
 			<value>setQuotas</value>
 		</property>
 		<property name="jobName">
-			<value>set site Quotas</value>
+			<value>UCT: Set Site Quotas</value>
 		</property>
 		<property name="schedulerManager">
 			<ref
@@ -207,7 +172,7 @@
 			<value>fixEmails</value>
 		</property>
 		<property name="jobName">
-			<value>fix user emails</value>
+			<value>UCT: Fix user emails</value>
 		</property>
 		<property name="schedulerManager">
 			<ref
@@ -242,7 +207,7 @@
 			<value>importCourses</value>
 		</property>
 		<property name="jobName">
-			<value>UCT Import New Course Data</value>
+			<value>UCT: Import Course Data</value>
 		</property>
 		<property name="schedulerManager">
 			<ref
@@ -277,7 +242,7 @@
 			<value>synchResearchCourses</value>
 		</property>
 		<property name="jobName">
-			<value>Synch Research courses</value>
+			<value>UCT: Synch Research courses</value>
 		</property>
 		<property name="schedulerManager">
 			<ref
@@ -312,7 +277,7 @@
 			<value>cleanUpCourses</value>
 		</property>
 		<property name="jobName">
-			<value>Clean up course data</value>
+			<value>UCT: Clean up course data</value>
 		</property>
 		<property name="schedulerManager">
 			<ref
@@ -346,7 +311,7 @@
 			<value>updateCoursesSets</value>
 		</property>
 		<property name="jobName">
-			<value>update uct course set names</value>
+			<value>UCT: update uct course set names</value>
 		</property>
 		<property name="schedulerManager">
 			<ref
@@ -383,7 +348,7 @@
 			<value>addToolUserSite</value>
 		</property>
 		<property name="jobName">
-			<value>Add page to user Site</value>
+			<value>UCT: Add page to user Site</value>
 		</property>
 		<property name="schedulerManager">
 			<ref
@@ -416,7 +381,7 @@
 			<value>checkUsersExist</value>
 		</property>
 		<property name="jobName">
-			<value>Check users are in LDAP</value>
+			<value>UCT: Check users are in LDAP</value>
 		</property>
 		<property name="schedulerManager">
 			<ref
@@ -437,7 +402,7 @@
 			<value>statefulTesJob</value>
 		</property>
 		<property name="jobName">
-			<value>test staful job</value>
+			<value>UCT: test stateful job</value>
 		</property>
 		<property name="schedulerManager">
 			<ref
@@ -464,7 +429,7 @@
 			<value>undeleteAssingments</value>
 		</property>
 		<property name="jobName">
-			<value>undelete assignments</value>
+			<value>UCT: undelete assignments</value>
 		</property>
 		<property name="schedulerManager">
 			<ref
@@ -490,7 +455,7 @@
 			<value>clearRTTMail</value>
 		</property>
 		<property name="jobName">
-			<value>clear RTT mail</value>
+			<value>UCT: clear RTT mail</value>
 		</property>
 		<property name="schedulerManager">
 			<ref
@@ -520,7 +485,7 @@
 			<value>cleanProfiles</value>
 		</property>
 		<property name="jobName">
-			<value>clear orphaned profiles</value>
+			<value>UCT: clear orphaned profiles</value>
 		</property>
 		<property name="schedulerManager">
 			<ref
@@ -581,7 +546,7 @@
 			<value>resetTypes</value>
 		</property>
 		<property name="jobName">
-			<value>reset content Types</value>
+			<value>UCT: reset content Types</value>
 		</property>
 		<property name="schedulerManager">
 			<ref
@@ -618,7 +583,7 @@
 			<value>scanForViruses</value>
 		</property>
 		<property name="jobName">
-			<value>Scan Content for Viruses</value>
+			<value>UCT: Scan Content for Viruses</value>
 		</property>
 		<property name="schedulerManager">
 			<ref
@@ -655,7 +620,7 @@
 			<value>checkJoinableSites</value>
 		</property>
 		<property name="jobName">
-			<value>check Joinable Sites</value>
+			<value>UCT: check Joinable Sites</value>
 		</property>
 		<property name="schedulerManager">
 			<ref
@@ -692,7 +657,7 @@
 			<value>cleanUpInactiveStudents</value>
 		</property>
 		<property name="jobName">
-			<value>clean up students</value>
+			<value>UCT: clean up students</value>
 		</property>
 		<property name="schedulerManager">
 			<ref
@@ -730,7 +695,7 @@
 			<value>cleanUpFacOnlytudents</value>
 		</property>
 		<property name="jobName">
-			<value>clean up Fac only students</value>
+			<value>UCT: clean up Fac only students</value>
 		</property>
 		<property name="schedulerManager">
 			<ref
@@ -761,7 +726,7 @@
 			<value>smsNotify</value>
 		</property>
 		<property name="jobName">
-			<value>Notify SMS users</value>
+			<value>UCT: Notify SMS users</value>
 		</property>
 		<property name="schedulerManager">
 			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
@@ -793,7 +758,7 @@
 			<value>addToolUserSiteHome</value>
 		</property>
 		<property name="jobName">
-			<value>Add tool to user Site Home</value>
+			<value>UCT: Add tool to user Site Home</value>
 		</property>
 		<property name="schedulerManager">
 			<ref
@@ -822,7 +787,7 @@
 			<value>profileNormalized</value>
 		</property>
 		<property name="jobName">
-			<value>Populate the Normalized cell no</value>
+			<value>UCT: Populate the Normalized cell no</value>
 		</property>
 		<property name="schedulerManager">
 			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
@@ -855,7 +820,7 @@
 			<value>checkOContent</value>
 		</property>
 		<property name="jobName">
-			<value>clear orphaned content</value>
+			<value>UCT: clear orphaned content</value>
 		</property>
 		<property name="schedulerManager">
 			<ref
@@ -884,48 +849,13 @@
 			<value>setCustomTitleFlag</value>
 		</property>
 		<property name="jobName">
-			<value>set Custom Page Title Flags</value>
+			<value>UCT: set Custom Page Title Flags</value>
 		</property>
 		<property name="schedulerManager">
 			<ref
 				bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
 		</property>
 	</bean>
-	
-	
-	
-	<!--  Send BirthdaySms -->
-	<!-- <bean id="sendBdSms"
-		class="za.ac.uct.cet.sakai.scheduler.sms.SmsBirthdayMessage">
-		<property name="sessionManager">
-			<ref bean="org.sakaiproject.tool.api.SessionManager" />
-		</property>
-		<property name="sqlService" ref="org.sakaiproject.db.api.SqlService" />
-		<property name="userDirectoryService">
-			<ref bean="org.sakaiproject.user.api.UserDirectoryService" />
-		</property>
-		<property name="smsTaskLogic" ref="org.sakaiproject.sms.logic.hibernate.SmsTaskLogic"/>
-	</bean>
-	
-	
-
-	<bean
-		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerSendbdaySms"
-		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		 init-method="init">
-		<property name="beanId">
-			<value>sendBdSms</value>
-		</property>
-		<property name="jobName">
-			<value>Send birthday Sms</value>
-		</property>
-		<property name="schedulerManager">
-			<ref
-				bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
-		</property>
-		<property name="restUrl"><value>https//mocha.cet.uct.ac.za</value></property>
-	</bean>
- -->	
 	
 	
 	
@@ -950,7 +880,7 @@
 			<value>cleanDeadGuests</value>
 		</property>
 		<property name="jobName">
-			<value>clean dead guest users</value>
+			<value>UCT: clean dead guest users</value>
 		</property>
 		<property name="schedulerManager">
 			<ref
@@ -980,7 +910,7 @@
 			<value>cleanInactiveEmail</value>
 		</property>
 		<property name="jobName">
-			<value>clean inactive users email</value>
+			<value>UCT: clean inactive users email</value>
 		</property>
 		<property name="schedulerManager">
 			<ref
@@ -1012,7 +942,7 @@
 			<value>cleanOfferStudents</value>
 		</property>
 		<property name="jobName">
-			<value>clean offer students</value>
+			<value>UCT: clean offer students</value>
 		</property>
 		<property name="schedulerManager">
 			<ref
@@ -1042,7 +972,7 @@
 			<value>setInactiveFlag</value>
 		</property>
 		<property name="jobName">
-			<value>Set inactive flag on inactive accounts</value>
+			<value>UCT: Set inactive flag on inactive accounts</value>
 		</property>
 		<property name="schedulerManager">
 			<ref
@@ -1074,7 +1004,7 @@
 			<value>checkUserResourceSize</value>
 		</property>
 		<property name="jobName">
-			<value>Check the size of old resourcer collections</value>
+			<value>UCT: Check the size of old Resource collections</value>
 		</property>
 		<property name="schedulerManager">
 			<ref
@@ -1102,7 +1032,7 @@
 			<value>fixFlagFormat</value>
 		</property>
 		<property name="jobName">
-			<value>Fix Format of deactive flag</value>
+			<value>UCT: Fix Format of deactive flag</value>
 		</property>
 		<property name="schedulerManager">
 			<ref
@@ -1139,7 +1069,7 @@
 			<value>checkCourseSites</value>
 		</property>
 		<property name="jobName">
-			<value>check Course Sites</value>
+			<value>UCT: check Course Sites</value>
 		</property>
 		<property name="schedulerManager">
 			<ref
@@ -1168,7 +1098,7 @@
 			<value>removeSearchTool</value>
 		</property>
 		<property name="jobName">
-			<value>Remove search Tool</value>
+			<value>UCT: Remove search Tool</value>
 		</property>
 		<property name="schedulerManager">
 			<ref
@@ -1205,7 +1135,7 @@
 			<value>exportChats</value>
 		</property>
 		<property name="jobName">
-			<value>Export Chats</value>
+			<value>UCT: Export Chats</value>
 		</property>
 		<property name="schedulerManager">
 			<ref

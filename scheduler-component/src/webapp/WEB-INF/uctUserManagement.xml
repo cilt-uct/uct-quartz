@@ -3,7 +3,7 @@
 	"http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
 
-<!-- PROCCESS NEW USER DATA-->
+<!-- PROCESS NEW USER DATA-->
 	<bean id="processPSData"
 		class="za.ac.uct.cet.sakai.scheduler.peoplesoft.ProcessPSUpdates">
 		<property name="sessionManager">
@@ -30,7 +30,7 @@
 			<value>processPSData</value>
 		</property>
 		<property name="jobName">
-			<value>process PS data</value>
+			<value>UCT: process PS enrolment data</value>
 		</property>
 		<property name="schedulerManager">
 			<ref
@@ -39,7 +39,7 @@
 	</bean>
 
 
-<!-- PROCCESS FinAid DATA-->
+<!-- PROCESS FinAid DATA-->
 	<bean id="processFinAidData"
 		class="za.ac.uct.cet.sakai.scheduler.peoplesoft.ProcessFinAidUpdates">
 		<property name="sessionManager">
@@ -65,13 +65,12 @@
 			<value>processFinAidData</value>
 		</property>
 		<property name="jobName">
-			<value>process FinAid data</value>
+			<value>UCT: process FinAid data</value>
 		</property>
 		<property name="schedulerManager">
 			<ref
 				bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
 		</property>
 	</bean>
-
 
 </beans>

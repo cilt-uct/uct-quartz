@@ -23,7 +23,7 @@
 			<value>maintainSrc</value>
 		</property>
 		<property name="jobName">
-			<value>maintain the SRC site</value>
+			<value>UCT: maintain the SRC site</value>
 		</property>
 		<property name="schedulerManager">
 			<ref
