@@ -814,7 +814,7 @@
 
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerOrphenedContent"
-		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringStatefulJobBeanWrapper"
 		 init-method="init">
 		<property name="beanId">
 			<value>checkOContent</value>
