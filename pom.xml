@@ -5,19 +5,19 @@
 	<parent>
 		<artifactId>master</artifactId>
 		<groupId>org.sakaiproject</groupId>
-		<version>11-SNAPSHOT</version>
+		<version>12-SNAPSHOT</version>
 		<relativePath>../master/pom.xml</relativePath>
 	</parent>
 	<name>Sakai JobScheduler Project</name>
 	<groupId>org.sakaiproject.uct</groupId>
 	<artifactId>uctjobs-base</artifactId>
-	<version>11-SNAPSHOT</version>
+	<version>12-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<modules>
 		<module>scheduler-component</module>
 		<module>scheduler-component-shared</module>
-
 	</modules>
+
 	<!-- We added all this to enable the Hudson build -->
 	<repositories>
 		<repository>
@@ -50,18 +50,17 @@
 			<dependency>
 				<groupId>org.sakaiproject</groupId>
 				<artifactId>sakai-useralias-model-api</artifactId>
-				<version>11-SNAPSHOT</version>
-				 <scope>provided</scope> 
+				<version>12-SNAPSHOT</version>
+				<scope>provided</scope> 
 			</dependency>
 			<dependency>
 				<groupId>org.sakaiproject</groupId>
 				<artifactId>sakai-useralias-logic-api</artifactId>
-				<version>11-SNAPSHOT</version>
-				 <scope>provided</scope>
+				<version>12-SNAPSHOT</version>
+				<scope>provided</scope>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-
 
 	<scm>
 		<connection>scm:svn:https://source.sakaiproject.org/svn/master/branches/VULA-2132</connection>
