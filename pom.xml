@@ -48,14 +48,14 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-				<groupId>org.sakaiproject</groupId>
-				<artifactId>sakai-useralias-model-api</artifactId>
+				<groupId>org.sakaiproject.roleplay</groupId>
+				<artifactId>roleplay-api</artifactId>
 				<version>12-SNAPSHOT</version>
-				<scope>provided</scope> 
+				<scope>provided</scope>
 			</dependency>
 			<dependency>
-				<groupId>org.sakaiproject</groupId>
-				<artifactId>sakai-useralias-logic-api</artifactId>
+				<groupId>org.sakaiproject.roleplay</groupId>
+				<artifactId>useralias-logic-impl</artifactId>
 				<version>12-SNAPSHOT</version>
 				<scope>provided</scope>
 			</dependency>

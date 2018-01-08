@@ -131,17 +131,17 @@
 			<version>${sakai.version}</version>
                         <scope>provided</scope>
 		</dependency>
-
-		<dependency>
-			<groupId>org.sakaiproject</groupId>
-			<artifactId>sakai-useralias-model-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.sakaiproject</groupId>
-			<artifactId>sakai-useralias-logic-api</artifactId>
-		</dependency>
-
-
+                <dependency>
+                        <groupId>org.sakaiproject.roleplay</groupId>
+                        <artifactId>roleplay-api</artifactId>
+                        <version>12-SNAPSHOT</version>
+                        <type>jar</type>
+                </dependency>
+                <dependency>
+                        <groupId>org.sakaiproject.roleplay</groupId>
+                        <artifactId>useralias-logic-impl</artifactId>
+                        <version>12-SNAPSHOT</version>
+                </dependency>
 	</dependencies>
 	<build>
 		<resources>
