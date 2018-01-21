@@ -2,8 +2,6 @@ package org.sakaiproject.component.app.scheduler.jobs;
 
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -19,6 +17,9 @@ import org.sakaiproject.user.api.UserLockedException;
 import org.sakaiproject.user.api.UserNotDefinedException;
 import org.sakaiproject.user.api.UserPermissionException;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class FixEmails implements Job {
 
 	private SessionManager sessionManager;
@@ -26,7 +27,6 @@ public class FixEmails implements Job {
 		this.sessionManager = s;
 	}
 	
-	private static final Log LOG = LogFactory.getLog(FixEmails.class);
 	private static final String ADMIN = "admin";
 	
 	private UserDirectoryService userDirectoryService;
@@ -55,7 +55,7 @@ public class FixEmails implements Job {
 			String type = u.getType();
 			if (type != null && (type.equals("student") || type.equals("staff") || type.equals("thirdparty")) && (u.getEmail() == null || u.getEmail().equals(""))) {
 				//we need to set this users email
-				LOG.info("Found: " + u.getId() + " (" + u.getEid()+") with ivalid email" + u.getEmail());
+				log.info("Found: " + u.getId() + " (" + u.getEid()+") with ivalid email" + u.getEmail());
 				try {
 					SakaiPerson systemP = personManager.getSakaiPerson(u.getId(), personManager.getSystemMutableType());
 					String mail = null;
@@ -65,7 +65,7 @@ public class FixEmails implements Job {
 						else 
 							mail = systemP.getMail();
 					} else {
-						LOG.warn("User " + u.getEid() +" has no system Profile");
+						log.warn("User " + u.getEid() +" has no system Profile");
 						mail = u.getEid() + "@uct.ac.za";
 					}
 					
@@ -85,24 +85,20 @@ public class FixEmails implements Job {
 					}
 					
 				} catch (UserNotDefinedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					log.warn(e.getMessage(), e);
 				} catch (UserPermissionException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					log.warn(e.getMessage(), e);
 				} catch (UserLockedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					log.warn(e.getMessage(), e);
 				} catch (UserAlreadyDefinedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					log.warn(e.getMessage(), e);
 				}
 	
 				
 			
 			} else {
 				if (!isValidEmail(u.getEmail())) {
-					LOG.warn(u.getEmail() + " is not a valid email");
+					log.warn(u.getEmail() + " is not a valid email");
 					
 				} else {
 					SakaiPerson sp = personManager.getSakaiPerson(u.getId(), personManager.getUserMutableType());

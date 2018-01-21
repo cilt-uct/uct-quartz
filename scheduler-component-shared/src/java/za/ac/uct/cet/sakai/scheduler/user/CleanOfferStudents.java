@@ -4,8 +4,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
@@ -26,9 +24,11 @@ import org.sakaiproject.user.api.UserLockedException;
 import org.sakaiproject.user.api.UserNotDefinedException;
 import org.sakaiproject.user.api.UserPermissionException;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class CleanOfferStudents implements Job{
 
-	private static final Log LOG = LogFactory.getLog(CleanOfferStudents.class);
 
 	private static final String PROPERTY_DEACTIVATED = "SPML_DEACTIVATED";
 
@@ -79,7 +79,7 @@ public class CleanOfferStudents implements Job{
 
 		List<String> users = sqlService.dbRead(sql);
 
-		LOG.info("got a list of " + users.size() + " users to remove");
+		log.info("got a list of " + users.size() + " users to remove");
 
 		for (int i = 0; i < users.size(); i++) {
 			String userId = users.get(i);
@@ -112,19 +112,15 @@ public class CleanOfferStudents implements Job{
 
 				
 
-				LOG.info("updated: " + userId);
+				log.info("updated: " + userId);
 			} catch (UserNotDefinedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 			} catch (UserPermissionException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 			} catch (UserLockedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 			} catch (UserAlreadyDefinedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 			}
 		}
 
@@ -137,7 +133,7 @@ public class CleanOfferStudents implements Job{
 		while (it.hasNext()) {
 			Section section = it.next();
 			String courseEid = section.getEid();
-			LOG.info("removing user from " + courseEid);
+			log.info("removing user from " + courseEid);
 			courseManagementAdministration.removeCourseOfferingMembership(userEid, courseEid);
 			courseManagementAdministration.removeSectionMembership(userEid, courseEid);
 			courseManagementAdministration.removeEnrollment(userEid, courseEid);
@@ -154,13 +150,13 @@ public class CleanOfferStudents implements Job{
 			Section section = it.next();
 			String sectionEid = section.getEid();
 			if (sectionEid.length() == "AAE5000H,2006".length()) {
-				LOG.info("section " + sectionEid + " looks like a course");
+				log.info("section " + sectionEid + " looks like a course");
 				return true;
 			} else if (isCurrentOfferGroup(sectionEid)) {
-				LOG.info("this is a 2011 student");
+				log.info("this is a 2011 student");
 				return true;
 			} else {
-				LOG.info(sectionEid + " doesn't match our filters");
+				log.info(sectionEid + " doesn't match our filters");
 			}
 			
 		}
@@ -173,7 +169,7 @@ public class CleanOfferStudents implements Job{
 		if ("SCI_OFFER_STUDENT,2011".equals(sectionEid) || "COM_OFFER_STUDENT,2011".equals(sectionEid) ||
 				"HUM_OFFER_STUDENT,2011".equals(sectionEid) || "LAW_OFFER_STUDENT,2011".equals(sectionEid) || 
 				"EBE_OFFER_STUDENT,2011".equals(sectionEid)) {
-			LOG.info(sectionEid + " is a current offer group");
+			log.info(sectionEid + " is a current offer group");
 			return true;
 		}
 		

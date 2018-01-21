@@ -3,8 +3,6 @@ package org.sakaiproject.component.app.scheduler.jobs;
 import java.text.NumberFormat;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.StatefulJob;
@@ -24,10 +22,12 @@ import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class CleanOrphanedContent implements StatefulJob {
 
 	private final String ADMIN = "admin";
-	private static final Log log = LogFactory.getLog(CleanOrphanedContent.class);
 	private SqlService sqlService;
 	private SessionManager sessionManager;
 	public void setSessionManager(SessionManager s) {
@@ -117,8 +117,7 @@ public class CleanOrphanedContent implements StatefulJob {
 			try {
 				chatManager.deleteChannel(channel);
 			} catch (PermissionException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.warn("PermissionException", e);;
 			}
 		}
 		
@@ -159,11 +158,9 @@ public class CleanOrphanedContent implements StatefulJob {
 				Site site = siteService.getSite(site_id);
 				siteService.removeSite(site);
 			} catch (IdUnusedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 			} catch (PermissionException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 			}
 		}
 
@@ -189,22 +186,17 @@ public class CleanOrphanedContent implements StatefulJob {
 					}
 				}
 			} catch (IdUnusedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 			} catch (TypeException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 			} catch (PermissionException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 			} catch (InUseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 			} catch (ServerOverloadException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 			} catch (Exception e) {
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);;
 			}
 
 		} //For each collection

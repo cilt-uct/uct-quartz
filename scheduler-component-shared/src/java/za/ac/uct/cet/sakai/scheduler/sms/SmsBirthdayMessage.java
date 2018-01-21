@@ -8,8 +8,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -21,9 +19,11 @@ import org.sakaiproject.tool.api.SessionManager;
 import org.sakaiproject.user.api.User;
 import org.sakaiproject.user.api.UserDirectoryService;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class SmsBirthdayMessage implements Job {
 
-	private static final Log log = LogFactory.getLog(SmsBirthdayMessage.class);
 	private static final String ADMIN = "admin";
 	
 	private SqlService sqlService;

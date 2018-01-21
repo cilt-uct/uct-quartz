@@ -2,8 +2,6 @@ package org.sakaiproject.component.app.scheduler.jobs;
 
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -15,9 +13,12 @@ import org.sakaiproject.tool.api.SessionManager;
 import org.sakaiproject.user.api.User;
 import org.sakaiproject.user.api.UserDirectoryService;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class PopulateNormalizedMobile implements Job {
 
-	private static final Log LOG = LogFactory.getLog(PopulateNormalizedMobile.class);
+
 
 	private SessionManager sessionManager;
 	public void setSessionManager(SessionManager s) {

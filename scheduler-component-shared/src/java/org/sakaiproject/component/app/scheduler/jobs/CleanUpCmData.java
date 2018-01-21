@@ -4,8 +4,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -18,11 +16,14 @@ import org.sakaiproject.coursemanagement.api.Section;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class CleanUpCmData implements Job {
 	
 	
 	private static final String ADMIN = "admin";
-	private static final Log log = LogFactory.getLog(CleanUpCmData.class);
+
 	private CourseManagementService courseManagementService;
 	private CourseManagementAdministration courseAdmin;
 	

@@ -2,28 +2,22 @@ package org.sakaiproject.component.app.scheduler.jobs;
 
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.commons.lang3.StringUtils;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-import org.sakaiproject.assignment.api.model.Assignment;
 import org.sakaiproject.assignment.api.AssignmentService;
-import org.sakaiproject.entity.api.EntityPropertyNotDefinedException;
-import org.sakaiproject.entity.api.EntityPropertyTypeException;
+import org.sakaiproject.assignment.api.model.Assignment;
 import org.sakaiproject.entity.api.ResourceProperties;
-import org.sakaiproject.exception.IdUnusedException;
-import org.sakaiproject.exception.InUseException;
 import org.sakaiproject.exception.PermissionException;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class UndeleteAssignments implements Job {
 
-        private static final Logger LOG = LoggerFactory.getLogger(UndeleteAssignments.class);
+
 	private AssignmentService assignmentService;
 	private SessionManager sessionManager;
 	private String context="e9501306-1c1c-4694-b2bf-b9056c8f1bff";
@@ -51,20 +45,20 @@ public class UndeleteAssignments implements Job {
                     try {
                         String deleted = rp.get(ResourceProperties.PROP_ASSIGNMENT_DELETED);
 
-                        LOG.info("Assignment " + ass.getTitle()+ " deleted status: " + deleted);
+                        log.info("Assignment " + ass.getTitle()+ " deleted status: " + deleted);
                         if (deleted != null) {
-                            LOG.info("undeleting" + ass.getTitle() + " for site " + context);
+                            log.info("undeleting" + ass.getTitle() + " for site " + context);
                             rp.remove(ResourceProperties.PROP_ASSIGNMENT_DELETED);
 
                             assignmentService.updateAssignment(ass);
                         }
                     } catch (PermissionException e) {
-                        LOG.warn("Could not undelete assignment: {}, {}", ass.getId(), e.getMessage());
+                        log.warn("Could not undelete assignment: {}, {}", ass.getId(), e.getMessage());
                     }
                 }
                 
             } catch (Exception e) {
-                LOG.error("UndeleteAssignments(): " + e.getClass().getName() + " : " + e.getMessage()); 
+                log.error("UndeleteAssignments(): " + e.getClass().getName() + " : " + e.getMessage()); 
             }	
 	}
 

@@ -4,8 +4,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -31,8 +29,10 @@ import com.novell.ldap.LDAPSearchConstraints;
 import com.novell.ldap.LDAPSearchResults;
 import com.novell.ldap.LDAPSocketFactory;
 
+import lombok.extern.slf4j.Slf4j;
 
 
+@Slf4j
 public class UCTCheckAccounts implements Job {
 
 	
@@ -56,7 +56,7 @@ public class UCTCheckAccounts implements Job {
 	public void setSessionManager(SessionManager s) {
 		this.sessionManager = s;
 	}
-	private static final Log LOG = LogFactory.getLog(UCTCheckAccounts.class);
+	
 	private static final String ADMIN = "admin";
 	
 	private String ldapHost = ""; //address of ldap server
@@ -118,7 +118,7 @@ public class UCTCheckAccounts implements Job {
 				User u = (User)users.get(i);
 				if (doThisUser(u)) {
 					if (!userExists(u.getEid())) {
-						LOG.warn("user: " + u.getEid() + " does not exist in auth tree" );
+						log.warn("user: " + u.getEid() + " does not exist in auth tree" );
 						try {
 							//if this is a student remove from current courses in this year
 							if ("student".equalsIgnoreCase(u.getType()))
@@ -129,21 +129,17 @@ public class UCTCheckAccounts implements Job {
 							userDirectoryService.commitEdit(ue);
 
 						} catch (UserNotDefinedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+							log.warn(e.getMessage(), e);
 						} catch (UserPermissionException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+							log.warn(e.getMessage(), e);
 						} catch (UserLockedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+							log.warn(e.getMessage(), e);
 						} catch (UserAlreadyDefinedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+							log.warn(e.getMessage(), e);
 						}
 
 					} else {
-						LOG.debug("user: " + u.getEid() + " is in ldap");
+						log.debug("user: " + u.getEid() + " is in ldap");
 					}
 
 
@@ -179,10 +175,10 @@ public class UCTCheckAccounts implements Job {
 		String userEid = u.getEid();
 		Set<EnrollmentSet> enroled = courseManagementService.findCurrentlyEnrolledEnrollmentSets(userEid);
 		Iterator<EnrollmentSet> coursesIt = enroled.iterator();
-		LOG.debug("got list of enrolement set with " + enroled.size());
+		log.debug("got list of enrolement set with " + enroled.size());
 		 while(coursesIt.hasNext()) {
 			EnrollmentSet eSet = (EnrollmentSet)coursesIt.next();
-			LOG.info("removing user from " + eSet.getEid());
+			log.info("removing user from " + eSet.getEid());
 			String courseEid =  eSet.getEid();
 			courseManagementAdministration.removeCourseOfferingMembership(userEid, courseEid);
 			courseManagementAdministration.removeSectionMembership(userEid, courseEid);
@@ -225,9 +221,9 @@ public class UCTCheckAccounts implements Job {
 			LDAPAttribute atr = userEntry.getAttribute("loginDisabled");
 			if (atr != null) {
 			 String disabled = atr.getStringValue();
-			 LOG.debug("LoginDisabled:" + disabled);
+			 log.debug("LoginDisabled:" + disabled);
 			 if ("TRUE".equals(disabled)) {
-				 LOG.warn(id + ": Acccount is disabled in auth tree");
+				 log.warn(id + ": Acccount is disabled in auth tree");
 				 conn.disconnect();
 				 return false;
 			 }

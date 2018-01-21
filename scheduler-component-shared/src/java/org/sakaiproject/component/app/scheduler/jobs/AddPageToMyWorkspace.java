@@ -3,8 +3,6 @@ package org.sakaiproject.component.app.scheduler.jobs;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -19,9 +17,12 @@ import org.sakaiproject.tool.api.SessionManager;
 import org.sakaiproject.user.api.User;
 import org.sakaiproject.user.api.UserDirectoryService;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class AddPageToMyWorkspace implements Job {
 
-	private static final Log LOG = LogFactory.getLog(AddPageToMyWorkspace.class);
+
 	private SiteService siteService;
 	public void setSiteService(SiteService s) {
 		this.siteService = s;
@@ -70,7 +71,7 @@ public class AddPageToMyWorkspace implements Job {
 	    	try {
 				Site userSite = siteService.getSite(siteService.getUserSiteId(u.getId()));
 				if (!siteContainsPage(userSite)) {
-					LOG.info("going to add page to: " + u.getEid());
+					log.info("going to add page to: " + u.getEid());
 					SitePage page = userSite.addPage();
 					page.setTitle(pageTitle);
 					siteService.save(userSite);
@@ -81,12 +82,9 @@ public class AddPageToMyWorkspace implements Job {
 				}
 				
 			} catch (IdUnusedException e) {
-				// TODO Auto-generated catch block
-				//e.printStackTrace();
-				LOG.info("user has no workspace!: " + u.getId());
+				log.info("user has no workspace!: " + u.getId());
 			} catch (PermissionException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.warn("PermissionException", e);
 			}
 
 	    }

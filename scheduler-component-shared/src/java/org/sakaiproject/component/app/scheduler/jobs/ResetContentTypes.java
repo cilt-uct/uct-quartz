@@ -5,11 +5,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -28,9 +26,11 @@ import org.sakaiproject.site.api.SiteService.SortType;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
 
+import lombok.extern.slf4j.Slf4j;
 
 
 
+@Slf4j
 public class ResetContentTypes implements Job {
 
 	private SiteService siteService;
@@ -60,8 +60,6 @@ public class ResetContentTypes implements Job {
 		this.forceTypes = forceTypes;
 	}
 
-	private static final Log log = LogFactory.getLog(ResetContentTypes.class);
-	
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		//set the user information into the current session
 		//for now 
@@ -107,23 +105,17 @@ public class ResetContentTypes implements Job {
 		    		}
 		    	}
 			} catch (IdUnusedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 			} catch (TypeException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 			} catch (PermissionException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 			} catch (InUseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 			} catch (OverQuotaException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 			} catch (ServerOverloadException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 			}
 
 	    }

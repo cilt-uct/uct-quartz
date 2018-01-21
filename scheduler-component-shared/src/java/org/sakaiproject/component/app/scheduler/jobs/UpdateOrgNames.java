@@ -2,8 +2,6 @@ package org.sakaiproject.component.app.scheduler.jobs;
 
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -14,9 +12,12 @@ import org.sakaiproject.db.api.SqlService;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class UpdateOrgNames implements Job {
 
-	private static final Log LOG = LogFactory.getLog(UpdateOrgNames.class);
+
 	private static final String ADMIN = "admin";
 	
 	private SqlService sqlService;
@@ -49,7 +50,7 @@ public class UpdateOrgNames implements Job {
 	    sakaiSession.setUserEid(ADMIN);
 		
 		List<CourseSet> sets = cmService.findCourseSets("Department");
-		LOG.debug("got a list of: " + sets.size() +" course sets");
+		log.debug("got a list of: " + sets.size() +" course sets");
 		for (int i =0; i < sets.size(); i++ ) {
 			CourseSet thisSet = (CourseSet)sets.get(i);
 			
@@ -75,10 +76,10 @@ public class UpdateOrgNames implements Job {
 		Object[] fields = new Object[]{modOrgUnit};
 		List<String> result = sqlService.dbRead(statement, fields, null);
 		if (result.size()>0) {
-			LOG.info("got org unit of " + (String)result.get(0));
+			log.info("got org unit of " + (String)result.get(0));
 			return (String)result.get(0);
 		} else {
-			LOG.info("Unknown org code of " + modOrgUnit + " received" );
+			log.info("Unknown org code of " + modOrgUnit + " received" );
 		}
 				
 		return null;

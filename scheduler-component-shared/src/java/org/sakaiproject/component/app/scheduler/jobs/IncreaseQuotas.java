@@ -2,8 +2,6 @@ package org.sakaiproject.component.app.scheduler.jobs;
 
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -24,10 +22,12 @@ import org.sakaiproject.site.api.SiteService.SortType;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class IncreaseQuotas implements Job {
 
-	private static final Log LOG = LogFactory.getLog(IncreaseQuotas.class);
-	
+
 	private SiteService siteService;
 	public void setSiteService(SiteService s) {
 		this.siteService = s;
@@ -68,9 +68,9 @@ public class IncreaseQuotas implements Job {
 				String term = sp.getProperty("term");
 				if (term != null ) {
 					term = term.trim();
-					LOG.debug("site is in term: " + term);
+					log.debug("site is in term: " + term);
 					if (term.equals("2008")) {
-						LOG.debug("got site " + s.getTitle());
+						log.debug("got site " + s.getTitle());
 						try {
 							
 							String siteColl = contentHostingService.getSiteCollection(s.getId());
@@ -80,51 +80,45 @@ public class IncreaseQuotas implements Job {
 							//Long collectionSize = new Long(0);
 							ResourceProperties properties = collection.getProperties();
 							long quota = (long) properties.getLongProperty(ResourceProperties.PROP_COLLECTION_BODY_QUOTA);
-							LOG.debug("got quota of " + quota);
+							log.debug("got quota of " + quota);
 							if (quota != 0 && quota < minQuota) {
-								LOG.info("setting new quota for site: " + s.getId());
+								log.info("setting new quota for site: " + s.getId());
 								ContentCollectionEdit collectionEdit = contentHostingService.editCollection(collection.getId());
 								properties.removeProperty(ResourceProperties.PROP_COLLECTION_BODY_QUOTA);
 								properties.addProperty(ResourceProperties.PROP_COLLECTION_BODY_QUOTA, Long.toString(minQuota));
 								contentHostingService.commitCollection(collectionEdit);
 							} else if (quota != 0 && (collectionSize.longValue() >= (quota - 1024))) {
 								sb.append(s.getId() +" " + s.getTitle() + " (" + collectionSize.toString() + "/" + quota + ")\n");
-								LOG.debug("Site is close to quota");
+								log.debug("Site is close to quota");
 							}
 							 				
 						} catch (IdUnusedException e) {
-							//TODO Auto-generated catch block
-							LOG.info("IdUnused: " + s.getId());
-							if (LOG.isDebugEnabled())
-								e.printStackTrace();
+							log.info("IdUnused: " + s.getId());
+							if (log.isDebugEnabled())
+								log.warn(e.getMessage(), e);
 						} catch (TypeException e) {
-							//TODO Auto-generated catch block
-							e.printStackTrace();
+							log.warn(e.getMessage(), e);
 						} catch (PermissionException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+							log.warn(e.getMessage(), e);
 						} catch (EntityPropertyNotDefinedException e) {
-							LOG.info("Quota property is not set: " + s.getId());
+							log.info("Quota property is not set: " + s.getId());
 							try {
 							ContentCollectionEdit collectionEdit = contentHostingService.editCollection(contentHostingService.getSiteCollection(s.getId()));
 							ResourceProperties properties = collectionEdit.getProperties();
 							properties.removeProperty(ResourceProperties.PROP_COLLECTION_BODY_QUOTA);
 							properties.addProperty(ResourceProperties.PROP_COLLECTION_BODY_QUOTA, Long.toString(minQuota));
-							LOG.debug("setting new quota for site");
+							log.debug("setting new quota for site");
 							contentHostingService.commitCollection(collectionEdit);
 							}
 							catch (Exception ec) {
-								LOG.error("Exception in catch block!");
-								e.printStackTrace();
+								log.error("Exception in catch block!" , e);
 							}
 						} catch (EntityPropertyTypeException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+							log.warn(e.getMessage(), e);
 						} catch (InUseException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+							log.warn(e.getMessage(), e);
 						} catch (Exception ex) {
-							ex.printStackTrace();
+							log.warn(ex.getMessage(), ex);
 						}
 
 						

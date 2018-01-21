@@ -2,8 +2,6 @@ package za.ac.uct.cet.sakai.scheduler.user;
 
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
@@ -23,9 +21,11 @@ import org.sakaiproject.user.api.UserLockedException;
 import org.sakaiproject.user.api.UserNotDefinedException;
 import org.sakaiproject.user.api.UserPermissionException;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class FixInactiveEmails implements Job{
 
-	private static final Log LOG = LogFactory.getLog(FixInactiveEmails.class);
 	
 	private static final String PROPERTY_DEACTIVATED = "SPML_DEACTIVATED";
 	
@@ -68,7 +68,7 @@ public class FixInactiveEmails implements Job{
 		
 		List<String> users = sqlService.dbRead(sql);
 		
-		LOG.info("got a list of " + users.size() + " users to remove");
+		log.info("got a list of " + users.size() + " users to remove");
 		
 		for (int i = 0; i < users.size(); i++) {
 			String userId = users.get(i);
@@ -103,19 +103,15 @@ public class FixInactiveEmails implements Job{
 				}
 				
 				
-				LOG.info("updated: " + userId);
+				log.info("updated: " + userId);
 			} catch (UserNotDefinedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 			} catch (UserPermissionException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 			} catch (UserLockedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 			} catch (UserAlreadyDefinedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 			}
 		}
 		

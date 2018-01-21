@@ -2,8 +2,6 @@ package org.sakaiproject.component.app.scheduler.jobs;
 
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -23,9 +21,11 @@ import org.sakaiproject.thread_local.api.ThreadLocalManager;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
 
+import lombok.extern.slf4j.Slf4j;
 
 
 
+@Slf4j
 public class VirusScanContent implements Job {
 
 	private SiteService siteService;
@@ -63,7 +63,6 @@ public class VirusScanContent implements Job {
 		this.emailService = emailService;
 	}
 
-	private static final Log log = LogFactory.getLog(VirusScanContent.class);
 
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		//set the user information into the current session
@@ -119,14 +118,12 @@ public class VirusScanContent implements Job {
 				} catch (IdUnusedException e) {
 					// we will get lots of these 
 					if (log.isDebugEnabled()) {
-						e.printStackTrace();
+						log.warn(e.getMessage(), e);
 					}
 				} catch (TypeException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					log.warn(e.getMessage(), e);
 				} catch (PermissionException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					log.warn(e.getMessage(), e);
 				} 
 
 			}

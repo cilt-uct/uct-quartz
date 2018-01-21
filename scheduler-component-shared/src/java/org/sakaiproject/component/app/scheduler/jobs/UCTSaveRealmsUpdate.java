@@ -4,8 +4,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -20,9 +18,11 @@ import org.sakaiproject.site.api.SiteService.SortType;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class UCTSaveRealmsUpdate implements Job {
 
-	private static final Log LOG = LogFactory.getLog(UCTSaveRealmsUpdate.class);
 	private SessionManager sessionManager;
 	public void setSessionManager(SessionManager s) {
 		this.sessionManager = s;
@@ -51,13 +51,13 @@ public class UCTSaveRealmsUpdate implements Job {
 	List sites = siteService.getSites(SiteService.SelectionType.NON_USER, "course", null, null, SortType.NONE, null);
 	for (int i =0 ; i< sites.size(); i++ ) {
 		Site s = (Site)sites.get(i);
-		LOG.info("got site " + s.getTitle());
+		log.info("got site " + s.getTitle());
 		if (s.getType()!= null && s.getType().equals("course")) {
 			ResourceProperties sp = s.getProperties();
 			String term = sp.getProperty("term");
 			if (term != null ) {
 				term = term.trim();
-				LOG.info("site is in term: " + term);
+				log.info("site is in term: " + term);
 				if (term.equals("2007") || term.equals("2006")) {
 					try {
 					AuthzGroup group = authzGroupService.getAuthzGroup("/site/" + s.getId());
@@ -73,9 +73,9 @@ public class UCTSaveRealmsUpdate implements Job {
 							for  (String thisId: pIds) {
 								String role = groupProvider.getRole(thisId, m.getUserEid());
 								if (role!= null && role.length()>0) {
-									LOG.info("Found external role of " + role + " internal role is: " + m.getRole().getId());
+									log.info("Found external role of " + role + " internal role is: " + m.getRole().getId());
 									if (role.equals(m.getRole().getId())) {
-									LOG.info("Seting user: " + m.getUserEid() + " to provided");
+									log.info("Seting user: " + m.getUserEid() + " to provided");
 									group.removeMember(m.getUserId());
 
 									}
@@ -89,7 +89,7 @@ public class UCTSaveRealmsUpdate implements Job {
 					authzGroupService.save(group);
 					}
 					catch(Exception e) {
-						e.printStackTrace();
+						log.warn(e.getMessage(), e);
 					}
 				}
 			}

@@ -7,8 +7,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -22,10 +20,12 @@ import org.sakaiproject.tool.api.SessionManager;
 import org.sakaiproject.user.api.User;
 import org.sakaiproject.user.api.UserDirectoryService;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class CleanFacOnlyStudents implements Job {
 
 	private static final String INACTIVE_STUDENT_TYPE = "inactiveStudent";
-	private static final Log LOG = LogFactory.getLog(CleanFacOnlyStudents.class);
 	private static final String ADMIN = "admin";
 
 	private SqlService sqlService;
@@ -81,13 +81,13 @@ public class CleanFacOnlyStudents implements Job {
 				User user = users.get(i);
 				if ("student".equals(user.getType())) {
 
-					LOG.info("Checking: " + user.getEid());
+					log.info("Checking: " + user.getEid());
 					//check the students current enrollments
 					String eid = user.getEid();
 					Set<EnrollmentSet> enrollments = courseManagementService.findCurrentlyEnrolledEnrollmentSets(eid);
-					LOG.info("found: " + enrollments.size() + " enrollments for the student");
+					log.info("found: " + enrollments.size() + " enrollments for the student");
 					if (enrollments.size() > 0 && !enrollmentsOk(enrollments)) {
-						LOG.warn("This student has no course registrations or fewer enrollments!");
+						log.warn("This student has no course registrations or fewer enrollments!");
 
 						//remove the student from current courses
 						studentCount++;
@@ -143,7 +143,7 @@ public class CleanFacOnlyStudents implements Job {
 			int check = "PHI3009F,2010".length();
 			String course = enrollment.getEid();
 			if (course.length() == check && course.indexOf("_STUD,") == -1) {
-				LOG.info("This student is a member of" + enrollment.getEid());
+				log.info("This student is a member of" + enrollment.getEid());
 				return true;
 			}
 		}
@@ -153,7 +153,7 @@ public class CleanFacOnlyStudents implements Job {
 
 	//remove user from old courses
 	private void synchCourses(List<String> uctCourse, String userEid){
-		LOG.debug("Checking enrolments for " + userEid);
+		log.debug("Checking enrolments for " + userEid);
 		SimpleDateFormat yearf = new SimpleDateFormat("yyyy");
 		String thisYear = yearf.format(new Date());
 
@@ -162,11 +162,11 @@ public class CleanFacOnlyStudents implements Job {
 
 		Set<EnrollmentSet> enroled = courseManagementService.findCurrentlyEnrolledEnrollmentSets(userEid);
 		Iterator<EnrollmentSet> coursesIt = enroled.iterator();
-		LOG.debug("got list of enrolement set with " + enroled.size());
+		log.debug("got list of enrolement set with " + enroled.size());
 		while(coursesIt.hasNext()) {
 			EnrollmentSet eSet = (EnrollmentSet)coursesIt.next();
 			String courseEid =  eSet.getEid();
-			LOG.debug("got section: " + courseEid);
+			log.debug("got section: " + courseEid);
 			boolean found = false;
 			for (int i =0; i < uctCourse.size(); i++ ) {
 				String thisEn = (String)uctCourse.get(i) + "," + thisYear;
@@ -174,7 +174,7 @@ public class CleanFacOnlyStudents implements Job {
 					found = true;
 			}
 			if (!found) {
-				LOG.info("removing user from " + courseEid);
+				log.info("removing user from " + courseEid);
 				courseAdmin.removeCourseOfferingMembership(userEid, courseEid);
 				courseAdmin.removeSectionMembership(userEid, courseEid);
 				courseAdmin.removeEnrollment(userEid, courseEid);
