@@ -6,8 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.StatefulJob;
@@ -22,6 +20,8 @@ import org.sakaiproject.email.api.EmailService;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
 
+import lombok.extern.slf4j.Slf4j;
+
 
 /**
  * Import course code updates from the incoming queue and 
@@ -30,9 +30,9 @@ import org.sakaiproject.tool.api.SessionManager;
  * @author dhorwitz
  *
  */
+@Slf4j
 public class ProcessFinAidUpdates implements StatefulJob {
 
-	private static final Log log = LogFactory.getLog(ProcessFinAidUpdates.class);
 	private static final String ADMIN = "admin";
 
 
@@ -260,7 +260,7 @@ public class ProcessFinAidUpdates implements StatefulJob {
 			courseAdmin.addOrUpdateSectionMembership(userId, role, courseEid, "enrolled");
 		}
 		catch(Exception e) {
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 
 		}
 

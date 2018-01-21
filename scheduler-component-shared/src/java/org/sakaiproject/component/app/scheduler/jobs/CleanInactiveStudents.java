@@ -7,8 +7,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -27,10 +25,12 @@ import org.sakaiproject.user.api.UserLockedException;
 import org.sakaiproject.user.api.UserNotDefinedException;
 import org.sakaiproject.user.api.UserPermissionException;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class CleanInactiveStudents implements Job {
 
 	private static final String INACTIVE_STUDENT_TYPE = "inactiveStudent";
-	private static final Log LOG = LogFactory.getLog(CleanInactiveStudents.class);
 	private static final String ADMIN = "admin";
 	
 	private SqlService sqlService;
@@ -78,12 +78,12 @@ public class CleanInactiveStudents implements Job {
 		List<String> eids = sqlService.dbRead(sql);
 		for (int i = 0; i < eids.size(); i++) {
 			String eid = eids.get(i);
-			LOG.info("Checking: " + eid);
+			log.info("Checking: " + eid);
 			//check the students current enrolements
 			Set<EnrollmentSet> enrollments = courseManagementService.findCurrentlyEnrolledEnrollmentSets(eid);
-			LOG.info("found: " + enrollments.size() + " enrollments for the student");
+			log.info("found: " + enrollments.size() + " enrollments for the student");
 			if (enrollments.size() <= 2) {
-				LOG.warn("This student has 2 or fewer enrollments!");
+				log.warn("This student has 2 or fewer enrollments!");
 				try {
 					User u = userDirectoryService.getUserByEid(eid);
 					if (!INACTIVE_STUDENT_TYPE.equals(u.getType())) {
@@ -98,17 +98,13 @@ public class CleanInactiveStudents implements Job {
 					}
 					
 				} catch (UserNotDefinedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					log.warn("UserNotDefinedException", e);
 				} catch (UserPermissionException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					log.warn("UserPermissionException", e);
 				} catch (UserLockedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					log.warn("UserLockedException", e);
 				} catch (UserAlreadyDefinedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					log.warn("UserAlreadyDefinedException", e);
 				}
 				
 			}
@@ -126,7 +122,7 @@ public class CleanInactiveStudents implements Job {
 	
 	//remove user from old courses
 	private void synchCourses(List<String> uctCourse, String userEid){
-		LOG.debug("Checking enrolments for " + userEid);
+		log.debug("Checking enrolments for " + userEid);
 		SimpleDateFormat yearf = new SimpleDateFormat("yyyy");
 		String thisYear = yearf.format(new Date());
 
@@ -135,11 +131,11 @@ public class CleanInactiveStudents implements Job {
 
 		Set<EnrollmentSet> enroled = courseManagementService.findCurrentlyEnrolledEnrollmentSets(userEid);
 		Iterator<EnrollmentSet> coursesIt = enroled.iterator();
-		LOG.debug("got list of enrolement set with " + enroled.size());
+		log.debug("got list of enrolement set with " + enroled.size());
 		while(coursesIt.hasNext()) {
 			EnrollmentSet eSet = (EnrollmentSet)coursesIt.next();
 			String courseEid =  eSet.getEid();
-			LOG.debug("got section: " + courseEid);
+			log.debug("got section: " + courseEid);
 			boolean found = false;
 			for (int i =0; i < uctCourse.size(); i++ ) {
 				String thisEn = (String)uctCourse.get(i) + "," + thisYear;
@@ -147,7 +143,7 @@ public class CleanInactiveStudents implements Job {
 					found = true;
 			}
 			if (!found) {
-				LOG.info("removing user from " + courseEid);
+				log.info("removing user from " + courseEid);
 				courseAdmin.removeCourseOfferingMembership(userEid, courseEid);
 				courseAdmin.removeSectionMembership(userEid, courseEid);
 				courseAdmin.removeEnrollment(userEid, courseEid);

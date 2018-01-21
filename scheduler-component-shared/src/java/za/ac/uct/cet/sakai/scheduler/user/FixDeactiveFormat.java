@@ -2,10 +2,7 @@ package za.ac.uct.cet.sakai.scheduler.user;
 
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.DateTimeFormatterBuilder;
 import org.joda.time.format.ISODateTimeFormat;
@@ -24,9 +21,11 @@ import org.sakaiproject.user.api.UserLockedException;
 import org.sakaiproject.user.api.UserNotDefinedException;
 import org.sakaiproject.user.api.UserPermissionException;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class FixDeactiveFormat implements Job {
 
-	private static final Log LOG = LogFactory.getLog(FixDeactiveFormat.class);
 	private SqlService sqlService;
 	private UserDirectoryService userDirectoryService;
 	
@@ -82,12 +81,12 @@ public class FixDeactiveFormat implements Job {
 				User user = userDirectoryService.getUser(userId);
 				ResourceProperties rp = user.getProperties();
 				String deactive = rp.getProperty("SPML_DEACTIVATED");
-				LOG.info("deactive string is  " + deactive);
+				log.info("deactive string is  " + deactive);
 				try {
 					DateTime dt = fmt.parseDateTime(deactive);
 				}
 				catch (IllegalArgumentException e) {
-					LOG.info("that's not an ISO date!");
+					log.info("that's not an ISO date!");
 					//todo we need to parse
 					String value = deactive.replace("SAST", "+02");
 					DateTime newOne = oldFormat.parseDateTime(value);
@@ -98,22 +97,18 @@ public class FixDeactiveFormat implements Job {
 						userDirectoryService.commitEdit(edit);
 						
 					} catch (UserPermissionException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+						log.warn(e.getMessage(), e);
 					} catch (UserLockedException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+						log.warn(e.getMessage(), e);
 					} catch (UserAlreadyDefinedException e3) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						log.warn(e.getMessage(), e);
 					}
 					
 					
 				}
 				
 			} catch (UserNotDefinedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 			}
 			
 		}

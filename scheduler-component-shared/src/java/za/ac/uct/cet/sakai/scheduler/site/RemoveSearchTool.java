@@ -4,8 +4,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -14,14 +12,16 @@ import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.exception.PermissionException;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SiteService;
-import org.sakaiproject.site.api.ToolConfiguration;
 import org.sakaiproject.site.api.SiteService.SortType;
+import org.sakaiproject.site.api.ToolConfiguration;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class RemoveSearchTool implements Job{
 
-	private static final Log LOG = LogFactory.getLog(RemoveSearchTool.class);
 
 	private SiteService siteService;
 	public void setSiteService(SiteService s) {
@@ -86,11 +86,9 @@ public class RemoveSearchTool implements Job{
 			}
 
 		} catch (IdUnusedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		} catch (PermissionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 	}	
 
@@ -100,7 +98,7 @@ public class RemoveSearchTool implements Job{
 			site = siteService.getSite(s1.getId());
 			ResourceProperties rp = site.getProperties();
 			String term = rp.getProperty("term");
-			LOG.info("found term " + term + " for " + site.getTitle());
+			log.info("found term " + term + " for " + site.getTitle());
 
 			if (term == null || Integer.valueOf(term).intValue() < minTermId) {
 				removeSearchTool(site); 
@@ -108,24 +106,22 @@ public class RemoveSearchTool implements Job{
 			}
 
 		} catch (IdUnusedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		} catch (PermissionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 	}
 
 	private void removeSearchTool(Site site)
 			throws IdUnusedException, PermissionException {
-		LOG.info("checking for search tool");
+		log.info("checking for search tool");
 		//find the search tool
 		Collection<ToolConfiguration> tc = site.getTools("sakai.search");
-		LOG.info("got " + tc.size() + " matching configs");
+		log.info("got " + tc.size() + " matching configs");
 		Iterator<ToolConfiguration> itar = tc.iterator();
 		while (itar.hasNext()) {
 			ToolConfiguration toolConfig = itar.next();
-			LOG.info("removing search page from " + site.getTitle());
+			log.info("removing search page from " + site.getTitle());
 			site.removePage(toolConfig.getContainingPage());
 			siteService.save(site);
 		}

@@ -1,25 +1,25 @@
 package org.sakaiproject.component.app.scheduler.jobs;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.StatefulJob;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class UCTTestJob implements StatefulJob {
-	private static final Log LOG = LogFactory.getLog(UCTTestJob.class);
+
 	
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		// TODO Auto-generated method stub
-		LOG.info("This job is stateful?: " +arg0.getJobDetail().toString());    //.isStateful());
-		LOG.info("UCTTestJob fired");
+		log.info("This job is stateful?: " +arg0.getJobDetail().toString());    //.isStateful());
+		log.info("UCTTestJob fired");
 		try {
 			Thread.sleep(120*1000);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
-		LOG.info("UCTTestJob finnished");
+		log.info("UCTTestJob finnished");
 	}
 
 }

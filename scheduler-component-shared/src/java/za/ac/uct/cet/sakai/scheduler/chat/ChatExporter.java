@@ -6,8 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFDataFormat;
@@ -31,9 +29,12 @@ import org.sakaiproject.user.api.UserNotDefinedException;
 import org.sakaiproject.useralias.logic.UserAliasLogic;
 import org.sakaiproject.useralias.model.UserAliasItem;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class ChatExporter implements Job {
 
-	private static final Log log = LogFactory.getLog(ChatExporter.class);
+
 	private SessionManager sessionManager;
 	public void setSessionManager(SessionManager s) {
 		this.sessionManager = s;
@@ -126,8 +127,7 @@ public class ChatExporter implements Job {
 							displayName = u.getDisplayName();
 						}
 					} catch (UserNotDefinedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						log.warn(e.getMessage(), e);
 						
 					}
 
@@ -158,7 +158,7 @@ public class ChatExporter implements Job {
 					FileOutputStream out = new FileOutputStream(fileName);
 					myWorkBook.write(out);
 					out.close();
-				}catch(Exception e){ e.printStackTrace();} 
+				}catch(Exception e){ log.warn(e.getMessage(), e);} 
 			}
 
 		}

@@ -4,8 +4,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -19,10 +17,13 @@ import org.sakaiproject.time.api.Time;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class ClearRTTMail implements Job {
 	private static final String MAIL_CHANNEL ="/mailarchive/channel/a2be4fcd-8e2e-40f8-0003-6c3d088393fe/main";
 	
-	private static final Log log = LogFactory.getLog(ClearRTTMail.class);
+
 	private static final String ADMIN = "admin";
 	private MailArchiveService mailArchiveService;
 	public void setMailArchiveService(MailArchiveService mailArchiveService) {
@@ -61,11 +62,9 @@ public class ClearRTTMail implements Job {
 			
 			
 		} catch (IdUnusedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		} catch (PermissionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 
 	}

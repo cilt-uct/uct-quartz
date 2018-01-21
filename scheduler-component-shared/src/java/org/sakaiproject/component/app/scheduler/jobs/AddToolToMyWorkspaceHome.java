@@ -2,8 +2,6 @@ package org.sakaiproject.component.app.scheduler.jobs;
 
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -18,9 +16,11 @@ import org.sakaiproject.tool.api.SessionManager;
 import org.sakaiproject.user.api.User;
 import org.sakaiproject.user.api.UserDirectoryService;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class AddToolToMyWorkspaceHome implements Job {
 
-	private static final Log LOG = LogFactory.getLog(AddToolToMyWorkspaceHome.class);
 	private SiteService siteService;
 	public void setSiteService(SiteService s) {
 		this.siteService = s;
@@ -79,22 +79,22 @@ public class AddToolToMyWorkspaceHome implements Job {
 							
 							SitePage page = getHomePage(userSite);
 							if (page != null) {
-								LOG.info("going to add tool to  page to: " + u.getEid() + " on page: " + page.getTitle());
+								log.info("going to add tool to  page to: " + u.getEid() + " on page: " + page.getTitle());
 								ToolConfiguration tool = page.addTool(toolId);
 								tool.setLayoutHints("0,1");
 								tool.setTitle(toolTitle);
 								tool.moveUp();
 								siteService.save(userSite);
 							} else {
-								LOG.warn("users worksite has no Home page!: " + u.getEid());
+								log.warn("users worksite has no Home page!: " + u.getEid());
 
 							}
 						}
 
 					} catch (IdUnusedException e) {
-						LOG.debug("user has no workspace!: " + u.getId());
+						log.debug("user has no workspace!: " + u.getId());
 					} catch (PermissionException e) {
-						e.printStackTrace();
+						log.warn("PermissionException", e);
 					}
 
 			}

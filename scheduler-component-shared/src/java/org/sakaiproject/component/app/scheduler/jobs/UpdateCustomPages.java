@@ -3,8 +3,6 @@ package org.sakaiproject.component.app.scheduler.jobs;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -14,15 +12,16 @@ import org.sakaiproject.entity.api.EntityPropertyTypeException;
 import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.exception.PermissionException;
-import org.sakaiproject.javax.PagingPosition;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SitePage;
 import org.sakaiproject.site.api.SiteService;
-import org.sakaiproject.site.api.SiteService.SelectionType;
 import org.sakaiproject.thread_local.api.ThreadLocalManager;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class UpdateCustomPages implements Job {
 
 	private SiteService siteService;
@@ -47,7 +46,7 @@ public class UpdateCustomPages implements Job {
 		this.threadLocalManager = threadLocalManager;
 	}
 
-	private static final Log LOG = LogFactory.getLog(UpdateCustomPages.class);
+
 
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 
@@ -98,24 +97,23 @@ public class UpdateCustomPages implements Job {
 						} catch (EntityPropertyNotDefinedException e) {
 							// we expect a lot of these
 						} catch (EntityPropertyTypeException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+							log.warn(e.getMessage(), e);
 						}
 						if (!custom) {
-							LOG.info("Page " + page.getTitle() + " has no custom flag");
+							log.info("Page " + page.getTitle() + " has no custom flag");
 							if (getTitleCustomLegacy(page, page.getTitle())) {
 								//We need to add the property
 								ResourceProperties rp = page.getProperties();
 								rp.addProperty(SitePage.PAGE_CUSTOM_TITLE_PROP, "true");
-								LOG.info("page " + page.getTitle() + " has been modified");
+								log.info("page " + page.getTitle() + " has been modified");
 								modified = true;
 							} else if (isMessagesPage(page)) {
-								LOG.info("removing old messages page: " + page.getTitle());
+								log.info("removing old messages page: " + page.getTitle());
 								editSite.removePage(page);
 								modified = true;
 								
 							} else {
-								LOG.info("page " + page.getTitle() + " is not custom");
+								log.info("page " + page.getTitle() + " is not custom");
 							}
 						}
 
@@ -131,11 +129,9 @@ public class UpdateCustomPages implements Job {
 					try {
 						siteService.save(editSite);
 					} catch (IdUnusedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						log.warn(e.getMessage(), e);
 					} catch (PermissionException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						log.warn(e.getMessage(), e);
 					}
 				}
 			}
@@ -184,8 +180,7 @@ public class UpdateCustomPages implements Job {
 		} catch (EntityPropertyNotDefinedException e) {
 			// we expect a lot of these
 		} catch (EntityPropertyTypeException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 		
 		if (is_home) {

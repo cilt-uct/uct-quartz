@@ -3,8 +3,6 @@ package za.ac.uct.cet.sakai.scheduler.user;
 import java.text.NumberFormat;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
@@ -32,10 +30,12 @@ import org.sakaiproject.user.api.UserLockedException;
 import org.sakaiproject.user.api.UserNotDefinedException;
 import org.sakaiproject.user.api.UserPermissionException;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class CleanOldUserData implements Job{
 
 	private static final String WORKSPACE_CONTENT_REMOVED = "workspace_content_removed";
-	private static final Log LOG = LogFactory.getLog(CleanOldUserData.class);
 	private SqlService sqlService;
 	private UserDirectoryService userDirectoryService;
 	
@@ -85,10 +85,10 @@ public class CleanOldUserData implements Job{
 	    DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
 	    String strDate = fmt.print(forQuery);
 	    String sql = "select user_id from SAKAI_USER_PROPERTY where name = 'SPML_DEACTIVATED' and timestamp(value) < '" + strDate + "' and user_id not in (select user_id from SAKAI_USER_PROPERTY where name='workspace_content_removed')";
-		LOG.info("sql: " + sql);
+		log.info("sql: " + sql);
 		List<String> users = sqlService.dbRead(sql);
 		
-		LOG.info("got a list of " + users.size() + " user who's data to clean up");
+		log.info("got a list of " + users.size() + " user who's data to clean up");
 		int noCollection = 0;
 		int hasCollection = 0;
 		long totalSize = 0;
@@ -104,7 +104,7 @@ public class CleanOldUserData implements Job{
 				user = userDirectoryService.editUser(userId);
 				String type = user.getType();
 				if (!type.toLowerCase().startsWith("inactive")) {
-					LOG.warn("user: " + user.getEid() + " has type of: " + type);
+					log.warn("user: " + user.getEid() + " has type of: " + type);
 					userDirectoryService.cancelEdit(user);
 					continue;
 				}
@@ -112,7 +112,7 @@ public class CleanOldUserData implements Job{
 				ContentCollection collection = contentHostingService.getCollection(collectionId);
 				hasCollection++;
 				long bodySize = collection.getBodySizeK();
-				LOG.info("user: " + userId + " has a collection of " + bodySize +"kb " + "(" + i + "/" + users.size() + ")");
+				log.info("user: " + userId + " has a collection of " + bodySize +"kb " + "(" + i + "/" + users.size() + ")");
 				totalSize = totalSize + bodySize;
 				//remove the collection
 				try {
@@ -122,11 +122,9 @@ public class CleanOldUserData implements Job{
 				} catch (IdUnusedException e) {
 
 				} catch (InUseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					log.warn(e.getMessage(), e);
 				} catch (ServerOverloadException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					log.warn(e.getMessage(), e);
 				}
 
 				//Remove the site
@@ -143,39 +141,33 @@ public class CleanOldUserData implements Job{
 
 				
 			} catch (IdUnusedException e) {
-				LOG.info("user: " + userId + " has no resource collection");
+				log.info("user: " + userId + " has no resource collection");
 				setUserFlags(user);
 				noCollection++;
 			} catch (TypeException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 			} catch (PermissionException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 			} catch (UserNotDefinedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 			} catch (UserPermissionException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 			} catch (UserLockedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 			}
 			finally {
 				if (user != null && user.isActiveEdit()) {
 					try {
 						userDirectoryService.commitEdit(user);
 					} catch (UserAlreadyDefinedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						log.warn(e.getMessage(), e);
 					}
 				}
 			}
 			
 		}
-		LOG.info("checked " + users.size() + " accounts of which " + noCollection + " had no content collection, " + hasCollection + " had a collection");
-		LOG.info("total resource size: " + totalSize + "kb");
+		log.info("checked " + users.size() + " accounts of which " + noCollection + " had no content collection, " + hasCollection + " had a collection");
+		log.info("total resource size: " + totalSize + "kb");
 		//email that
 		String body = "checked " + users.size() + " accounts of which " + noCollection + " had no content collection, " + hasCollection + " had a collection\n";
 		body +=  "total resource size: " + formatSize(totalSize * 1024);

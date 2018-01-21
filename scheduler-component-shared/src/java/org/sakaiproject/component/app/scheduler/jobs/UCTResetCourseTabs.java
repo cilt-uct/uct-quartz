@@ -3,8 +3,6 @@ package org.sakaiproject.component.app.scheduler.jobs;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -20,10 +18,11 @@ import org.sakaiproject.user.api.PreferencesService;
 import org.sakaiproject.user.api.User;
 import org.sakaiproject.user.api.UserDirectoryService;
 
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class UCTResetCourseTabs implements Job {
 
-	private static final Log LOG = LogFactory.getLog(UCTResetCourseTabs.class);
 	private static final String ADMIN = "admin";
 	private UserDirectoryService userDirectoryService;
 	public void setUserDirectoryService(UserDirectoryService s) {
@@ -54,7 +53,7 @@ public class UCTResetCourseTabs implements Job {
 		List users = userDirectoryService.getUsers();
 		for (int i= 0; i < users.size(); i++ ){
 			User u = (User)users.get(i);
-			LOG.info("GOT User " + u.getId());
+			log.info("GOT User " + u.getId());
 			
 			//get the 	list of sites
 			
@@ -65,7 +64,7 @@ public class UCTResetCourseTabs implements Job {
 			}
 			catch (IdUnusedException e) {
 				//e.printStackTrace();
-				LOG.warn("user has no preferences set!");
+				log.warn("user has no preferences set!");
 				try {
 					p = preferencesService.add(u.getId());
 				}
@@ -91,13 +90,12 @@ public class UCTResetCourseTabs implements Job {
 					if (order != null ) {
 						for (int q =0;q < order.size();q++){
 							String value = (String) order.get(q);
-							LOG.info("got a vaulue of " + value);
+							log.info("got a vaulue of " + value);
 							Site s = null;
 							try {
 								s = siteService.getSite(value);
 							} catch (IdUnusedException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
+								log.warn(e.getMessage(), e);
 							}
 							if (s != null && s.getType()!= null && s.getType().equals("course")) {
 								//anything not 2008 moves down
@@ -105,8 +103,8 @@ public class UCTResetCourseTabs implements Job {
 								String term = sp.getProperty("term");
 								term = term.trim();
 								if (term != null && !term.equals("2008") ) {
-									LOG.info("site is in term: " + term);
-									LOG.info("adding term to bottom list");
+									log.info("site is in term: " + term);
+									log.info("adding term to bottom list");
 									bottom.add(value);
 								} else {
 									top.add(value);
@@ -126,7 +124,7 @@ public class UCTResetCourseTabs implements Job {
 						}
 						
 				} else {
-					LOG.warn("resourceProperites is null");
+					log.warn("resourceProperites is null");
 				}
 				
 			  

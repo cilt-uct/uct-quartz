@@ -2,8 +2,6 @@ package org.sakaiproject.component.app.scheduler.jobs;
 
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -13,9 +11,11 @@ import org.sakaiproject.db.api.SqlService;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class ClearorphanedProfiles implements Job {
 
-	private static final Log log = LogFactory.getLog(ClearorphanedProfiles.class);
 	private static final String ADMIN = "admin";
 	
 	private SakaiPersonManager sakaiPersonManager;

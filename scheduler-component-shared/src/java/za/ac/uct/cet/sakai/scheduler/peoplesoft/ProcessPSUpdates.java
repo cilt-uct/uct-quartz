@@ -9,8 +9,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
@@ -36,6 +34,8 @@ import org.sakaiproject.user.api.UserLockedException;
 import org.sakaiproject.user.api.UserNotDefinedException;
 import org.sakaiproject.user.api.UserPermissionException;
 
+import lombok.extern.slf4j.Slf4j;
+
 
 /**
  * Import course code updates from the incoming queue and 
@@ -44,10 +44,9 @@ import org.sakaiproject.user.api.UserPermissionException;
  * @author dhorwitz
  *
  */
+@Slf4j
 public class ProcessPSUpdates implements StatefulJob {
 
-
-	private static final Log log = LogFactory.getLog(ProcessPSUpdates.class);
 
 	private static final String ADMIN = "admin";
 	
@@ -128,17 +127,13 @@ public class ProcessPSUpdates implements StatefulJob {
 			rp.addProperty("PS_MEMEBERSHIPS_SYNCHED", fmt.print(dt));
 			userDirectoryService.commitEdit(user);
 		} catch (UserNotDefinedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		} catch (UserPermissionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		} catch (UserLockedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		} catch (UserAlreadyDefinedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 		}
 		
 		
@@ -381,8 +376,7 @@ public class ProcessPSUpdates implements StatefulJob {
 						updated = new DateTime(result.getDate(2));
 					}
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					log.warn(e.getMessage(), e);
 				}
 				ret.setCourseRegistrations(courses);
 				ret.setLastUpdated(updated);
@@ -506,7 +500,7 @@ public class ProcessPSUpdates implements StatefulJob {
 			courseAdmin.addOrUpdateSectionMembership(userId, role, courseEid, "enrolled");
 		}
 		catch(Exception e) {
-			e.printStackTrace();
+			log.warn(e.getMessage(), e);
 
 		}
 

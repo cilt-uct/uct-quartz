@@ -6,8 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -21,18 +19,18 @@ import org.sakaiproject.exception.PermissionException;
 import org.sakaiproject.exception.TypeException;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SiteService;
-import org.sakaiproject.site.api.ToolConfiguration;
 import org.sakaiproject.site.api.SiteService.SortType;
+import org.sakaiproject.site.api.ToolConfiguration;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
 import org.sakaiproject.user.api.User;
 import org.sakaiproject.user.api.UserDirectoryService;
 import org.sakaiproject.user.api.UserNotDefinedException;
 
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class CheckCourseSites implements Job {
-
-	private static final Log LOG = LogFactory.getLog(CheckCourseSites.class);
 	
 	private SiteService siteService;
 	public void setSiteService(SiteService s) {
@@ -82,13 +80,13 @@ public class CheckCourseSites implements Job {
 			while (it.hasNext()) {
 				Member member = it.next();
 				String role = member.getRole().getId();
-				LOG.debug("got member: " + member.getUserDisplayId() + " with role: " + role);
+				log.debug("got member: " + member.getUserDisplayId() + " with role: " + role);
 				if ("Student".equals(role)) {
-					LOG.debug("got a student user");
+					log.debug("got a student user");
 					try {
 						User user = userDirectoryService.getUser(member.getUserId());
 						if ("student".equals(user.getType())) {
-							LOG.debug("got an active student");
+							log.debug("got an active student");
 							hasActiveStudent = true;
 							break;
 						}
@@ -100,7 +98,7 @@ public class CheckCourseSites implements Job {
 			}
 			
 			if (!hasActiveStudent) {
-				LOG.info("site: " + s1.getTitle() + " has no active students");
+				log.info("site: " + s1.getTitle() + " has no active students");
 				
 				//get the size of the collection
 				String siteCollection  = contentHostingService.getSiteCollection(s1.getId());
@@ -110,15 +108,13 @@ public class CheckCourseSites implements Job {
 					totalBodyK = totalBodyK + bodyK;
 				} catch (IdUnusedException e) {
 					// Possibly the site has no collection
-					if (LOG.isDebugEnabled()) {
-						LOG.debug("site " + s1.getId() + " has no content collection");
+					if (log.isDebugEnabled()) {
+						log.debug("site " + s1.getId() + " has no content collection");
 					}
 				} catch (TypeException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					log.warn(e.getMessage(), e);
 				} catch (PermissionException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					log.warn(e.getMessage(), e);
 				}
 				
 				nonActiveSites.add(s1);
@@ -131,16 +127,16 @@ public class CheckCourseSites implements Job {
 				site = siteService.getSite(s1.getId());
 				ResourceProperties rp = site.getProperties();
 				String term = rp.getProperty("term");
-				LOG.info("found term " + term + " for " + site.getTitle());
+				log.info("found term " + term + " for " + site.getTitle());
 				if (term == null || Integer.valueOf(term).intValue() < 2012) {
-					LOG.info("checking for search tool");
+					log.info("checking for search tool");
 					//find the search tool
 					Collection<ToolConfiguration> tc = site.getTools("sakai.search");
-					LOG.info("got " + tc.size() + " matching configs");
+					log.info("got " + tc.size() + " matching configs");
 					Iterator<ToolConfiguration> itar = tc.iterator();
 					while (itar.hasNext()) {
 						ToolConfiguration toolConfig = itar.next();
-						LOG.info("removing search page from " + site.getTitle() + " in  term " + term);
+						log.info("removing search page from " + site.getTitle() + " in  term " + term);
 						site.removePage(toolConfig.getContainingPage());
 						siteService.save(site);
 					} 
@@ -148,11 +144,9 @@ public class CheckCourseSites implements Job {
 				}
 				
 			} catch (IdUnusedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 			} catch (PermissionException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.warn(e.getMessage(), e);
 			}
 			
 			

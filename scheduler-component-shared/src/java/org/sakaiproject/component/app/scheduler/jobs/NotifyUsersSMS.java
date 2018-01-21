@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -19,9 +17,11 @@ import org.sakaiproject.tool.api.SessionManager;
 import org.sakaiproject.user.api.User;
 import org.sakaiproject.user.api.UserDirectoryService;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class NotifyUsersSMS implements Job {
 
-	private static final Log LOG = LogFactory.getLog(NotifyUsersSMS.class);
 
 	private SessionManager sessionManager;
 	public void setSessionManager(SessionManager s) {
@@ -108,7 +108,7 @@ public class NotifyUsersSMS implements Job {
 						
 						replacementValues.put("eid", u.getEid());
 						
-						LOG.info("Sending SMS notification email to " + u.getEid());
+						log.info("Sending SMS notification email to " + u.getEid());
 						
 						emailTemplateService.sendRenderedMessages(key, to , replacementValues, "help@vula.uct.ac.za", "Vula Team, UCT");
 						

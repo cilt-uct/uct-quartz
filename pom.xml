@@ -53,12 +53,6 @@
 				<version>12-SNAPSHOT</version>
 				<scope>provided</scope>
 			</dependency>
-			<dependency>
-				<groupId>org.sakaiproject.roleplay</groupId>
-				<artifactId>useralias-logic-impl</artifactId>
-				<version>12-SNAPSHOT</version>
-				<scope>provided</scope>
-			</dependency>
 		</dependencies>
 	</dependencyManagement>
 

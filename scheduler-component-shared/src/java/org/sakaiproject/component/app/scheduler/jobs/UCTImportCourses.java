@@ -1,20 +1,15 @@
 package org.sakaiproject.component.app.scheduler.jobs;
 
-import java.io.FileReader;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
-import au.com.bytecode.opencsv.CSVReader;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -26,10 +21,13 @@ import org.sakaiproject.coursemanagement.api.Section;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
 
+import au.com.bytecode.opencsv.CSVReader;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class UCTImportCourses implements Job {
 
 	private static final String ADMIN = "admin";
-	private static final Log LOG = LogFactory.getLog(UCTImportCourses.class);
 
 	private CourseManagementService courseManagementService;
 	private CourseManagementAdministration courseAdmin;
@@ -67,9 +65,9 @@ public class UCTImportCourses implements Job {
 
 		try {
 			reader = new CSVReader(new FileReader(file), ',' , '"' , 0);
-			LOG.info("Updating course information from " + file);
+			log.info("Updating course information from " + file);
 		} catch (FileNotFoundException e) {
-			LOG.error("Cannot open file " + file + " for reading");	
+			log.error("Cannot open file " + file + " for reading");	
 			return;
 		}
        
@@ -88,20 +86,20 @@ public class UCTImportCourses implements Job {
 						String subject =  nextLine[3];
 						Date startDate = formatter.parse(nextLine[4]);
 						Date endDate = formatter.parse(nextLine[5]);
-						LOG.info("createCourse(" + course + "," + year + "," + descr + "," + subject + "," + 
+						log.info("createCourse(" + course + "," + year + "," + descr + "," + subject + "," + 
 							nextLine[4] + "," +nextLine[5] + ")");
 						this.createCourse(course, year, descr, subject, startDate, endDate);
 					} catch (java.text.ParseException e) {
-						LOG.error("Skipping CSV record for " + nextLine[0] + " - cannot parse date formats");
+						log.error("Skipping CSV record for " + nextLine[0] + " - cannot parse date formats");
 					}
 				}
 			}
 		} catch (IOException e) {
-			LOG.error("Error reading CSV file " + file);	
+			log.error("Error reading CSV file " + file);	
 			return;
 		}
 
-		LOG.info("Finished");
+		log.info("Finished");
 	}
 
 	private Set<String> acadTerms = new HashSet<String>();
@@ -155,7 +153,7 @@ public class UCTImportCourses implements Job {
 
 		if (!courseManagementService.isCourseOfferingDefined(courseEid)) {
 			// create new course
-			LOG.info("creating course offering for " + courseCode + " in year " + term);
+			log.info("creating course offering for " + courseCode + " in year " + term);
 			courseAdmin.createCourseOffering(courseEid, courseCode + " - " + descr, courseEid + " - " + descr, "active", term, courseCode, startDate, endDate);
 
 			courseAdmin.addCourseOfferingToCourseSet(setId, courseEid);		 

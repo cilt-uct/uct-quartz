@@ -4,8 +4,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -17,9 +15,12 @@ import org.sakaiproject.db.api.SqlService;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class SynchResearchCourses implements Job {
 	private static final String ADMIN = "admin";
-	private static final Log LOG = LogFactory.getLog(SynchResearchCourses.class);
+
 	
 	private CourseManagementService courseManagementService;
 	private CourseManagementAdministration courseAdmin;
@@ -52,20 +53,20 @@ public class SynchResearchCourses implements Job {
 		List<String> vals = sqlService.dbRead(sql);
 		for (int i =0; i < vals.size(); i++) {
 			String courseEid = vals.get(i);
-			LOG.info("going to synch " + courseEid);
+			log.info("going to synch " + courseEid);
 			Set<Membership> members = courseManagementService.getSectionMemberships(courseEid);
 			Iterator<Membership> mit = members.iterator();
 			
 			//each of these needs to be added to the exivelent 2011 course
 			String nextCourseEid = courseEid.replace(",2010", ",2011");
-			LOG.info("going to add " + members.size() + " members to " + nextCourseEid + " from " + courseEid);
+			log.info("going to add " + members.size() + " members to " + nextCourseEid + " from " + courseEid);
 			while (mit.hasNext()) {
 				Membership membership = mit.next();
 				try {
 				courseAdmin.addOrUpdateSectionMembership(membership.getUserId(), membership.getRole(), nextCourseEid, membership.getRole());
 				}
 				catch (IdNotFoundException e) {
-					LOG.warn("could not find course: " + nextCourseEid);
+					log.warn("could not find course: " + nextCourseEid);
 					//TODO should we clear the course?
 				}
 			}

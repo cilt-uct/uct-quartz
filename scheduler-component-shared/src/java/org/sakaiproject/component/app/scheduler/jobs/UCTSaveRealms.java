@@ -3,8 +3,6 @@ package org.sakaiproject.component.app.scheduler.jobs;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.StatefulJob;
@@ -19,10 +17,12 @@ import org.sakaiproject.site.api.SiteService.SortType;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class UCTSaveRealms implements StatefulJob {
 	
 	private static boolean FIX_USERS = false;
-	private static final Log LOG = LogFactory.getLog(UCTSaveRealms.class);
 	private SessionManager sessionManager;
 	public void setSessionManager(SessionManager s) {
 		this.sessionManager = s;
@@ -48,7 +48,7 @@ public class UCTSaveRealms implements StatefulJob {
 		List<String> ret = new ArrayList<String>();
 		for (int i =0; i < as.size(); i++) {
 			AcademicSession a = as.get(i);
-			LOG.debug("got accademic session: " + a.getEid());
+			log.debug("got accademic session: " + a.getEid());
 			ret.add(a.getEid());
 		}
 		return ret;
@@ -66,15 +66,15 @@ public class UCTSaveRealms implements StatefulJob {
 	List<String> currentTerms = getTerms();
 	for (int i =0 ; i< sites.size(); i++ ) {
 		Site s = (Site)sites.get(i);
-		LOG.debug("got site " + s.getTitle());
+		log.debug("got site " + s.getTitle());
 		if (s.getType()!= null && s.getType().equals("course")) {
 			ResourceProperties sp = s.getProperties();
 			String term = sp.getProperty("term");
 			if (term != null ) {
 				term = term.trim();
-				LOG.debug("site is in term: " + term);
+				log.debug("site is in term: " + term);
 				if (currentTerms.contains(term)) {
-					LOG.debug("saving realm: " + s.getTitle());
+					log.debug("saving realm: " + s.getTitle());
 					try {
 						AuthzGroup group = authzGroupService.getAuthzGroup("/site/" + s.getId());
 						//we only need to save if there is a provider set
@@ -83,7 +83,7 @@ public class UCTSaveRealms implements StatefulJob {
 						}
 					}
 					catch(Exception e) {
-						e.printStackTrace();
+						log.warn(e.getMessage(), e);
 					}
 				}
 			}

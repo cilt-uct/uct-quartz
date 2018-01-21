@@ -2,8 +2,6 @@ package za.ac.uct.cet.sakai.scheduler.user;
 
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -18,9 +16,11 @@ import org.sakaiproject.user.api.UserLockedException;
 import org.sakaiproject.user.api.UserNotDefinedException;
 import org.sakaiproject.user.api.UserPermissionException;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class CleanGuestsNoSite implements Job{
 
-	private static final Log LOG = LogFactory.getLog(CleanGuestsNoSite.class);
 	private SqlService sqlService;
 	private UserDirectoryService userDirectoryService;
 	
@@ -60,7 +60,7 @@ public class CleanGuestsNoSite implements Job{
 		
 		List<String> users = sqlService.dbRead(sql);
 		
-		LOG.info("got a list of " + users.size() + " users to remove");
+		log.info("got a list of " + users.size() + " users to remove");
 		
 		for (int i = 0; i < users.size(); i++) {
 			String userId = users.get(i);
@@ -70,16 +70,13 @@ public class CleanGuestsNoSite implements Job{
 				try {
 					UserEdit u = userDirectoryService.editUser(userId);
 					userDirectoryService.removeUser(u);
-					LOG.info("removed: " + userId);
+					log.info("removed: " + userId);
 				} catch (UserNotDefinedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					log.warn(e.getMessage(), e);
 				} catch (UserPermissionException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					log.warn(e.getMessage(), e);
 				} catch (UserLockedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					log.warn(e.getMessage(), e);
 				}
 			}
 		}

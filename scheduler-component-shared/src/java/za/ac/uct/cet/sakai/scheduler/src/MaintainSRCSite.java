@@ -4,8 +4,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -17,10 +15,12 @@ import org.sakaiproject.exception.PermissionException;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class MaintainSRCSite implements StatefulJob {
 
 	private final String ADMIN = "admin";
-	private static final Log log = LogFactory.getLog(MaintainSRCSite.class);
 	private SessionManager sessionManager;
 	public void setSessionManager(SessionManager s) {
 		this.sessionManager = s;
@@ -57,8 +57,7 @@ public class MaintainSRCSite implements StatefulJob {
 								log.info("deleting message posted on: "  + posted.toString());
 								chatManager.deleteMessage(message);
 							} catch (PermissionException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
+								log.warn(e.getMessage(), e);
 							}
 						}
 					}
