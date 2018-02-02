@@ -49,7 +49,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.sakaiproject.assignment</groupId>
-                        <artifactId>sakai-assignment-api</artifactId>
+			<artifactId>sakai-assignment-api</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.sakaiproject.message</groupId>
