@@ -2,11 +2,17 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
 	"http://www.springframework.org/dtd/spring-beans.dtd">
 
-
 <beans>
 	<import resource="uctSiteManagement.xml" />
 	<import resource="uctUserManagement.xml" />
-
+	
+	<!-- NTP -->
+	<bean class="za.ac.uct.sakai.healthcheck.ServerHealthCheck" init-method="init" destroy-method="destroy">
+		<property name="sqlService" ref="org.sakaiproject.db.api.SqlService"/>
+		<property name="emailService" ref="org.sakaiproject.email.api.EmailService"/>
+		<property name="serverConfigurationService" ref="org.sakaiproject.component.api.ServerConfigurationService"/>
+		<property name="seconds"><value>30</value></property>
+	</bean>
 	<!-- course site owners -->
 
 	<bean id="UCTCourseSiteOwners"
