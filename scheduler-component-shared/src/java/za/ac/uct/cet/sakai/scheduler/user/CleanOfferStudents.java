@@ -92,11 +92,11 @@ public class CleanOfferStudents implements Job{
 					//TODO remove user from cm groups
 					removeUserFromCMGroups(u.getEid());
 					
-					
 					u.setType("inactive");
+
 					//set the inactive date if none
 					ResourceProperties rp = u.getProperties();
-					DateTime dt = new DateTime(u.getModifiedTime().getTime());
+					DateTime dt = new DateTime(u.getModifiedDate());
 					DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
 
 					//do we have an inactive flag?
