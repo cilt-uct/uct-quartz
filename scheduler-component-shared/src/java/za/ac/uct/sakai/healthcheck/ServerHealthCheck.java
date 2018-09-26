@@ -149,8 +149,7 @@ public class ServerHealthCheck  {
 				TimeInfo timeInfo = client.getTime(address);
 				timeInfo.computeDetails();
 				Instant rDate = Instant.ofEpochMilli(timeInfo.getReturnTime());
-				//TODO Zone
-				ZonedDateTime returnDate = ZonedDateTime.ofInstant(rDate, userTimeService.getLocalTimeZone().toZoneId()); //ZoneId.of("Africa/Johannesburg"));
+				ZonedDateTime returnDate = ZonedDateTime.ofInstant(rDate, userTimeService.getLocalTimeZone().toZoneId());
 				DateTimeFormatter fmt = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 				String strDate = returnDate.format(fmt);
 				log.info("Offset to " + ntpHost +" is: " + timeInfo.getOffset() + "ms ntp host time is: " + strDate);
