@@ -3,17 +3,19 @@ package za.ac.uct.sakai.healthcheck;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.Date;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.apache.commons.net.ntp.NTPUDPClient;
 import org.apache.commons.net.ntp.TimeInfo;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
 import org.sakaiproject.component.api.ServerConfigurationService;
 import org.sakaiproject.db.api.SqlService;
 import org.sakaiproject.email.api.EmailService;
+import org.sakaiproject.time.api.UserTimeService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -44,6 +46,12 @@ public class ServerHealthCheck  {
 	public void setServerConfigurationService(
 			ServerConfigurationService serverConfigurationService) {
 		this.serverConfigurationService = serverConfigurationService;
+	}
+
+	private UserTimeService userTimeService;
+	
+	public void setUserTimeService(UserTimeService userTimeService) {
+		this.userTimeService = userTimeService;
 	}
 
 	private CheckRunner checkRunner;
@@ -86,7 +94,7 @@ public class ServerHealthCheck  {
 						checkServerHealth();
 						checkNTP();
 						nextCheck = System.currentTimeMillis() + checkPeriod;
-						log.info("next check at " + new Date(nextCheck));
+						log.info("next check at " + Instant.ofEpochMilli(nextCheck));
 					}
 					Thread.sleep(5000);
 				} catch (InterruptedException e) {
@@ -103,9 +111,9 @@ public class ServerHealthCheck  {
 		
 		@SuppressWarnings("unchecked")
 		private void checkServerHealth() {
-			DateTime dt = new DateTime();
-			DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
-			String strDate = fmt.print(dt);
+			DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+			ZonedDateTime date = ZonedDateTime.now();
+			String strDate = date.format(formatter);
 			Object[] fields = new Object[]{strDate};
 
 			// This can return a decimal value in mysql 5.7
@@ -140,9 +148,11 @@ public class ServerHealthCheck  {
 				InetAddress address = InetAddress.getByName(ntpHost);
 				TimeInfo timeInfo = client.getTime(address);
 				timeInfo.computeDetails();
-				DateTime returnDate = new DateTime(timeInfo.getReturnTime());
-				DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
-				String strDate = fmt.print(returnDate);
+				Instant rDate = Instant.ofEpochMilli(timeInfo.getReturnTime());
+				//TODO Zone
+				ZonedDateTime returnDate = ZonedDateTime.ofInstant(rDate, userTimeService.getLocalTimeZone().toZoneId()); //ZoneId.of("Africa/Johannesburg"));
+				DateTimeFormatter fmt = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+				String strDate = returnDate.format(fmt);
 				log.info("Offset to " + ntpHost +" is: " + timeInfo.getOffset() + "ms ntp host time is: " + strDate);
 				double offset = timeInfo.getOffset().longValue()/1000D;
 				if (offset > seconds || offset < (seconds * -1)) {
