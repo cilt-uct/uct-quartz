@@ -12,6 +12,7 @@
 		<property name="emailService" ref="org.sakaiproject.email.api.EmailService"/>
 		<property name="serverConfigurationService" ref="org.sakaiproject.component.api.ServerConfigurationService"/>
 		<property name="seconds"><value>30</value></property>
+		<property name="userTimeService" ref="org.sakaiproject.time.api.UserTimeService"/>
 	</bean>
 	<!-- course site owners -->
 
