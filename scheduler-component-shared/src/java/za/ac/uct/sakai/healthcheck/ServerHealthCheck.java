@@ -90,7 +90,7 @@ public class ServerHealthCheck  {
 					}
 					Thread.sleep(5000);
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					log.warn(e.getLocalizedMessage(), e);
 				} catch (NumberFormatException e) {
 					log.error("Format exception ", e);
 				}
