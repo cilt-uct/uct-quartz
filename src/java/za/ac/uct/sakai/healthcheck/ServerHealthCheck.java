@@ -78,6 +78,7 @@ public class ServerHealthCheck  {
 		 */
 		private int threshold =  30;
 		
+		Instant nextCheck;
 		
 		public CheckRunner(int threshold) {
 			thread = new Thread(this);
@@ -86,15 +87,15 @@ public class ServerHealthCheck  {
 		}
 		
 		public void run() {
-			int checkPeriod = 5*60*1000;
-			long nextCheck = System.currentTimeMillis();
+			int checkPeriod = -(5*60*1000);
+			nextCheck = Instant.now();
 			while (!stopThread) {
 				try {
-					if (System.currentTimeMillis() >= nextCheck) {
+					if (Instant.now().isAfter(nextCheck)) {
 						checkServerHealth();
 						checkNTP();
-						nextCheck = System.currentTimeMillis() + checkPeriod;
-						log.info("next check at " + Instant.ofEpochMilli(nextCheck));
+						nextCheck = nextCheck.minusMillis(checkPeriod);
+						log.info("next check at " + dateISO(nextCheck));
 					}
 					Thread.sleep(5000);
 				} catch (InterruptedException e) {
@@ -109,11 +110,16 @@ public class ServerHealthCheck  {
 			stopThread = val;
 		}
 		
+		private String dateISO(Instant i) {
+			DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+			ZonedDateTime date = ZonedDateTime.ofInstant(i, userTimeService.getLocalTimeZone().toZoneId());
+			String strDate = date.format(formatter);
+			return strDate;
+		}
+		
 		@SuppressWarnings("unchecked")
 		private void checkServerHealth() {
-			DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
-			ZonedDateTime date = ZonedDateTime.now();
-			String strDate = date.format(formatter);
+			String strDate = dateISO(Instant.now());
 			Object[] fields = new Object[]{strDate};
 
 			// This can return a decimal value in mysql 5.7
@@ -149,9 +155,7 @@ public class ServerHealthCheck  {
 				TimeInfo timeInfo = client.getTime(address);
 				timeInfo.computeDetails();
 				Instant rDate = Instant.ofEpochMilli(timeInfo.getReturnTime());
-				ZonedDateTime returnDate = ZonedDateTime.ofInstant(rDate, userTimeService.getLocalTimeZone().toZoneId());
-				DateTimeFormatter fmt = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
-				String strDate = returnDate.format(fmt);
+				String strDate = dateISO(rDate);
 				log.info("Offset to " + ntpHost +" is: " + timeInfo.getOffset() + "ms ntp host time is: " + strDate);
 				double offset = timeInfo.getOffset().longValue()/1000D;
 				if (offset > seconds || offset < (seconds * -1)) {
@@ -162,7 +166,7 @@ public class ServerHealthCheck  {
 							body, null, null, null);
 				}
 			} catch (UnknownHostException e) {
-				log.warn(e.getLocalizedMessage(), e);
+				log.warn(e.getLocalizedMessage());
 			} catch (IOException e) {
 				log.warn(e.getLocalizedMessage(), e);
 			}
