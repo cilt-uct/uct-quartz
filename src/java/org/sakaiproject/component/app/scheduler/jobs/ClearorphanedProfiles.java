@@ -45,7 +45,7 @@ public class ClearorphanedProfiles implements Job {
 		List<String> res = sqlService.dbRead(sql);
 		log.info("got a result of: " + res.size());
 		int count = 0;
-		for (int i =0; i < res.size(); i++) {
+		for (int i = 0; i < res.size(); i++) {
 			String r = (String)res.get(i);
 			count = i;
 			log.info("found orphaned record: " + r);

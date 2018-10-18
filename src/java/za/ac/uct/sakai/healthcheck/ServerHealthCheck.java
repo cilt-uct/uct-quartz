@@ -87,7 +87,7 @@ public class ServerHealthCheck  {
 		}
 		
 		public void run() {
-			int checkPeriod = -(5*60*1000);
+			int checkPeriod = -(5 * 60 * 1000);
 			nextCheck = Instant.now();
 			while (!stopThread) {
 				try {
@@ -156,7 +156,7 @@ public class ServerHealthCheck  {
 				timeInfo.computeDetails();
 				Instant rDate = Instant.ofEpochMilli(timeInfo.getReturnTime());
 				String strDate = dateISO(rDate);
-				log.info("Offset to " + ntpHost +" is: " + timeInfo.getOffset() + "ms ntp host time is: " + strDate);
+				log.info("Offset to " + ntpHost + " is: " + timeInfo.getOffset() + "ms ntp host time is: " + strDate);
 				double offset = timeInfo.getOffset().longValue()/1000D;
 				if (offset > seconds || offset < (seconds * -1)) {
 					log.error("Drift from " + ntpHost + " is: "  + offset + " seconds exceeding threshold of " + threshold + " seconds");

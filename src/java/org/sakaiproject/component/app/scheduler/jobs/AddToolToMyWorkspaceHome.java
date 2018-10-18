@@ -101,7 +101,7 @@ public class AddToolToMyWorkspaceHome implements Job {
 			if (users.size() < increment) {
 				doAnother = false;
 			} else {
-				first = last +1;
+				first = last + 1;
 				last = last + increment;
 			}
 		}

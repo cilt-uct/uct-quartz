@@ -199,7 +199,7 @@ public class ProcessPSUpdates implements StatefulJob {
  				log.debug(i + ". looks like user dropped " + eid);
  				drops.add(eid);
  			} else {
- 				log.debug(i +". looks like user is still registered for " + eid);
+ 				log.debug(i + ". looks like user is still registered for " + eid);
  			}
  		}
  		log.debug("we have an incoming list of " + incomingList.size());
@@ -342,7 +342,7 @@ public class ProcessPSUpdates implements StatefulJob {
 
 	private Integer getTermIntFromCourseEid(String courseCode) {
 		String[] fields = courseCode.split(",");
-		String yearS =fields[1]; 
+		String yearS = fields[1]; 
 		Integer year = Integer.valueOf(yearS);
 		return year;
 	}
@@ -391,7 +391,7 @@ public class ProcessPSUpdates implements StatefulJob {
 
 
 	private void addUserToCourse(String userId, String courseCode, String term, String setCategory) {
-		log.debug("addUserToCourse(" + userId +", " + courseCode + "," + term + "," + setCategory + ")");
+		log.debug("addUserToCourse(" + userId + ", " + courseCode + "," + term + "," + setCategory + ")");
 		
 
 		try {
@@ -441,7 +441,7 @@ public class ProcessPSUpdates implements StatefulJob {
 				Calendar cal2 = Calendar.getInstance();
 				cal2.set(Calendar.DAY_OF_MONTH, 31);
 				cal2.set(Calendar.MONTH, Calendar.OCTOBER);
-				if (term !=null) {
+				if (term != null) {
 					cal2.set(Calendar.YEAR, Integer.valueOf(term));
 				}
 				//if this is a residence the end date is later.
@@ -465,7 +465,7 @@ public class ProcessPSUpdates implements StatefulJob {
 				enrollmentSet = courseManagementService.getEnrollmentSet(courseEid);
 			}
 			
-			if(! courseManagementService.isSectionDefined(courseEid)) {
+			if (!courseManagementService.isSectionDefined(courseEid)) {
 				courseAdmin.createSection(courseEid, courseEid, "description", "course", null, courseEid, enrollmentSet.getEid());
 			} else {
 				Section section = courseManagementService.getSection(courseEid);
@@ -499,7 +499,7 @@ public class ProcessPSUpdates implements StatefulJob {
 			}
 			courseAdmin.addOrUpdateSectionMembership(userId, role, courseEid, "enrolled");
 		}
-		catch(Exception e) {
+		catch (Exception e) {
 			log.warn(e.getMessage(), e);
 
 		}

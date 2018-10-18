@@ -38,7 +38,7 @@ public class IncreaseQuotas implements Job {
 		this.sessionManager = s;
 	}
 	
-	private long minQuota = 1024*1024;
+	private long minQuota = 1024 * 1024;
 	public void setMinQuota(long q) {
 		minQuota = q;
 	}
@@ -61,7 +61,7 @@ public class IncreaseQuotas implements Job {
 	    sakaiSession.setUserEid("admin");
 	    List<Site> sites = siteService.getSites(SiteService.SelectionType.NON_USER, "course", null, null, SortType.NONE, null);
 		StringBuffer sb = new StringBuffer();
-	    for (int i =0 ; i< sites.size(); i++ ) {
+	    for (int i = 0; i< sites.size(); i++ ) {
 			Site s = (Site)sites.get(i);
 			if (s.getType()!= null && s.getType().equals("course")) {
 				ResourceProperties sp = s.getProperties();
@@ -88,7 +88,7 @@ public class IncreaseQuotas implements Job {
 								properties.addProperty(ResourceProperties.PROP_COLLECTION_BODY_QUOTA, Long.toString(minQuota));
 								contentHostingService.commitCollection(collectionEdit);
 							} else if (quota != 0 && (collectionSize.longValue() >= (quota - 1024))) {
-								sb.append(s.getId() +" " + s.getTitle() + " (" + collectionSize.toString() + "/" + quota + ")\n");
+								sb.append(s.getId() + " " + s.getTitle() + " (" + collectionSize.toString() + "/" + quota + ")\n");
 								log.debug("Site is close to quota");
 							}
 							 				

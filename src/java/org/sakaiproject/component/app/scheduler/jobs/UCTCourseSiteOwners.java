@@ -94,7 +94,7 @@ private void addCourseOwners() {
 		
 		
 		
-		String addedUsers ="";
+		String addedUsers = "";
 		//first get a list all course sites
 		
 		List<Site> siteList = siteService.getSites( org.sakaiproject.site.api.SiteService.SelectionType.ANY, null, null, null,SiteService.SortType.TITLE_ASC,null);
@@ -102,7 +102,7 @@ private void addCourseOwners() {
 		log.debug("got a list with " + siteList.size() + " sites");
 		for (int i = 0; i < siteList.size();i++) {
 			Site thisSite = (Site)siteList.get(i);
-			log.debug(thisSite.getTitle() + "("+thisSite.getId()+")");
+			log.debug(thisSite.getTitle() + "(" + thisSite.getId() + ")");
 			//ignore if type is null
 			if (wantSite(thisSite)) {
 				Set<Member> members = thisSite.getMembers();
@@ -140,7 +140,7 @@ private void addCourseOwners() {
 									Member m = courseOwners.getMember(thisM.getUserId());
 									if (m == null ) {
 										courseOwners.addMember(thisM.getUserId(),"Participant",true,false);
-										addedUsers = addedUsers + thisM.getUserEid() + " (" + user.getFirstName() + " " + user.getLastName() +") \n";
+										addedUsers = addedUsers + thisM.getUserEid() + " (" + user.getFirstName() + " " + user.getLastName() + ") \n";
 									} else {
 										log.debug("user is already a member with active: " + m.isActive());
 									}
@@ -153,7 +153,7 @@ private void addCourseOwners() {
 										//try add this user to the group
 										log.debug("about to add " + thisM.getUserEid());
 										groupProjectOwners.addMember(thisM.getUserId(),"Participant",true,false);
-										addedUsers = addedUsers + thisM.getUserEid() + " (" + user.getFirstName() + " " + user.getLastName() +") \n";
+										addedUsers = addedUsers + thisM.getUserEid() + " (" + user.getFirstName() + " " + user.getLastName() + ") \n";
 									} else {
 											log.debug("user is already a member");
 									}
@@ -165,7 +165,7 @@ private void addCourseOwners() {
 										//try add this user to the group
 										log.debug("about to add " + thisM.getUserEid());
 										groupCourseOwners.addMember(thisM.getUserId(),"Participant",true,false);
-										addedUsers = addedUsers + thisM.getUserEid() + " (" + user.getFirstName() + " " + user.getLastName() +") \n";
+										addedUsers = addedUsers + thisM.getUserEid() + " (" + user.getFirstName() + " " + user.getLastName() + ") \n";
 									} else {
 											log.debug("user is already a member");
 									}
@@ -192,7 +192,7 @@ private void addCourseOwners() {
 			authzGroupService.save(groupCourseOwners);
 			authzGroupService.save(groupProjectOwners);
 			log.debug("added " + addedUsers);
-			if (addedUsers.length()>0) {
+			if (addedUsers.length() > 0) {
 				
 				emailService.send("help-team@vula.uct.ac.za","help-team@vula.uct.ac.za","Users added to CourseSiteOwners",addedUsers,null,null,null);
 			}

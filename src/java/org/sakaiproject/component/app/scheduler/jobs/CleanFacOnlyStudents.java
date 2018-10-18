@@ -121,13 +121,13 @@ public class CleanFacOnlyStudents implements Job {
 			if (users.size() < increment) {
 				doAnother = false;
 			} else {
-				first = last +1;
+				first = last + 1;
 				last = last + increment;
 			}
 		}
 		StringBuilder sb = new StringBuilder();
-		sb.append("we have removed these "+ studentCount +" students from fac course groups: \r\n");
-		for (int i =0; i < removedEids.size(); i++) {
+		sb.append("we have removed these "+ studentCount + " students from fac course groups: \r\n");
+		for (int i = 0; i < removedEids.size(); i++) {
 			sb.append(removedEids.get(i));
 			sb.append("\r\n");
 		}
@@ -163,12 +163,12 @@ public class CleanFacOnlyStudents implements Job {
 		Set<EnrollmentSet> enroled = courseManagementService.findCurrentlyEnrolledEnrollmentSets(userEid);
 		Iterator<EnrollmentSet> coursesIt = enroled.iterator();
 		log.debug("got list of enrolement set with " + enroled.size());
-		while(coursesIt.hasNext()) {
+		while (coursesIt.hasNext()) {
 			EnrollmentSet eSet = (EnrollmentSet)coursesIt.next();
 			String courseEid =  eSet.getEid();
 			log.debug("got section: " + courseEid);
 			boolean found = false;
-			for (int i =0; i < uctCourse.size(); i++ ) {
+			for (int i = 0; i < uctCourse.size(); i++ ) {
 				String thisEn = (String)uctCourse.get(i) + "," + thisYear;
 				if (thisEn.equalsIgnoreCase(courseEid))
 					found = true;

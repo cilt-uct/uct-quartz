@@ -51,7 +51,7 @@ public class SynchResearchCourses implements Job {
 		String sql = "select CM_MEMBER_CONTAINER_T.enterprise_id, CM_MEMBER_CONTAINER_T.end_date from CM_MEMBER_CONTAINER_T join CM_ACADEMIC_SESSION_T on CM_MEMBER_CONTAINER_T.academic_session=CM_ACADEMIC_SESSION_T.ACADEMIC_SESSION_ID where CM_ACADEMIC_SESSION_T.ENTERPRISE_ID = '2010' and CM_MEMBER_CONTAINER_T.end_Date > '2010-12-30'";
 		
 		List<String> vals = sqlService.dbRead(sql);
-		for (int i =0; i < vals.size(); i++) {
+		for (int i = 0; i < vals.size(); i++) {
 			String courseEid = vals.get(i);
 			log.info("going to synch " + courseEid);
 			Set<Membership> members = courseManagementService.getSectionMemberships(courseEid);

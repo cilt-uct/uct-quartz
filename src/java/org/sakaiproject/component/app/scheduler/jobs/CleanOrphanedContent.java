@@ -112,7 +112,7 @@ public class CleanOrphanedContent implements StatefulJob {
 		//orphaned chat channels
 		sql = "select CHAT2_CHANNEL.channel_id from CHAT2_CHANNEL where context not in (select site_id from SAKAI_SITE);";
 		res = sqlService.dbRead(sql);
-		for (int i =0; i < res.size(); i++) {
+		for (int i = 0; i < res.size(); i++) {
 			ChatChannel channel = chatManager.getChatChannel(res.get(i));
 			try {
 				chatManager.deleteChannel(channel);
@@ -152,7 +152,7 @@ public class CleanOrphanedContent implements StatefulJob {
 
 
 	private void cleanUpOrphanedSites(List<String> res) {
-		for (int i =0; i < res.size(); i++) {
+		for (int i = 0; i < res.size(); i++) {
 			String site_id = res.get(i);
 			try {
 				Site site = siteService.getSite(site_id);
@@ -169,7 +169,7 @@ public class CleanOrphanedContent implements StatefulJob {
 	private long getBytesInCollection(List<String> collectionList) {
 		long userBytes = 0;
 		log.info("got a result of: " + collectionList.size());
-		for (int i =0 ; i < collectionList.size(); i ++) {
+		for (int i = 0 ; i < collectionList.size(); i ++) {
 			String r = (String)collectionList.get(i);
 			log.debug("got resource: " + r);
 
@@ -214,25 +214,25 @@ public class CleanOrphanedContent implements StatefulJob {
 		String size = "";
 		NumberFormat formatter = NumberFormat.getInstance();
 		formatter.setMaximumFractionDigits(1);
-		if(size_long > 700000000L)
+		if (size_long > 700000000L)
 		{
 
 			size = formatter.format(1.0 * size_long / (1024L * 1024L * 1024L)) + "G";
 
 		}
-		else if(size_long > 700000L)
+		else if (size_long > 700000L)
 		{
 			
 			size = formatter.format(1.0 * size_long / (1024L * 1024L)) + "Mb";
 
 		}
-		else if(size_long > 700L)
+		else if (size_long > 700L)
 		{		
 			size = formatter.format(1.0 * size_long / 1024L) + "kb";
 		}
 		else 
 		{
-			size = formatter.format(size_long) +"b";
+			size = formatter.format(size_long) + "b";
 		}
 		return size;
 	}

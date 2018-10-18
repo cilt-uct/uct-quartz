@@ -112,7 +112,7 @@ public class CleanOldUserData implements Job{
 				ContentCollection collection = contentHostingService.getCollection(collectionId);
 				hasCollection++;
 				long bodySize = collection.getBodySizeK();
-				log.info("user: " + userId + " has a collection of " + bodySize +"kb " + "(" + i + "/" + users.size() + ")");
+				log.info("user: " + userId + " has a collection of " + bodySize + "kb " + "(" + i + "/" + users.size() + ")");
 				totalSize = totalSize + bodySize;
 				//remove the collection
 				try {
@@ -194,25 +194,25 @@ public class CleanOldUserData implements Job{
 		String size = "";
 		NumberFormat formatter = NumberFormat.getInstance();
 		formatter.setMaximumFractionDigits(1);
-		if(size_long > 700000000L)
+		if (size_long > 700000000L)
 		{
 
 			size = formatter.format(1.0 * size_long / (1024L * 1024L * 1024L)) + "G";
 
 		}
-		else if(size_long > 700000L)
+		else if (size_long > 700000L)
 		{
 			
 			size = formatter.format(1.0 * size_long / (1024L * 1024L)) + "Mb";
 
 		}
-		else if(size_long > 700L)
+		else if (size_long > 700L)
 		{		
 			size = formatter.format(1.0 * size_long / 1024L) + "kb";
 		}
 		else 
 		{
-			size = formatter.format(size_long) +"b";
+			size = formatter.format(size_long) + "b";
 		}
 		return size;
 	}

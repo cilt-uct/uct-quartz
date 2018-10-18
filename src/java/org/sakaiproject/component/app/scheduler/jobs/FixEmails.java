@@ -55,7 +55,7 @@ public class FixEmails implements Job {
 			String type = u.getType();
 			if (type != null && (type.equals("student") || type.equals("staff") || type.equals("thirdparty")) && (u.getEmail() == null || u.getEmail().equals(""))) {
 				//we need to set this users email
-				log.info("Found: " + u.getId() + " (" + u.getEid()+") with ivalid email" + u.getEmail());
+				log.info("Found: " + u.getId() + " (" + u.getEid() + ") with ivalid email" + u.getEmail());
 				try {
 					SakaiPerson systemP = personManager.getSakaiPerson(u.getId(), personManager.getSystemMutableType());
 					String mail = null;
@@ -65,7 +65,7 @@ public class FixEmails implements Job {
 						else 
 							mail = systemP.getMail();
 					} else {
-						log.warn("User " + u.getEid() +" has no system Profile");
+						log.warn("User " + u.getEid() + " has no system Profile");
 						mail = u.getEid() + "@uct.ac.za";
 					}
 					
