@@ -71,7 +71,8 @@ public class ServerHealthCheck  {
     }
     
     public void run() {
-      int checkPeriod = -(5 * 60 * 1000);
+      int checkPeriod = -((5 * 60) * 1000);
+      log.debug("next: " + checkPeriod);
       nextCheck = Instant.now();
       while (!stopThread) {
         try {
