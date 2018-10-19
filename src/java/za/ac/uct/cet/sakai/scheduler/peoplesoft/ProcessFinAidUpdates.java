@@ -154,7 +154,7 @@ public class ProcessFinAidUpdates implements StatefulJob {
 	 */
 	private void addUserToCourse(String userId, String courseCode, String term, String setCategory) {
 
-		log.debug("addUserToCourse(" + userId +", " + courseCode + "," + term + "," + setCategory + ")");
+		log.debug("addUserToCourse(" + userId + ", " + courseCode + "," + term + "," + setCategory + ")");
 		
 		try {
 
@@ -201,7 +201,7 @@ public class ProcessFinAidUpdates implements StatefulJob {
 				Calendar cal2 = Calendar.getInstance();
 				cal2.set(Calendar.DAY_OF_MONTH, 31);
 				cal2.set(Calendar.MONTH, Calendar.OCTOBER);
-				if (term !=null) {
+				if (term != null) {
 					cal2.set(Calendar.YEAR, Integer.valueOf(term));
 				}
 				//if this is a residence the end date is later.
@@ -225,7 +225,7 @@ public class ProcessFinAidUpdates implements StatefulJob {
 				enrollmentSet = courseManagementService.getEnrollmentSet(courseEid);
 			}
 			
-			if(! courseManagementService.isSectionDefined(courseEid)) {
+			if (!courseManagementService.isSectionDefined(courseEid)) {
 				courseAdmin.createSection(courseEid, courseEid, "description", "course", null, courseEid, enrollmentSet.getEid());
 			} else {
 				Section section = courseManagementService.getSection(courseEid);
@@ -259,7 +259,7 @@ public class ProcessFinAidUpdates implements StatefulJob {
 			}
 			courseAdmin.addOrUpdateSectionMembership(userId, role, courseEid, "enrolled");
 		}
-		catch(Exception e) {
+		catch (Exception e) {
 			log.warn(e.getMessage(), e);
 
 		}

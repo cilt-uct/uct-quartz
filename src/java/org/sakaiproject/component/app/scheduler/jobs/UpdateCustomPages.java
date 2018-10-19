@@ -138,7 +138,7 @@ public class UpdateCustomPages implements Job {
 			if (sites.size() < increment) {
 				doAnother = false;
 			} else {
-				first = last +1;
+				first = last + 1;
 				last = last + increment;
 			}
 		} //END WHILE
@@ -204,7 +204,7 @@ public class UpdateCustomPages implements Job {
 		{
 			return false;
 		}
-		else if(m_title !=null && !m_title.equals(toolName))
+		else if (m_title != null && !m_title.equals(toolName))
 		{
 			return true;
 		}

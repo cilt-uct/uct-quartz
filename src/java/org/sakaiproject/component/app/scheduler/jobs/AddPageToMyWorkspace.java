@@ -115,7 +115,7 @@ public class AddPageToMyWorkspace implements Job {
 	private void placePageProperties(ToolConfiguration tool){
 		if (pageProperties != null && pageProperties.size() > 0 ){
 			for (Map.Entry<String, String> property : pageProperties.entrySet()){
-				if(property.getKey() != null){
+				if (property.getKey() != null){
 					tool.getPlacementConfig().setProperty(property.getKey(), property.getValue());
 				}
 			}

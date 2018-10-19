@@ -88,7 +88,7 @@ public class UCTResetCourseTabs implements Job {
 					//we need this list so we don't loose sites later
 					order = rp.getPropertyList("order");
 					if (order != null ) {
-						for (int q =0;q < order.size();q++){
+						for (int q = 0;q < order.size();q++){
 							String value = (String) order.get(q);
 							log.info("got a vaulue of " + value);
 							Site s = null;
@@ -116,10 +116,10 @@ public class UCTResetCourseTabs implements Job {
 						}
 						rp.removeProperty("order");
 						
-						for (int q =0; q < top.size(); q++) {
+						for (int q = 0; q < top.size(); q++) {
 							rp.addPropertyToList("order", (String)top.get(q));
 						}
-						for (int q =0; q < bottom.size(); q++) {
+						for (int q = 0; q < bottom.size(); q++) {
 							rp.addPropertyToList("order", (String)bottom.get(q));
 						}
 						

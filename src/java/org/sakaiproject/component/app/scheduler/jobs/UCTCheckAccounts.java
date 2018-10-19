@@ -151,7 +151,7 @@ public class UCTCheckAccounts implements Job {
 			if (users.size() < increment) {
 				doAnother = false;
 			} else {
-				first = last +1;
+				first = last + 1;
 				last = last + increment;
 			}
 		}
@@ -176,7 +176,7 @@ public class UCTCheckAccounts implements Job {
 		Set<EnrollmentSet> enroled = courseManagementService.findCurrentlyEnrolledEnrollmentSets(userEid);
 		Iterator<EnrollmentSet> coursesIt = enroled.iterator();
 		log.debug("got list of enrolement set with " + enroled.size());
-		 while(coursesIt.hasNext()) {
+		 while (coursesIt.hasNext()) {
 			EnrollmentSet eSet = (EnrollmentSet)coursesIt.next();
 			log.info("removing user from " + eSet.getEid());
 			String courseEid =  eSet.getEid();
@@ -192,7 +192,7 @@ public class UCTCheckAccounts implements Job {
 			return true;
 		} else if (TYPE_STUDENT.equalsIgnoreCase(u.getType())) {
 			//skip the valid testing accounts
-			if (u.getEid().indexOf("user") == 0 || u.getEid().indexOf("tii") ==0 || u.getEid().indexOf("test") == 0 || u.getEid().indexOf("student") == 0) 
+			if (u.getEid().indexOf("user") == 0 || u.getEid().indexOf("tii") == 0 || u.getEid().indexOf("test") == 0 || u.getEid().indexOf("student") == 0) 
 				return false;
 				
 			return true;
@@ -209,7 +209,7 @@ public class UCTCheckAccounts implements Job {
 		String sFilter = "cn=" + id;
 
 		String[] attrList = new String[] { "dn", "loginDisabled" };
-		try{
+		try {
 			conn.connect( ldapHost, ldapPort );
 			//this will fail if user does not exist	
 			LDAPEntry userEntry = getEntryFromDirectory(sFilter,attrList,conn);
@@ -231,7 +231,7 @@ public class UCTCheckAccounts implements Job {
 			conn.disconnect();
 		
 		}
-		catch(Exception e)
+		catch (Exception e)
 		{
 			
 			return false;	
@@ -256,7 +256,7 @@ public class UCTCheckAccounts implements Job {
 					false,
 					cons);
 
-		if(searchResults.hasMore()){
+		if (searchResults.hasMore()){
 			nextEntry = searchResults.next();            
 		}
 

@@ -58,7 +58,7 @@ public class CleanUpCmData implements Job {
 	    //first get course sets
 	    List<CourseSet> depts = courseManagementService.findCourseSets("Department");
 	    
-	    for (int i =0 ; i < depts.size(); i++) {
+	    for (int i = 0 ; i < depts.size(); i++) {
 	    	CourseSet dept = (CourseSet) depts.get(i);
 	    	log.info("got set: " + dept.getEid());
 	    	Set<CanonicalCourse> canonCourses = courseManagementService.getCanonicalCourses(dept.getEid());
@@ -66,7 +66,7 @@ public class CleanUpCmData implements Job {
 	    	while (it.hasNext()) {
 	    		CanonicalCourse course = (CanonicalCourse) it.next();
 	    		String eid = course.getEid();
-	    		if (eid.lastIndexOf("SUP") == 8 ||eid.lastIndexOf("EWA") == 8) {
+	    		if (eid.lastIndexOf("SUP") == 8 || eid.lastIndexOf("EWA") == 8) {
 	    			log.warn("Found course to delete: " + eid);
 	    			String fullEid = eid + "," + term;
 	    			String fullEid2 = eid + ",2010";

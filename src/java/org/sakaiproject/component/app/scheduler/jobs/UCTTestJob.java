@@ -12,10 +12,10 @@ public class UCTTestJob implements StatefulJob {
 	
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		// TODO Auto-generated method stub
-		log.info("This job is stateful?: " +arg0.getJobDetail().toString());    //.isStateful());
+		log.info("This job is stateful?: " + arg0.getJobDetail().toString());    //.isStateful());
 		log.info("UCTTestJob fired");
 		try {
-			Thread.sleep(120*1000);
+			Thread.sleep(120 * 1000);
 		} catch (InterruptedException e) {
 			log.warn(e.getMessage(), e);
 		}

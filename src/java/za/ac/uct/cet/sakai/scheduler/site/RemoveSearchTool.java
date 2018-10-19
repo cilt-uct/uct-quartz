@@ -52,14 +52,14 @@ public class RemoveSearchTool implements Job{
 
 
 		List<Site> sites = siteService.getSites(SiteService.SelectionType.NON_USER, "project", null, null, SortType.NONE, null);
-		for (int i =0 ; i< sites.size(); i++ ) {
+		for (int i = 0 ; i< sites.size(); i++ ) {
 			Site s1 = sites.get(i);
 			checkRemoveProjectSites(s1);
 
 		}
 
 		sites = siteService.getSites(SiteService.SelectionType.NON_USER, "collaboration", null, null, SortType.NONE, null);
-		for (int i =0 ; i< sites.size(); i++ ) {
+		for (int i = 0 ; i< sites.size(); i++ ) {
 			Site s1 = sites.get(i);
 			checkRemoveProjectSites(s1);
 
@@ -68,7 +68,7 @@ public class RemoveSearchTool implements Job{
 		//if this is before 2011 remove the search tool
 		//site will be lazily loaded
 		sites = siteService.getSites(SiteService.SelectionType.NON_USER, "course", null, null, SortType.NONE, null);
-		for (int i =0 ; i< sites.size(); i++ ) {
+		for (int i = 0 ; i< sites.size(); i++ ) {
 			Site s1 = sites.get(i);
 			checkRemoveCourseSites(s1);
 
