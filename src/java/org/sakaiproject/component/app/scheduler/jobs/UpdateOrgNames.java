@@ -50,15 +50,15 @@ public class UpdateOrgNames implements Job {
 	    sakaiSession.setUserEid(ADMIN);
 		
 		List<CourseSet> sets = cmService.findCourseSets("Department");
-		log.debug("got a list of: " + sets.size() +" course sets");
-		for (int i =0; i < sets.size(); i++ ) {
+		log.debug("got a list of: " + sets.size() + " course sets");
+		for (int i = 0; i < sets.size(); i++ ) {
 			CourseSet thisSet = (CourseSet)sets.get(i);
 			
 			String descr = this.getOrgNameByEid(thisSet.getEid());
 			if (descr != null && descr.length() > 0 ) {
 				thisSet.setTitle(thisSet.getEid() + " - " + descr);
 				//if the name contains "residence" change the type"
-				if (descr.indexOf("Residence")>-1)
+				if (descr.indexOf("Residence")> -1)
 					thisSet.setCategory("Residence");
 
 				cmAdminService.updateCourseSet(thisSet);
@@ -75,7 +75,7 @@ public class UpdateOrgNames implements Job {
 		String statement = "Select Description from UCT_ORG where ORG = ?";
 		Object[] fields = new Object[]{modOrgUnit};
 		List<String> result = sqlService.dbRead(statement, fields, null);
-		if (result.size()>0) {
+		if (result.size() > 0) {
 			log.info("got org unit of " + (String)result.get(0));
 			return (String)result.get(0);
 		} else {

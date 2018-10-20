@@ -154,11 +154,11 @@ public class ChatExporter implements Job {
 					rowNum++;
 				}
 				mySheet.autoSizeColumn(3);
-				try{
+				try {
 					FileOutputStream out = new FileOutputStream(fileName);
 					myWorkBook.write(out);
 					out.close();
-				}catch(Exception e){ log.warn(e.getMessage(), e);} 
+				} catch (Exception e){ log.warn(e.getMessage(), e);} 
 			}
 
 		}

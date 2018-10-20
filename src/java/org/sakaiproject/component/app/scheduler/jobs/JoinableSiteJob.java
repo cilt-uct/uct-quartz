@@ -72,7 +72,7 @@ public class JoinableSiteJob implements Job {
 		List<Site> sites = siteService.getSites(SiteService.SelectionType.NON_USER, "project", null, null, SortType.NONE, null);
 		List<Site> sites2 = siteService.getSites(SiteService.SelectionType.NON_USER, "collaboration", null, null, SortType.NONE, null);
 		sites.addAll(sites2);
-		for (int i =0 ; i< sites.size(); i++ ) {
+		for (int i = 0 ; i< sites.size(); i++ ) {
 			//iterate through the sites
 			Site s1 = sites.get(i);
 			

@@ -88,10 +88,10 @@ public class PopulateNormalizedMobile implements Job {
 			if (users.size() < increment) {
 				doAnother = false;
 			} else {
-				first = last +1;
+				first = last + 1;
 				last = last + increment;
 			}
-		}//End WHILE
+		} //End WHILE
 
 	}
 

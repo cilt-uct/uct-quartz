@@ -70,7 +70,7 @@ public class CheckCourseSites implements Job {
 		
 		List<Site> nonActiveSites = new ArrayList<Site>();
 		Long totalBodyK = 0L;
-		for (int i =0 ; i< sites.size(); i++ ) {
+		for (int i = 0 ; i< sites.size(); i++ ) {
 			//iterate through the sites
 			Site s1 = sites.get(i);
 			//get the membership

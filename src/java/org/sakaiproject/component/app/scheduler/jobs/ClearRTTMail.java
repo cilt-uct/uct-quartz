@@ -21,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class ClearRTTMail implements Job {
-	private static final String MAIL_CHANNEL ="/mailarchive/channel/a2be4fcd-8e2e-40f8-0003-6c3d088393fe/main";
+	private static final String MAIL_CHANNEL = "/mailarchive/channel/a2be4fcd-8e2e-40f8-0003-6c3d088393fe/main";
 	
 
 	private static final String ADMIN = "admin";

@@ -46,7 +46,7 @@ public class UCTSaveRealms implements StatefulJob {
 	private List<String> getTerms() {
 		List<AcademicSession>  as = courseManagementService.getCurrentAcademicSessions();
 		List<String> ret = new ArrayList<String>();
-		for (int i =0; i < as.size(); i++) {
+		for (int i = 0; i < as.size(); i++) {
 			AcademicSession a = as.get(i);
 			log.debug("got accademic session: " + a.getEid());
 			ret.add(a.getEid());
@@ -64,7 +64,7 @@ public class UCTSaveRealms implements StatefulJob {
 	    
 	List<Site> sites = siteService.getSites(SiteService.SelectionType.NON_USER, "course", null, null, SortType.NONE, null);
 	List<String> currentTerms = getTerms();
-	for (int i =0 ; i< sites.size(); i++ ) {
+	for (int i = 0 ; i< sites.size(); i++ ) {
 		Site s = (Site)sites.get(i);
 		log.debug("got site " + s.getTitle());
 		if (s.getType()!= null && s.getType().equals("course")) {
@@ -82,7 +82,7 @@ public class UCTSaveRealms implements StatefulJob {
 							authzGroupService.save(group);
 						}
 					}
-					catch(Exception e) {
+					catch (Exception e) {
 						log.warn(e.getMessage(), e);
 					}
 				}

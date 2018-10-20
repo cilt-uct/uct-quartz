@@ -82,7 +82,7 @@ public class VirusScanContent implements Job {
 		long count = 0;
 		while (doAnother) {
 			List<Site> sites = siteService.getSites(SiteService.SelectionType.ANY, null , null, null, SortType.NONE, new PagingPosition(first, last));
-			for (int i =0 ; i< sites.size(); i++ ) {
+			for (int i = 0 ; i< sites.size(); i++ ) {
 
 				//SAK-17117 before we do this clear threadLocal
 				//get the security advisor stack otherwise later calls will fail
@@ -100,7 +100,7 @@ public class VirusScanContent implements Job {
 				try {
 					collection = contentHostingService.getCollection(siteColl);
 					List<String> members = collection.getMembers();
-					for (int q =0; q < members.size(); q++) {
+					for (int q = 0; q < members.size(); q++) {
 						String resId = (String)members.get(q);
 						log.debug("got resource " + resId);
 						try {
@@ -111,7 +111,7 @@ public class VirusScanContent implements Job {
 						}
 						catch (VirusFoundException e) {
 							//we have a virus!
-							sb.append(resId +": " + e.getMessage() + "\n");
+							sb.append(resId + ": " + e.getMessage() + "\n");
 						}
 
 					}
@@ -130,7 +130,7 @@ public class VirusScanContent implements Job {
 			if (sites.size() < increment) {
 				doAnother = false;
 			} else {
-				first = last +1;
+				first = last + 1;
 				last = last + increment;
 			}
 		} //end while

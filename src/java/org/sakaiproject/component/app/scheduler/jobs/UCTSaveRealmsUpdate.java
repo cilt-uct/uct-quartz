@@ -38,7 +38,7 @@ public class UCTSaveRealmsUpdate implements Job {
 	
 	private GroupProvider groupProvider;
 	public void setGroupProvider(GroupProvider gp){
-		groupProvider =gp;
+		groupProvider = gp;
 	}
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		// TODO Auto-generated method stub
@@ -49,7 +49,7 @@ public class UCTSaveRealmsUpdate implements Job {
 	    sakaiSession.setUserEid("admin");
 	    
 	List sites = siteService.getSites(SiteService.SelectionType.NON_USER, "course", null, null, SortType.NONE, null);
-	for (int i =0 ; i< sites.size(); i++ ) {
+	for (int i = 0 ; i< sites.size(); i++ ) {
 		Site s = (Site)sites.get(i);
 		log.info("got site " + s.getTitle());
 		if (s.getType()!= null && s.getType().equals("course")) {
@@ -61,7 +61,7 @@ public class UCTSaveRealmsUpdate implements Job {
 				if (term.equals("2007") || term.equals("2006")) {
 					try {
 					AuthzGroup group = authzGroupService.getAuthzGroup("/site/" + s.getId());
-					if (group.getProviderGroupId() != null && group.getProviderGroupId().length()>0 ) {
+					if (group.getProviderGroupId() != null && group.getProviderGroupId().length() > 0 ) {
 						String pId = group.getProviderGroupId();
 						String[] pIds = groupProvider.unpackId(pId);
 						Set members = group.getMembers();
@@ -72,7 +72,7 @@ public class UCTSaveRealmsUpdate implements Job {
 							if (!m.isProvided()) {
 							for  (String thisId: pIds) {
 								String role = groupProvider.getRole(thisId, m.getUserEid());
-								if (role!= null && role.length()>0) {
+								if (role!= null && role.length() > 0) {
 									log.info("Found external role of " + role + " internal role is: " + m.getRole().getId());
 									if (role.equals(m.getRole().getId())) {
 									log.info("Seting user: " + m.getUserEid() + " to provided");
@@ -88,7 +88,7 @@ public class UCTSaveRealmsUpdate implements Job {
 					
 					authzGroupService.save(group);
 					}
-					catch(Exception e) {
+					catch (Exception e) {
 						log.warn(e.getMessage(), e);
 					}
 				}

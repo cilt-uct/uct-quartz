@@ -95,7 +95,7 @@ public class NotifyUsersSMS implements Job {
 						replacementValues.put("prefReceive", val);
 						
 						String hideS = "No";
-						if (sp.getHidePrivateInfo()!=null && sp.getHidePrivateInfo().booleanValue()) {
+						if (sp.getHidePrivateInfo() != null && sp.getHidePrivateInfo().booleanValue()) {
 							hideS = "Yes";
 						}
 						replacementValues.put("prefHide", hideS);
@@ -126,10 +126,10 @@ public class NotifyUsersSMS implements Job {
 			if (users.size() < increment) {
 				doAnother = false;
 			} else {
-				first = last +1;
+				first = last + 1;
 				last = last + increment;
 			}
-		}//End WHILE
+		}  //End WHILE
 
 	}
 

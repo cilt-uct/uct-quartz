@@ -87,7 +87,7 @@ public class UCTImportCourses implements Job {
 						Date startDate = formatter.parse(nextLine[4]);
 						Date endDate = formatter.parse(nextLine[5]);
 						log.info("createCourse(" + course + "," + year + "," + descr + "," + subject + "," + 
-							nextLine[4] + "," +nextLine[5] + ")");
+							nextLine[4] + "," + nextLine[5] + ")");
 						this.createCourse(course, year, descr, subject, startDate, endDate);
 					} catch (java.text.ParseException e) {
 						log.error("Skipping CSV record for " + nextLine[0] + " - cannot parse date formats");
@@ -108,7 +108,7 @@ public class UCTImportCourses implements Job {
 	private void createCourse(String courseCode, String term, String descr, String setId, Date startDate, Date endDate) {
 
 		String setCategory = "Department";
-		String courseEid = courseCode +","+term;
+		String courseEid = courseCode + "," + term;
 
 		Calendar cal = Calendar.getInstance();
 		if (startDate == null) {

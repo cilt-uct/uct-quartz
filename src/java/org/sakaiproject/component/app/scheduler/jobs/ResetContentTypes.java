@@ -82,21 +82,21 @@ public class ResetContentTypes implements Job {
 	    sakaiSession.setUserId("admin");
 	    sakaiSession.setUserEid("admin");
 	    List<Site> sites = siteService.getSites(SiteService.SelectionType.ANY, null , null, null, SortType.NONE, null);
-	    for (int i =0 ; i< sites.size(); i++ ) {
+	    for (int i = 0 ; i< sites.size(); i++ ) {
 	    	Site s = (Site)sites.get(i);
 	    	String siteColl = contentHostingService.getSiteCollection(s.getId());
 	    	ContentCollection collection;
 			try {
 				collection = contentHostingService.getCollection(siteColl);
 		    	List<String> members = collection.getMembers();
-		    	for (int q =0; q < members.size(); q++) {
+		    	for (int q = 0; q < members.size(); q++) {
 		    		String resId = (String)members.get(q);
 		    		log.debug("got resource " + resId);
 		    		if (reset(resId)) {
 		    			ContentResourceEdit res = contentHostingService.editResource(resId);
 		    			String oldType = res.getContentType();
 		    			if ((!oldType.equals(getContentType(resId)) || forceTypes.contains(getExtension(resId))) && !"text/url".equals(oldType)) {
-		    				log.info("content:"  + resId  +" had type: " + res.getContentType());
+		    				log.info("content:"  + resId  + " had type: " + res.getContentType());
 		    				res.setContentType(getContentType(resId));
 		    				contentHostingService.commitResource(res, 0);
 		    			} else {
