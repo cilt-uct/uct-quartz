@@ -138,6 +138,7 @@ public class ServerHealthCheck  {
       try {
         String ntpHost = serverConfigurationService.getString("ntp", "za.pool.ntp.org");
         InetAddress address = InetAddress.getByName(ntpHost);
+        client.setDefaultTimeout(600);
         TimeInfo timeInfo = client.getTime(address);
         timeInfo.computeDetails();
         Instant rDate = Instant.ofEpochMilli(timeInfo.getReturnTime());
@@ -154,6 +155,8 @@ public class ServerHealthCheck  {
       } catch (UnknownHostException e) {
         log.warn(e.getLocalizedMessage());
       } catch (IOException e) {
+        log.warn(e.getLocalizedMessage(), e);
+      } catch (Exception e) {
         log.warn(e.getLocalizedMessage(), e);
       } finally {
         client.close();
