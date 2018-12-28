@@ -5,7 +5,7 @@
 	<parent>
 		<artifactId>master</artifactId>
 		<groupId>org.sakaiproject</groupId>
-		<version>12-SNAPSHOT</version>
+		<version>19-SNAPSHOT</version>
 		<relativePath>../master/pom.xml</relativePath>
 	</parent>
 
@@ -61,13 +61,13 @@
 		<dependency>
 			<groupId>org.sakaiproject.sms</groupId>
 			<artifactId>sms-api</artifactId>
-			<version>12-SNAPSHOT</version>
+			<version>19-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.sakaiproject.contentreview.service</groupId>
 			<artifactId>content-review-service-impl</artifactId>
-			<version>12-SNAPSHOT</version>
+			<version>19-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 		<!--dependency>
@@ -79,10 +79,6 @@
 		<dependency>
 			<groupId>org.sakaiproject.edu-services.course-management</groupId>
 			<artifactId>coursemanagement-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>commons-logging</groupId>
-			<artifactId>commons-logging</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.sakaiproject.common</groupId>
@@ -129,7 +125,7 @@
                 <dependency>
                         <groupId>org.sakaiproject.roleplay</groupId>
                         <artifactId>roleplay-api</artifactId>
-                        <version>12-SNAPSHOT</version>
+                        <version>19-SNAPSHOT</version>
                         <type>jar</type>
                 </dependency>
           <dependency>
