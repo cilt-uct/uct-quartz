@@ -1,6 +1,6 @@
 /**********************************************************************************
  *
- * Copyright (c) 2013 The Sakai Foundation
+ * Copyright (c) 2019 University of Cape Town
  *
  * Licensed under the Educational Community License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
