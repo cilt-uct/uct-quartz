@@ -47,7 +47,7 @@ public class ProcessFinAidUpdates implements StatefulJob {
 	
 	
 	private final String courseCode = "FINAID";
-	private final String term = "2018";
+	private final String term = "2019";
 
 	public void setEmailService(EmailService emailService) {
 		this.emailService = emailService;
