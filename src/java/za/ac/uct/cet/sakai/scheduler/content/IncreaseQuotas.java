@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  **********************************************************************************/
-package org.sakaiproject.component.app.scheduler.jobs;
+package za.ac.uct.cet.sakai.scheduler.content;
 
 import java.util.List;
 
@@ -39,36 +39,23 @@ import org.sakaiproject.site.api.SiteService.SortType;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
 
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class IncreaseQuotas implements Job {
 
 
-	private SiteService siteService;
-	public void setSiteService(SiteService s) {
-		this.siteService = s;
-	}
-	
-	private SessionManager sessionManager;
-	public void setSessionManager(SessionManager s) {
-		this.sessionManager = s;
-	}
+	@Setter private SiteService siteService;
+	@Setter private SessionManager sessionManager;
+	@Setter private ContentHostingService contentHostingService;
+	@Setter private EmailService emailService; 
 	
 	private long minQuota = 1024 * 1024;
 	public void setMinQuota(long q) {
 		minQuota = q;
 	}
-	
-	private ContentHostingService contentHostingService;
-	public void setContentHostingService(ContentHostingService chs) {
-		contentHostingService = chs;
-	}
-	private EmailService emailService; 
-	public void setEmailService(EmailService emailService) {
-		this.emailService = emailService;
-	}
-	
+
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		
 

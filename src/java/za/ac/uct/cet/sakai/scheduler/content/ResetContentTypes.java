@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  **********************************************************************************/
-package org.sakaiproject.component.app.scheduler.jobs;
+package za.ac.uct.cet.sakai.scheduler.content;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,6 +43,7 @@ import org.sakaiproject.site.api.SiteService.SortType;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
 
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -50,15 +51,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ResetContentTypes implements Job {
 
-	private SiteService siteService;
-	public void setSiteService(SiteService s) {
-		this.siteService = s;
-	}
-	
-	private SessionManager sessionManager;
-	public void setSessionManager(SessionManager s) {
-		this.sessionManager = s;
-	}
+	@Setter private SiteService siteService;
+	@Setter private SessionManager sessionManager;
+	@Setter private ContentHostingService contentHostingService;
+
 	
 	Map<String, String> extensions = new HashMap<String, String>();
 	
@@ -66,11 +62,6 @@ public class ResetContentTypes implements Job {
 		this.extensions = extensions;
 	}
 
-	private ContentHostingService contentHostingService;
-	public void setContentHostingService(ContentHostingService chs) {
-		contentHostingService = chs;
-	}
-	
 	private List<String> forceTypes = new ArrayList<String>();
 	
 	public void setForceTypes(List<String> forceTypes) {

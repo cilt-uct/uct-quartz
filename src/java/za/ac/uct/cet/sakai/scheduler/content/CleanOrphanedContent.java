@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  **********************************************************************************/
-package org.sakaiproject.component.app.scheduler.jobs;
+package za.ac.uct.cet.sakai.scheduler.content;
 
 import java.text.NumberFormat;
 import java.util.List;
@@ -39,47 +39,23 @@ import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
 
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class CleanOrphanedContent implements StatefulJob {
 
 	private final String ADMIN = "admin";
-	private SqlService sqlService;
-	private SessionManager sessionManager;
-	public void setSessionManager(SessionManager s) {
-		this.sessionManager = s;
-	}
-
-	public void setSqlService(SqlService sqlService) {
-		this.sqlService = sqlService;
-	}
-
-	private ContentHostingService contentHostingService;
-	public void setContentHostingService(ContentHostingService contentHostingService) {
-		this.contentHostingService = contentHostingService;
-	}
-
-
-	private SiteService siteService;	
-	public void setSiteService(SiteService siteService) {
-		this.siteService = siteService;
-	}
+	@Setter private SqlService sqlService;
+	@Setter private SessionManager sessionManager;
+	@Setter private ContentHostingService contentHostingService;
+	@Setter private SiteService siteService;
+	@Setter private EmailService emailService;
+	@Setter private ChatManager chatManager;
 
 	private Boolean doCleanUp;
 	public void setDoCleanUp(Boolean doCleanUp) {
 		this.doCleanUp = doCleanUp;
-	}
-	
-
-	private EmailService emailService;	
-	public void setEmailService(EmailService emailService) {
-		this.emailService = emailService;
-	}
-
-	private ChatManager chatManager;
-	public void setChatManager(ChatManager chatManager) {
-		this.chatManager = chatManager;
 	}
 
 	public void execute(JobExecutionContext context)
@@ -137,16 +113,6 @@ public class CleanOrphanedContent implements StatefulJob {
 				log.warn("PermissionException", e);;
 			}
 		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		
 		
 		log.info("Orphaned content in user collections: " + formatSize(userBytes * 1024));

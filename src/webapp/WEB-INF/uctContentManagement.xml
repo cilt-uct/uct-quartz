@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+	"http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+
+	<!--  Clear the orpahened content -->
+	
+	<bean id="checkOContent"
+		class="za.ac.uct.cet.sakai.scheduler.content.CleanOrphanedContent">
+		<property name="sessionManager">
+			<ref bean="org.sakaiproject.tool.api.SessionManager" />
+		</property>
+		<property name="contentHostingService"
+			ref="org.sakaiproject.content.api.ContentHostingService" />
+		<property name="sqlService" ref="org.sakaiproject.db.api.SqlService" />
+		<property name="doCleanUp" value="true"/>
+		<property name="siteService" ref="org.sakaiproject.site.api.SiteService"/>
+		<property name="emailService" ref="org.sakaiproject.email.api.EmailService" />
+		<property name="chatManager" ref="org.sakaiproject.chat2.model.ChatManager"/>
+	</bean>
+	
+	<bean
+		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerOrphenedContent"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringStatefulJobBeanWrapper"
+		 init-method="init">
+		<property name="beanId">
+			<value>checkOContent</value>
+		</property>
+		<property name="jobName">
+			<value>UCT: clear orphaned content</value>
+		</property>
+		<property name="schedulerManager">
+			<ref
+				bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+	</bean>
+	
+	
+
+	
+	<!--  check site quota's --> 
+	<bean id="setQuotas"
+		class="za.ac.uct.cet.sakai.scheduler.content.IncreaseQuotas">
+		<property name="sessionManager">
+			<ref bean="org.sakaiproject.tool.api.SessionManager" />
+		</property>
+		<property name="siteService">
+			<ref bean="org.sakaiproject.site.api.SiteService" />
+		</property>
+		<property name="contentHostingService">
+			<ref
+				bean="org.sakaiproject.content.api.ContentHostingService" />
+		</property>
+		<property name="emailService" ref="org.sakaiproject.email.api.EmailService"/>
+		<property name="minQuota">
+			<value>1048576</value>
+		</property>
+	</bean>
+
+	<bean
+		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerSetQuotas"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		 init-method="init">
+		<property name="beanId">
+			<value>setQuotas</value>
+		</property>
+		<property name="jobName">
+			<value>UCT: Set Site Quotas</value>
+		</property>
+		<property name="schedulerManager">
+			<ref
+				bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+	</bean>
+
+
+	<!--  Reset content types -->
+	
+	<bean id="resetTypes"
+		class="za.ac.uct.cet.sakai.scheduler.content.ResetContentTypes">
+		<property name="sessionManager">
+			<ref bean="org.sakaiproject.tool.api.SessionManager" />
+		</property>
+		<property name="siteService">
+			<ref bean="org.sakaiproject.site.api.SiteService" />
+		</property>
+		<property name="contentHostingService">
+			<ref
+				bean="org.sakaiproject.content.api.ContentHostingService" />
+		</property>
+		<property name="extensions">
+			<map>
+				<entry key="docx"><value>application/vnd.openxmlformats-officedocument.wordprocessingml.document</value></entry>
+				<entry key="pptx"><value>application/vnd.openxmlformats-officedocument.presentationml.presentation</value></entry>
+				<entry key="ppsx"><value>application/vnd.openxmlformats-officedocument.presentationml.slideshow</value></entry>
+				<entry key="xlsx"><value>application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</value></entry>
+				<entry key="dotx"><value> application/vnd.openxmlformats-officedocument.wordprocessingml.template</value></entry>
+				<entry key="xps"><value>application/vnd.ms-xpsdocument</value></entry>
+				<entry key="odt"><value>application/vnd.oasis.opendocument.text</value></entry>
+				<entry key="ott"><value>application/vnd.oasis.opendocument.text-template</value></entry>
+				<entry key="oth"><value>application/vnd.oasis.opendocument.text-web</value></entry>
+				<entry key="odm"><value>application/vnd.oasis.opendocument.text-master</value></entry>
+				<entry key="odp"><value>application/vnd.oasis.opendocument.presentation</value></entry>
+				<entry key="otp"><value>application/vnd.oasis.opendocument.presentation-template</value></entry>
+				<entry key="ods"><value>application/vnd.oasis.opendocument.spreadsheet</value></entry>
+				<entry key="ots"><value>application/vnd.oasis.opendocument.spreadsheet-template</value></entry>
+				<entry key="doc"><value>application/msword</value></entry>
+				<entry key="pdf"><value>application/pdf</value></entry>
+				<entry key="rtf"><value>application/rtf</value></entry>
+			</map>
+		</property>
+		<property name="forceTypes">
+			<list>
+				<value>doc</value>
+				<value>odt</value>
+				<value>rtf</value>
+			</list>
+		</property>
+		
+	</bean>
+
+	<bean
+		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerResetTypes"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		 init-method="init">
+		<property name="beanId">
+			<value>resetTypes</value>
+		</property>
+		<property name="jobName">
+			<value>UCT: reset content Types</value>
+		</property>
+		<property name="schedulerManager">
+			<ref
+				bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+	</bean>
+
+
+	
+	<!--  Scan content for viruses -->
+	<bean id="scanForViruses"
+		class="za.ac.uct.cet.sakai.scheduler.content.VirusScanContent">
+		<property name="sessionManager">
+			<ref bean="org.sakaiproject.tool.api.SessionManager" />
+		</property>
+		<property name="siteService">
+			<ref bean="org.sakaiproject.site.api.SiteService" />
+		</property>
+		<property name="contentHostingService">
+			<ref
+				bean="org.sakaiproject.content.api.ContentHostingService" />
+		</property>
+		<property name="virusScanner" ref="org.sakaiproject.antivirus.api.VirusScanner"/>
+		<property name="threadLocalManager" ref="org.sakaiproject.thread_local.api.ThreadLocalManager"/>
+		<property name="emailService" ref="org.sakaiproject.email.api.EmailService"/>
+	</bean>
+
+	<bean
+		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerScanForViruses"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		 init-method="init">
+		<property name="beanId">
+			<value>scanForViruses</value>
+		</property>
+		<property name="jobName">
+			<value>UCT: Scan Content for Viruses</value>
+		</property>
+		<property name="schedulerManager">
+			<ref
+				bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+	</bean>
+	
+	
+
+</beans>

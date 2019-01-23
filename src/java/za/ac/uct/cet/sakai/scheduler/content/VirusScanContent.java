@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  **********************************************************************************/
-package org.sakaiproject.component.app.scheduler.jobs;
+package za.ac.uct.cet.sakai.scheduler.content;
 
 import java.util.List;
 
@@ -38,6 +38,7 @@ import org.sakaiproject.thread_local.api.ThreadLocalManager;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
 
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -45,40 +46,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class VirusScanContent implements Job {
 
-	private SiteService siteService;
-	public void setSiteService(SiteService s) {
-		this.siteService = s;
-	}
-
-	private SessionManager sessionManager;
-	public void setSessionManager(SessionManager s) {
-		this.sessionManager = s;
-	}
-
-
-
-	private ContentHostingService contentHostingService;
-	public void setContentHostingService(ContentHostingService chs) {
-		contentHostingService = chs;
-	}
-
-
-
-
-	private VirusScanner virusScanner;	
-	public void setVirusScanner(VirusScanner virusScanner) {
-		this.virusScanner = virusScanner;
-	}
-
-	private ThreadLocalManager threadLocalManager;
-	public void setThreadLocalManager(ThreadLocalManager threadLocalManager) {
-		this.threadLocalManager = threadLocalManager;
-	}
-
-	private EmailService emailService;	
-	public void setEmailService(EmailService emailService) {
-		this.emailService = emailService;
-	}
+	@Setter private SiteService siteService;
+	@Setter	private SessionManager sessionManager;
+	@Setter private ContentHostingService contentHostingService;
+	@Setter private VirusScanner virusScanner;	
+	@Setter private ThreadLocalManager threadLocalManager;
+	@Setter private EmailService emailService;	
 
 
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
@@ -119,7 +92,7 @@ public class VirusScanContent implements Job {
 					List<String> members = collection.getMembers();
 					for (int q = 0; q < members.size(); q++) {
 						String resId = (String)members.get(q);
-						log.debug("got resource " + resId);
+						log.debug("got resource {}", resId);
 						try {
 							if (!contentHostingService.isCollection(resId)) {
 								virusScanner.scanContent(resId);
@@ -151,15 +124,9 @@ public class VirusScanContent implements Job {
 				last = last + increment;
 			}
 		} //end while
-		log.info("scanned: _" + count + " items");
-		sb.append("\nscanned: _" + count + " items\n");
-		log.info("virii found : " + sb.toString());
+		log.info("scanned: {} items", count);
+		sb.append("\nscanned: " + count + " items\n");
+		log.debug("virus found : {}", sb.toString());
 		emailService.send("help@vula.uct.ac.za", "help-team@vula.uct.ac.za", "virusScan results", sb.toString(), null, null, null);
-
-
-
 	}
-
-
-
 }
