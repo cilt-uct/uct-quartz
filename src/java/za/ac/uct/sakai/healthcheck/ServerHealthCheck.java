@@ -133,9 +133,9 @@ public class ServerHealthCheck  {
       if (ret.size() > 0) {
         double d = Double.parseDouble(ret.get(0));
         int intVal = (int) d;
-        log.info("Offset from database timestamp is: " + intVal + " seconds (" + d + ")");
+        log.info("Offset from database timestamp is: {} seconds ({})", intVal, d);
         if (intVal > seconds || intVal < (seconds * -1)) {
-          log.error("Drift is " + intVal + " exceeding threshold of " + threshold + " seconds");
+          log.error("Drift is {} exceeding threshold of {} seconds", intVal, threshold);
           String nodeId = serverConfigurationService.getServerId();
           String body = "Server: " + nodeId + " exceeded time drift of " + seconds + " seconds from db with a value of: " + intVal + " seconds";
           emailService.send("help@vula.uct.ac.za", "alerts@vula.uct.ac.za", "Server-DB clock alert", 
