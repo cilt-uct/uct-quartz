@@ -1,3 +1,4 @@
+package za.ac.uct.sakai.healthcheck;
 /**********************************************************************************
  *
  * Copyright (c) 2019 University of Cape Town
@@ -15,7 +16,6 @@
  * limitations under the License.
  *
  **********************************************************************************/
-package za.ac.uct.sakai.healthcheck;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -97,13 +97,13 @@ public class ServerHealthCheck  {
             checkServerHealth();
             checkNTP();
             nextCheck = nextCheck.minusMillis(checkPeriod);
-            log.info("next check at " + dateIso(nextCheck));
+            log.info("next check at {}", dateIso(nextCheck));
           }
           Thread.sleep(5000);
         } catch (InterruptedException e) {
           log.warn(e.getLocalizedMessage(), e);
         } catch (NumberFormatException e) {
-          log.error("Format exception ", e);
+          log.error("Format exception {}", e);
         }
       }
     }
@@ -133,15 +133,15 @@ public class ServerHealthCheck  {
       if (ret.size() > 0) {
         double d = Double.parseDouble(ret.get(0));
         int intVal = (int) d;
-        log.info("Offset from database timestamp is: " + intVal + " seconds (" + d + ")");
+        log.info("Offset from database timestamp is: {} seconds ({})", intVal, d);
         if (intVal > seconds || intVal < (seconds * -1)) {
-          log.error("Drift is " + intVal + " exceeding threshold of " + threshold + " seconds");
+          log.error("Drift is {} exceeding threshold of {} seconds", intVal, threshold);
           String nodeId = serverConfigurationService.getServerId();
           String body = "Server: " + nodeId + " exceeded time drift of " + seconds + " seconds from db with a value of: " + intVal + " seconds";
           emailService.send("help@vula.uct.ac.za", "alerts@vula.uct.ac.za", "Server-DB clock alert", 
               body, null, null, null);
         } else {
-          log.debug("in range : " + intVal + " threshold: " + seconds);
+          log.debug("in range : {} threshold: {}", intVal, seconds);
         }
       } else {
         log.warn("query returned no result");
@@ -160,10 +160,10 @@ public class ServerHealthCheck  {
         timeInfo.computeDetails();
         Instant rDate = Instant.ofEpochMilli(timeInfo.getReturnTime());
         String strDate = dateIso(rDate);
-        log.info("Offset to " + ntpHost + " is: " + timeInfo.getOffset() + "ms ntp host time is: " + strDate);
+        log.info("Offset to {} is: {}ms ntp host time is: {}", ntpHost, timeInfo.getOffset(), strDate);
         double offset = timeInfo.getOffset().longValue()/1000D;
         if (offset > seconds || offset < (seconds * -1)) {
-          log.error("Drift from " + ntpHost + " is: "  + offset + " seconds exceeding threshold of " + threshold + " seconds");
+          log.error("Drift from {} is: {} seconds exceeding threshold of {} seconds", ntpHost, offset, threshold);
           String nodeId = serverConfigurationService.getServerId();
           String body = "Server: " + nodeId + " exceeded time drift of " + seconds + " seconds with a value of: " + offset + " seconds from: " + ntpHost;
           emailService.send("help@vula.uct.ac.za", "alerts@vula.uct.ac.za", "Server clock alert", 
