@@ -38,7 +38,7 @@ import org.sakaiproject.coursemanagement.api.Section;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
 
-import au.com.bytecode.opencsv.CSVReader;
+import com.opencsv.CSVReader;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

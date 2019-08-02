@@ -85,9 +85,8 @@
     </dependency>
     <!-- needed for generating CSVs for export -->
     <dependency>
-      <groupId>net.sf.opencsv</groupId>
+      <groupId>com.opencsv</groupId>
       <artifactId>opencsv</artifactId>
-      <version>2.3</version>
     </dependency>
     <dependency>
       <groupId>org.apache.poi</groupId>
