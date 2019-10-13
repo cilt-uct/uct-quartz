@@ -32,7 +32,10 @@ import org.apache.commons.net.ntp.TimeInfo;
 import org.sakaiproject.component.api.ServerConfigurationService;
 import org.sakaiproject.db.api.SqlService;
 import org.sakaiproject.email.api.EmailService;
+import org.sakaiproject.memory.cover.MemoryServiceLocator;
 import org.sakaiproject.time.api.UserTimeService;
+import org.sakaiproject.tool.api.Session;
+import org.sakaiproject.tool.api.SessionManager;
 
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -49,7 +52,11 @@ public class ServerHealthCheck  {
   @Setter private EmailService emailService;
   @Setter private ServerConfigurationService serverConfigurationService;
   @Setter private UserTimeService userTimeService;
+  @Setter private SessionManager sessionManager;
 
+  // Free memory lower limit: 500M
+  private static final long MIN_FREE_MEM = 450 * 1024 * 1024L;
+  private static final String ADMIN = "admin";
 
   private CheckRunner checkRunner;
 
@@ -96,6 +103,7 @@ public class ServerHealthCheck  {
           if (Instant.now().isAfter(nextCheck)) {
             checkServerHealth();
             checkNTP();
+            checkMemory();
             nextCheck = nextCheck.minusMillis(checkPeriod);
             log.info("next check at {}", dateIso(nextCheck));
           }
@@ -119,7 +127,27 @@ public class ServerHealthCheck  {
       String strDate = date.format(formatter);
       return strDate;
     }
-    
+
+    private void checkMemory() {
+        long freeMem = Runtime.getRuntime().freeMemory();
+
+        if (freeMem < MIN_FREE_MEM) {
+            log.warn("Free heap memory {} MB below threshold {} MB: clearing all caches", freeMem / (1024*1024), MIN_FREE_MEM / (1024*1024));
+
+            Session sakaiSession = sessionManager.getCurrentSession();
+            try {
+              sakaiSession.setUserId(ADMIN);
+              sakaiSession.setUserEid(ADMIN);
+              MemoryServiceLocator.getInstance().resetCachers();
+            } finally {
+              sakaiSession.setUserId(null);
+              sakaiSession.setUserEid(null);
+            }
+        } else {
+            log.info("Free heap memory {} MB", freeMem / (1024*1024));
+        }
+    }
+
     @SuppressWarnings("unchecked")
     private void checkServerHealth() {
       String strDate = dateIso(Instant.now());
@@ -147,7 +175,6 @@ public class ServerHealthCheck  {
         log.warn("query returned no result");
       }
     }
-    
     
     private void checkNTP() {
       log.debug("checkNTP()");

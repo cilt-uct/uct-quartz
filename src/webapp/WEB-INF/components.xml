@@ -13,9 +13,10 @@
 		<property name="serverConfigurationService" ref="org.sakaiproject.component.api.ServerConfigurationService"/>
 		<property name="seconds"><value>30</value></property>
 		<property name="userTimeService" ref="org.sakaiproject.time.api.UserTimeService"/>
+		<property name="sessionManager" ref="org.sakaiproject.tool.api.SessionManager" />
 	</bean>
-	<!-- course site owners -->
 
+	<!-- course site owners -->
 	<bean id="UCTCourseSiteOwners"
 		class="org.sakaiproject.component.app.scheduler.jobs.UCTCourseSiteOwners">
 		<property name="emailService">
@@ -50,11 +51,6 @@
 				bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
 		</property>
 	</bean>
-
-
-	
-
-
 
 	<!-- Redo Tabs-->
 	<bean id="courseTabs"
