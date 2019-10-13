@@ -69,12 +69,6 @@
       <version>19-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
-    <!--dependency>
-      <groupId>org.sakaiproject.contentreview</groupId>
-      <artifactId>contentreview-model-api</artifactId>
-      <version>12-SNAPSHOT</version>
-      <scope>provided</scope>
-    </dependency-->
     <dependency>
       <groupId>org.sakaiproject.edu-services.course-management</groupId>
       <artifactId>coursemanagement-api</artifactId>
