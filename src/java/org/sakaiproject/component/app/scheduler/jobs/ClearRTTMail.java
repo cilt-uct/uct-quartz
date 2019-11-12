@@ -66,7 +66,7 @@ public class ClearRTTMail implements Job {
 				Instant d = messageHeader.getInstant();
 
 				//1 hours
-				Instant cal2 = Instant.now().minus(1, ChronoUnit.HOURS);
+				Instant cal2 = Instant.now().plus(1, ChronoUnit.HOURS);
 
 				if (d.isBefore(cal2)) {
 					log.debug("deleting message " + mes.getId());
