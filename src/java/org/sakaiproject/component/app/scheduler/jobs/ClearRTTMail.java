@@ -33,6 +33,7 @@ import org.sakaiproject.message.api.MessageHeader;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
 
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -41,15 +42,9 @@ public class ClearRTTMail implements Job {
 	
 
 	private static final String ADMIN = "admin";
-	private MailArchiveService mailArchiveService;
-	public void setMailArchiveService(MailArchiveService mailArchiveService) {
-		this.mailArchiveService = mailArchiveService;
-	}
-	
-	private SessionManager sessionManager;
-	public void setSessionManager(SessionManager s) {
-		this.sessionManager = s;
-	}
+	@Setter private MailArchiveService mailArchiveService;
+	@Setter private SessionManager sessionManager;
+
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		//set the user information into the current session
 	    Session sakaiSession = sessionManager.getCurrentSession();
