@@ -17,8 +17,8 @@
  **********************************************************************************/
 package org.sakaiproject.component.app.scheduler.jobs;
 
-import java.util.Calendar;
-import java.util.Date;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import org.quartz.Job;
@@ -30,7 +30,6 @@ import org.sakaiproject.mailarchive.api.MailArchiveChannel;
 import org.sakaiproject.mailarchive.api.MailArchiveMessage;
 import org.sakaiproject.mailarchive.api.MailArchiveService;
 import org.sakaiproject.message.api.MessageHeader;
-import org.sakaiproject.time.api.Time;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
 
@@ -64,14 +63,12 @@ public class ClearRTTMail implements Job {
 			for (int i = 0; i < messages.size(); i++) {
 				MailArchiveMessage mes = (MailArchiveMessage) messages.get(i);
 				MessageHeader messageHeader = mes.getHeader();
-				Time mTime = messageHeader.getDate();
-				Date d = new Date(mTime.getTime());
+				Instant d = messageHeader.getInstant();
 
-				//What was the time an hour agon
-				Calendar cal = Calendar.getInstance();
-				cal.roll(Calendar.HOUR, false);
+				//1 hours
+				Instant cal2 = Instant.now().minus(1, ChronoUnit.HOURS);
 
-				if (d.before(cal.getTime())) {
+				if (d.isBefore(cal2)) {
 					log.debug("deleting message " + mes.getId());
 					channel.removeMessage(mes.getId());
 				}
