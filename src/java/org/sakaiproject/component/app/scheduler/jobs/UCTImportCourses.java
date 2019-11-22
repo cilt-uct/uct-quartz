@@ -38,7 +38,12 @@ import org.sakaiproject.coursemanagement.api.Section;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
 
+import com.opencsv.CSVParser;
+import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
+
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -46,21 +51,9 @@ public class UCTImportCourses implements Job {
 
 	private static final String ADMIN = "admin";
 
-	private CourseManagementService courseManagementService;
-	private CourseManagementAdministration courseAdmin;
-
-	public void setCourseManagementService(CourseManagementService cs) {
-		courseManagementService = cs;
-	}
-
-	private SessionManager sessionManager;
-	public void setSessionManager(SessionManager s) {
-		this.sessionManager = s;
-	}
-
-	public void setCourseManagementAdministration(CourseManagementAdministration cs) {
-		courseAdmin = cs;
-	}
+	@Setter private CourseManagementService courseManagementService;
+	@Setter private CourseManagementAdministration courseManagementAdministration;
+	@Setter private SessionManager sessionManager;
 
 	private String filePath;
 	public void setFilePath(String fp) {
@@ -81,7 +74,15 @@ public class UCTImportCourses implements Job {
 		CSVReader reader = null;
 
 		try {
-			reader = new CSVReader(new FileReader(file), ',' , '"' , 0);
+			CSVParser parser = new CSVParserBuilder()
+					.withSeparator(',')
+					.withQuoteChar('"')
+					.withStrictQuotes(false)
+					.build();
+			reader = new CSVReaderBuilder(new FileReader(file))
+					.withCSVParser(parser)
+					.build();
+					//new CSVReader(new FileReader(file), ',' , '"' , 0);
 			log.info("Updating course information from " + file);
 		} catch (FileNotFoundException e) {
 			log.error("Cannot open file " + file + " for reading");	
@@ -146,7 +147,7 @@ public class UCTImportCourses implements Job {
 		// does the academic session exist
 		if (!acadTerms.contains(term)) {
 			if (!courseManagementService.isAcademicSessionDefined(term)) {
-				courseAdmin.createAcademicSession(term, term,term + " academic year", new Date(), yearEnd);
+				courseManagementAdministration.createAcademicSession(term, term,term + " academic year", new Date(), yearEnd);
 				acadTerms.add(term);
 			} else {
 				acadTerms.add(term);
@@ -156,7 +157,7 @@ public class UCTImportCourses implements Job {
 		// does the course set exist?
 		if (!courseSets.contains(setId)) {
 			if (!courseManagementService.isCourseSetDefined(setId)) { 
-				courseAdmin.createCourseSet(setId, setId, setId, setCategory, null);
+				courseManagementAdministration.createCourseSet(setId, setId, setId, setCategory, null);
 				courseSets.add(setId);
 			} else {
 				courseSets.add(setId);
@@ -164,31 +165,31 @@ public class UCTImportCourses implements Job {
 		}
 
 		if (!courseManagementService.isCanonicalCourseDefined(courseCode)) {
-			courseAdmin.createCanonicalCourse(courseCode, courseCode, descr);
-			courseAdmin.addCanonicalCourseToCourseSet(setId, courseCode);
+			courseManagementAdministration.createCanonicalCourse(courseCode, courseCode, descr);
+			courseManagementAdministration.addCanonicalCourseToCourseSet(setId, courseCode);
 		}
 
 		if (!courseManagementService.isCourseOfferingDefined(courseEid)) {
 			// create new course
 			log.info("creating course offering for " + courseCode + " in year " + term);
-			courseAdmin.createCourseOffering(courseEid, courseCode + " - " + descr, courseEid + " - " + descr, "active", term, courseCode, startDate, endDate);
+			courseManagementAdministration.createCourseOffering(courseEid, courseCode + " - " + descr, courseEid + " - " + descr, "active", term, courseCode, startDate, endDate);
 
-			courseAdmin.addCourseOfferingToCourseSet(setId, courseEid);		 
+			courseManagementAdministration.addCourseOfferingToCourseSet(setId, courseEid);		 
 
 			EnrollmentSet enrolmentSet = null; 
 			if (!courseManagementService.isEnrollmentSetDefined(courseEid)) {
-				enrolmentSet = courseAdmin.createEnrollmentSet(courseEid, descr, descr, "category", "defaultEnrollmentCredits", courseEid, null);
+				enrolmentSet = courseManagementAdministration.createEnrollmentSet(courseEid, descr, descr, "category", "defaultEnrollmentCredits", courseEid, null);
 			} else {
 				enrolmentSet = courseManagementService.getEnrollmentSet(courseEid);
 			}
 
 			if (!courseManagementService.isSectionDefined(courseEid)) {
-				courseAdmin.createSection(courseEid, courseEid, descr, "course", null, courseEid, enrolmentSet.getEid());
+				courseManagementAdministration.createSection(courseEid, courseEid, descr, "course", null, courseEid, enrolmentSet.getEid());
 			} else {
 				Section section = courseManagementService.getSection(courseEid);
 				section.setEnrollmentSet(enrolmentSet);
 				section.setCategory("course");
-				courseAdmin.updateSection(section);
+				courseManagementAdministration.updateSection(section);
 			}
 		} else {
 			// update the course details
@@ -197,7 +198,7 @@ public class UCTImportCourses implements Job {
 			co.setDescription(courseCode + " - " + descr);
 			co.setStartDate(startDate);
 			co.setEndDate(endDate);
-			courseAdmin.updateCourseOffering(co);
+			courseManagementAdministration.updateCourseOffering(co);
 		}
 	}
 }
