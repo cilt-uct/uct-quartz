@@ -51,6 +51,8 @@ import org.sakaiproject.user.api.UserLockedException;
 import org.sakaiproject.user.api.UserNotDefinedException;
 import org.sakaiproject.user.api.UserPermissionException;
 
+import lombok.Data;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -77,42 +79,12 @@ public class ProcessPSUpdates implements StatefulJob {
 	/**
 	 * Services
 	 */
-	private SessionManager sessionManager;
-	private CourseManagementService courseManagementService;
-	private CourseManagementAdministration courseAdmin;
-	private SqlService sqlService;
-	private EmailService emailService;
-	private UserDirectoryService userDirectoryService;
-	
-
-
-	public void setUserDirectoryService(UserDirectoryService userDirectoryService) {
-		this.userDirectoryService = userDirectoryService;
-	}
-
-
-	public void setEmailService(EmailService emailService) {
-		this.emailService = emailService;
-	}
-
-
-	public void setSqlService(SqlService sqlService) {
-		this.sqlService = sqlService;
-	}
-
-
-	public void setCourseManagementService(CourseManagementService cs) {
-		courseManagementService = cs;
-	}
-
-	
-	public void setSessionManager(SessionManager s) {
-		this.sessionManager = s;
-	}
-
-	public void setCourseManagementAdministration(CourseManagementAdministration cs) {
-		courseAdmin = cs;
-	}
+	@Setter private SessionManager sessionManager;
+	@Setter private CourseManagementService courseManagementService;
+	@Setter private CourseManagementAdministration courseManagementAdministration;
+	@Setter private SqlService sqlService;
+	@Setter private EmailService emailService;
+	@Setter private UserDirectoryService userDirectoryService;
 
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		// set the user information into the current session
@@ -178,14 +150,14 @@ public class ProcessPSUpdates implements StatefulJob {
 		
 		List<String> incomingList = userCourseRegistrations.getCourseRegistrations();
 		List<String> incomingListFixed = new ArrayList<String>();
-		log.debug("initial incoming list: " + incomingList.size());
+		log.debug("initial incoming list: {}", incomingList.size());
 		//if the student has no course reg there will be 1 course with the ied "null)
 		if (!hasNoCourses(incomingList)) {
 			for (int i = 0; i < incomingList.size(); i++) {
 				String courseCode = incomingList.get(i);
 				String fixedCourseCode = fixCourseCode(courseCode);
 				if (!isAfterVula(fixedCourseCode)) {
-					log.debug("removing " + courseCode + " from incoming list");
+					log.debug("removing {} from incoming list", courseCode);
 					continue;
 				}
 
@@ -208,7 +180,7 @@ public class ProcessPSUpdates implements StatefulJob {
 			
  		}
  		
- 		log.debug("have a list of " + enrolledSectionEids.size() + " eids from CM");
+ 		log.debug("have a list of {} eids from CM", enrolledSectionEids.size());
  		//build a list of drops - in the CM list but not in incoming
  		for (int i = 0; i < enrolledSectionEids.size(); i++) {
  			String eid = enrolledSectionEids.get(i);
@@ -216,7 +188,7 @@ public class ProcessPSUpdates implements StatefulJob {
  				log.debug(i + ". looks like user dropped " + eid);
  				drops.add(eid);
  			} else {
- 				log.debug(i + ". looks like user is still registered for " + eid);
+ 				log.debug("{}. looks like user is still registered for {}", i, eid);
  			}
  		}
  		log.debug("we have an incoming list of " + incomingList.size());
@@ -224,10 +196,10 @@ public class ProcessPSUpdates implements StatefulJob {
 		for (int i = 0; i < incomingListFixed.size(); i++) {
 			String courseCode =  incomingListFixed.get(i);
 			if (! enrolledSectionEids.contains(courseCode)) {
-				log.debug("looks like use added " + courseCode);
+				log.debug("looks like use added {}", courseCode);
 				adds.add(courseCode);
 			} else {
-				log.debug(i + ". looks like user is already registered for " + courseCode);
+				log.debug("{}. looks like user is already registered for {}", i, courseCode);
 			}
 		 }
  		
@@ -271,10 +243,10 @@ public class ProcessPSUpdates implements StatefulJob {
 		
 		for (int i = 0; i < drops.size(); i++) {
 			String courseEid = drops.get(i);
-			log.info("removing user from " + courseEid);
-			courseAdmin.removeCourseOfferingMembership(userId, courseEid);
-			courseAdmin.removeSectionMembership(userId, courseEid);
-			courseAdmin.removeEnrollment(userId, courseEid);
+			log.info("removing user from {}", courseEid);
+			courseManagementAdministration.removeCourseOfferingMembership(userId, courseEid);
+			courseManagementAdministration.removeSectionMembership(userId, courseEid);
+			courseManagementAdministration.removeEnrollment(userId, courseEid);
 		}
 	}
 
@@ -319,20 +291,20 @@ public class ProcessPSUpdates implements StatefulJob {
 			if (eid.length() == "PSY3007SSUP,2010".length()) {
 				return true;
 			} else	if (eid.length() != "PSY3007S,2010".length()) {
-				log.debug("we don't work with " + eid);
+				log.debug("we don't work with {}", eid);
 				return false;
 			}
 		} else {
 			if (eid.length() == "PSY307SSUP,2010".length()) {
 				return true;
 			} else	if (eid.length() != "PSY307S,2010".length()) {
-				log.debug("we don't work with " + eid);
+				log.debug("we don't work with {}", eid);
 				return false;
 			}
 		}
 		
 		if (eid.indexOf("_STUD") > 0) {
-			log.debug(eid + " looks like a faculty group");
+			log.debug("{} looks like a faculty group", eid);
 			return false;
 		}
 		
@@ -352,7 +324,7 @@ public class ProcessPSUpdates implements StatefulJob {
 		if (year >= earliestCourseYear) {
 			return true;
 		}
-		log.debug("Ignoring course " + courseCode + " as it predates Vula");
+		log.debug("Ignoring course {} as it predates Vula", courseCode);
 		return false;
 	}
 
@@ -408,7 +380,7 @@ public class ProcessPSUpdates implements StatefulJob {
 
 
 	private void addUserToCourse(String userId, String courseCode, String term, String setCategory) {
-		log.debug("addUserToCourse(" + userId + ", " + courseCode + "," + term + "," + setCategory + ")");
+		log.debug("addUserToCourse( {}, {}, {}, {})", userId, courseCode, term,setCategory);
 		
 
 		try {
@@ -435,21 +407,21 @@ public class ProcessPSUpdates implements StatefulJob {
 				Date start =  cal.getTime();
 				cal.set(new Integer(term).intValue(), Calendar.DECEMBER, 30);
 				Date end = cal.getTime();
-				courseAdmin.createAcademicSession(term, term, term, start, end);
+				courseManagementAdministration.createAcademicSession(term, term, term, start, end);
 			}
 			//does the course set exist?
 			if (!courseManagementService.isCourseSetDefined(setId)) 
-				courseAdmin.createCourseSet(setId, setId, setId, setCategory, null);
+				courseManagementAdministration.createCourseSet(setId, setId, setId, setCategory, null);
 
 			//is there a cannonical course?
 			if (!courseManagementService.isCanonicalCourseDefined(courseCode)) {
-				courseAdmin.createCanonicalCourse(courseCode, courseCode, courseCode);
-				courseAdmin.addCanonicalCourseToCourseSet(setId, courseCode);
+				courseManagementAdministration.createCanonicalCourse(courseCode, courseCode, courseCode);
+				courseManagementAdministration.addCanonicalCourseToCourseSet(setId, courseCode);
 			}
 
 
 			if (!courseManagementService.isCourseOfferingDefined(courseEid)) {
-				log.info("creating course offering for " + courseCode + " in year " + term);
+				log.info("creating course offering for {} in year {}" , courseCode, term);
 				emailService.send("help-team@vula.uct.ac.za", "help-team@vula.uct.ac.za", "[CM]: new course created on vula: " + courseEid, "[CM]: new course created on vula: " + courseEid, null, null, null);
 				//if this is being created by SPML its current now
 				Date startDate = new Date();
@@ -470,20 +442,20 @@ public class ProcessPSUpdates implements StatefulJob {
 				
 				Date endDate = cal2.getTime();
 				log.debug("got cal:" + cal2.get(Calendar.YEAR) + "/" + cal2.get(Calendar.MONTH) + "/" + cal2.get(Calendar.DAY_OF_MONTH));
-				courseAdmin.createCourseOffering(courseEid, courseEid, "someDescription", "active", term, courseCode, startDate, endDate);
-				courseAdmin.addCourseOfferingToCourseSet(setId, courseEid);
+				courseManagementAdministration.createCourseOffering(courseEid, courseEid, "someDescription", "active", term, courseCode, startDate, endDate);
+				courseManagementAdministration.addCourseOfferingToCourseSet(setId, courseEid);
 			}
 
 			//we know that all objects to this level must exist
 			EnrollmentSet enrollmentSet = null;
 			if (! courseManagementService.isEnrollmentSetDefined(courseEid)) {
-				enrollmentSet =  courseAdmin.createEnrollmentSet(courseEid, "title", "description", "category", "defaultEnrollmentCredits", courseEid, null);
+				enrollmentSet =  courseManagementAdministration.createEnrollmentSet(courseEid, "title", "description", "category", "defaultEnrollmentCredits", courseEid, null);
 			} else {
 				enrollmentSet = courseManagementService.getEnrollmentSet(courseEid);
 			}
 			
 			if (!courseManagementService.isSectionDefined(courseEid)) {
-				courseAdmin.createSection(courseEid, courseEid, "description", "course", null, courseEid, enrollmentSet.getEid());
+				courseManagementAdministration.createSection(courseEid, courseEid, "description", "course", null, courseEid, enrollmentSet.getEid());
 			} else {
 				Section section = courseManagementService.getSection(courseEid);
 				//Check the section has a properly defined Enrolment set
@@ -491,14 +463,14 @@ public class ProcessPSUpdates implements StatefulJob {
 					EnrollmentSet enrolmentSet = courseManagementService.getEnrollmentSet(courseEid);
 					section.setEnrollmentSet(enrolmentSet);
 					section.setCategory("course");
-					courseAdmin.updateSection(section);
+					courseManagementAdministration.updateSection(section);
 				}
 			}
 
 
-			log.info("adding this student to " + courseEid);
-			courseAdmin.addOrUpdateSectionMembership(userId, role, courseEid, "enrolled");
-			courseAdmin.addOrUpdateEnrollment(userId, courseEid, "enrolled", "NA", "0");
+			log.info("adding this student to {}", courseEid);
+			courseManagementAdministration.addOrUpdateSectionMembership(userId, role, courseEid, "enrolled");
+			courseManagementAdministration.addOrUpdateEnrollment(userId, courseEid, "enrolled", "NA", "0");
 			//now add the user to a section of the same name
 			//TODO this looks like duplicate LOGic
 			
@@ -509,12 +481,12 @@ public class ProcessPSUpdates implements StatefulJob {
 				//create the CO
 				//lets create the 2007 academic year :-)
 				//create enrolmentset
-				courseAdmin.createEnrollmentSet(courseEid, courseEid, "description", "category", "defaultEnrollmentCredits", courseEid, null);
-				log.info("creating Section for " + courseCode + " in year " + term);
+				courseManagementAdministration.createEnrollmentSet(courseEid, courseEid, "description", "category", "defaultEnrollmentCredits", courseEid, null);
+				log.info("creating Section for {} in year {}",courseCode, term);
 				getCanonicalCourse(courseEid);
-				courseAdmin.createSection(courseEid, courseEid, "someDescription","course",null,courseEid,courseEid);
+				courseManagementAdministration.createSection(courseEid, courseEid, "someDescription","course",null,courseEid,courseEid);
 			}
-			courseAdmin.addOrUpdateSectionMembership(userId, role, courseEid, "enrolled");
+			courseManagementAdministration.addOrUpdateSectionMembership(userId, role, courseEid, "enrolled");
 		}
 		catch (Exception e) {
 			log.warn(e.getMessage(), e);
@@ -526,13 +498,13 @@ public class ProcessPSUpdates implements StatefulJob {
 	
 	private void getCanonicalCourse(String courseEid) {
 		String courseCode = courseEid.substring(0, "PSY2006F".length());
-		log.debug("get Cannonical course:" + courseCode);
+		log.debug("get Cannonical course: {}", courseCode);
 		try {
 			courseManagementService.getCanonicalCourse(courseCode);
 		}
 		catch (IdNotFoundException id) {
-			log.debug("creating canonicalcourse " + courseCode);
-			courseAdmin.createCanonicalCourse(courseCode, "something", "something else");
+			log.debug("creating canonicalcourse {}", courseCode);
+			courseManagementAdministration.createCanonicalCourse(courseCode, "something", "something else");
 		}
 	}
 	
@@ -541,28 +513,11 @@ public class ProcessPSUpdates implements StatefulJob {
 	 * @author dhorwitz
 	 *
 	 */
+	@Data
 	private class UserCourseRegistrations {
 		private String userId;
 		private List<String> courseRegistrations;
 		private DateTime lastUpdated;
-		public String getUserId() {
-			return userId;
-		}
-		public void setUserId(String userId) {
-			this.userId = userId;
-		}
-		public List<String> getCourseRegistrations() {
-			return courseRegistrations;
-		}
-		public void setCourseRegistrations(List<String> courseRegistrations) {
-			this.courseRegistrations = courseRegistrations;
-		}
-		public DateTime getLastUpdated() {
-			return lastUpdated;
-		}
-		public void setLastUpdated(DateTime lastUpdated) {
-			this.lastUpdated = lastUpdated;
-		}
 	}
 
 }

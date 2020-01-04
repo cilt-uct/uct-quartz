@@ -37,6 +37,7 @@ import org.sakaiproject.email.api.EmailService;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
 
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -56,38 +57,17 @@ public class ProcessFinAidUpdates implements StatefulJob {
 	/**
 	 * Services
 	 */
-	private SessionManager sessionManager;
-	private CourseManagementService courseManagementService;
-	private CourseManagementAdministration courseAdmin;
-	private SqlService sqlService;
-	private EmailService emailService;
+	@Setter private SessionManager sessionManager;
+	@Setter private CourseManagementService courseManagementService;
+	@Setter private CourseManagementAdministration courseManagementAdministration;
+	@Setter private SqlService sqlService;
+	@Setter private EmailService emailService;
 	
 	
 	private final String courseCode = "FINAID";
 	private final String term = "2019";
 
-	public void setEmailService(EmailService emailService) {
-		this.emailService = emailService;
-	}
 
-
-	public void setSqlService(SqlService sqlService) {
-		this.sqlService = sqlService;
-	}
-
-
-	public void setCourseManagementService(CourseManagementService cs) {
-		courseManagementService = cs;
-	}
-
-
-	public void setSessionManager(SessionManager s) {
-		this.sessionManager = s;
-	}
-
-	public void setCourseManagementAdministration(CourseManagementAdministration cs) {
-		courseAdmin = cs;
-	}
 
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 
@@ -127,12 +107,12 @@ public class ProcessFinAidUpdates implements StatefulJob {
 			Enrollment thisOne = it.next();
 			String user = thisOne.getUserId();
 			if (!users.contains(user)) {
-				log.info("dropping user " + user + " from " + courseCode);
-				courseAdmin.removeCourseOfferingMembership(user, courseEid);
-				courseAdmin.removeSectionMembership(user, courseEid);
-				courseAdmin.removeEnrollment(user, courseEid);
+				log.info("dropping user {} from {}",user, courseCode);
+				courseManagementAdministration.removeCourseOfferingMembership(user, courseEid);
+				courseManagementAdministration.removeSectionMembership(user, courseEid);
+				courseManagementAdministration.removeEnrollment(user, courseEid);
 			} else {
-				log.debug("user " + user + " is still registered");
+				log.debug("user {} is still registered", user);
 			}
 		}
 	}
@@ -171,7 +151,7 @@ public class ProcessFinAidUpdates implements StatefulJob {
 	 */
 	private void addUserToCourse(String userId, String courseCode, String term, String setCategory) {
 
-		log.debug("addUserToCourse(" + userId + ", " + courseCode + "," + term + "," + setCategory + ")");
+		log.debug("addUserToCourse({}, {}, {}, {})", userId, courseCode, term, setCategory);
 		
 		try {
 
@@ -184,7 +164,7 @@ public class ProcessFinAidUpdates implements StatefulJob {
 			//Get the role based on the type of object this is
 			String role = "Student";
 			String setId = courseCode.substring(0,3);
-			setCategory = "Department";			
+			setCategory = "Department";
 			
 			String courseEid = courseCode + "," + term;
 			
@@ -195,17 +175,17 @@ public class ProcessFinAidUpdates implements StatefulJob {
 				Date start =  cal.getTime();
 				cal.set(new Integer(term).intValue(), Calendar.DECEMBER, 30);
 				Date end = cal.getTime();
-				courseAdmin.createAcademicSession(term, term, term, start, end);
+				courseManagementAdministration.createAcademicSession(term, term, term, start, end);
 			}
 
 			//does the course set exist?
 			if (!courseManagementService.isCourseSetDefined(setId)) 
-				courseAdmin.createCourseSet(setId, setId, setId, setCategory, null);
+				courseManagementAdministration.createCourseSet(setId, setId, setId, setCategory, null);
 
 			//is there a cannonical course?
 			if (!courseManagementService.isCanonicalCourseDefined(courseCode)) {
-				courseAdmin.createCanonicalCourse(courseCode, courseCode, courseCode);
-				courseAdmin.addCanonicalCourseToCourseSet(setId, courseCode);
+				courseManagementAdministration.createCanonicalCourse(courseCode, courseCode, courseCode);
+				courseManagementAdministration.addCanonicalCourseToCourseSet(setId, courseCode);
 			}
 
 			if (!courseManagementService.isCourseOfferingDefined(courseEid)) {
@@ -230,20 +210,20 @@ public class ProcessFinAidUpdates implements StatefulJob {
 				
 				Date endDate = cal2.getTime();
 				log.debug("got cal:" + cal2.get(Calendar.YEAR) + "/" + cal2.get(Calendar.MONTH) + "/" + cal2.get(Calendar.DAY_OF_MONTH));
-				courseAdmin.createCourseOffering(courseEid, courseEid, "someDescription", "active", term, courseCode, startDate, endDate);
-				courseAdmin.addCourseOfferingToCourseSet(setId, courseEid);
+				courseManagementAdministration.createCourseOffering(courseEid, courseEid, "someDescription", "active", term, courseCode, startDate, endDate);
+				courseManagementAdministration.addCourseOfferingToCourseSet(setId, courseEid);
 			}
 
 			//we know that all objects to this level must exist
 			EnrollmentSet enrollmentSet = null;
 			if (! courseManagementService.isEnrollmentSetDefined(courseEid)) {
-				enrollmentSet =  courseAdmin.createEnrollmentSet(courseEid, "title", "description", "category", "defaultEnrollmentCredits", courseEid, null);
+				enrollmentSet =  courseManagementAdministration.createEnrollmentSet(courseEid, "title", "description", "category", "defaultEnrollmentCredits", courseEid, null);
 			} else {
 				enrollmentSet = courseManagementService.getEnrollmentSet(courseEid);
 			}
 			
 			if (!courseManagementService.isSectionDefined(courseEid)) {
-				courseAdmin.createSection(courseEid, courseEid, "description", "course", null, courseEid, enrollmentSet.getEid());
+				courseManagementAdministration.createSection(courseEid, courseEid, "description", "course", null, courseEid, enrollmentSet.getEid());
 			} else {
 				Section section = courseManagementService.getSection(courseEid);
 				//Check the section has a properly defined Enrolment set
@@ -251,14 +231,14 @@ public class ProcessFinAidUpdates implements StatefulJob {
 					EnrollmentSet enrolmentSet = courseManagementService.getEnrollmentSet(courseEid);
 					section.setEnrollmentSet(enrolmentSet);
 					section.setCategory("course");
-					courseAdmin.updateSection(section);
+					courseManagementAdministration.updateSection(section);
 				}
 			}
 
 
-			log.info("Adding student " + userId + " to " + courseEid);
-			courseAdmin.addOrUpdateSectionMembership(userId, role, courseEid, "enrolled");
-			courseAdmin.addOrUpdateEnrollment(userId, courseEid, "enrolled", "NA", "0");
+			log.info("Adding student {} to {}", userId, courseEid);
+			courseManagementAdministration.addOrUpdateSectionMembership(userId, role, courseEid, "enrolled");
+			courseManagementAdministration.addOrUpdateEnrollment(userId, courseEid, "enrolled", "NA", "0");
 			//now add the user to a section of the same name
 			//TODO this looks like duplicate LOGic
 			
@@ -269,12 +249,12 @@ public class ProcessFinAidUpdates implements StatefulJob {
 				//create the CO
 				//lets create the 2007 academic year :-)
 				//create enrolmentset
-				courseAdmin.createEnrollmentSet(courseEid, courseEid, "description", "category", "defaultEnrollmentCredits", courseEid, null);
-				log.info("creating Section for " + courseCode + " in year " + term);
+				courseManagementAdministration.createEnrollmentSet(courseEid, courseEid, "description", "category", "defaultEnrollmentCredits", courseEid, null);
+				log.info("creating Section for {} in year {}", courseCode, term);
 				getCanonicalCourse(courseEid);
-				courseAdmin.createSection(courseEid, courseEid, "someDescription","course",null,courseEid,courseEid);
+				courseManagementAdministration.createSection(courseEid, courseEid, "someDescription","course",null,courseEid,courseEid);
 			}
-			courseAdmin.addOrUpdateSectionMembership(userId, role, courseEid, "enrolled");
+			courseManagementAdministration.addOrUpdateSectionMembership(userId, role, courseEid, "enrolled");
 		}
 		catch (Exception e) {
 			log.warn(e.getMessage(), e);
@@ -285,13 +265,13 @@ public class ProcessFinAidUpdates implements StatefulJob {
 
 	private void getCanonicalCourse(String courseEid) {
 		String courseCode = courseEid.substring(0, "PSY2006F".length());
-		log.debug("get Cannonical course:" + courseCode);
+		log.debug("get Cannonical course: {}", courseCode);
 		try {
 			courseManagementService.getCanonicalCourse(courseCode);
 		}
 		catch (IdNotFoundException id) {
-			log.debug("creating canonicalcourse " + courseCode);
-			courseAdmin.createCanonicalCourse(courseCode, "something", "something else");
+			log.debug("creating canonicalcourse {}", courseCode);
+			courseManagementAdministration.createCanonicalCourse(courseCode, "something", "something else");
 		}
 	}
 	
