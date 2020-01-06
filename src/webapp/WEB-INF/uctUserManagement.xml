@@ -6,17 +6,9 @@
 <!-- PROCESS NEW USER DATA-->
 	<bean id="processPSData"
 		class="za.ac.uct.cet.sakai.scheduler.peoplesoft.ProcessPSUpdates">
-		<property name="sessionManager">
-			<ref bean="org.sakaiproject.tool.api.SessionManager" />
-		</property>
-		<property name="courseManagementService">
-			<ref
-				bean="org.sakaiproject.coursemanagement.api.CourseManagementService" />
-		</property>
-		<property name="courseManagementAdministration">
-			<ref
-				bean="org.sakaiproject.coursemanagement.api.CourseManagementAdministration" />
-		</property>
+		<property name="sessionManager" ref="org.sakaiproject.tool.api.SessionManager" />
+		<property name="courseManagementService" ref="org.sakaiproject.coursemanagement.api.CourseManagementService" />
+		<property name="courseManagementAdministration"  ref="org.sakaiproject.coursemanagement.api.CourseManagementAdministration" />
 		<property name="sqlService" ref="org.sakaiproject.db.api.SqlService"/>
 		<property name="emailService" ref="org.sakaiproject.email.api.EmailService"/>
 		<property name="userDirectoryService" ref="org.sakaiproject.user.api.UserDirectoryService" />
@@ -42,17 +34,9 @@
 <!-- PROCESS FinAid DATA-->
 	<bean id="processFinAidData"
 		class="za.ac.uct.cet.sakai.scheduler.peoplesoft.ProcessFinAidUpdates">
-		<property name="sessionManager">
-			<ref bean="org.sakaiproject.tool.api.SessionManager" />
-		</property>
-		<property name="courseManagementService">
-			<ref
-				bean="org.sakaiproject.coursemanagement.api.CourseManagementService" />
-		</property>
-		<property name="courseManagementAdministration">
-			<ref
-				bean="org.sakaiproject.coursemanagement.api.CourseManagementAdministration" />
-		</property>
+		<property name="sessionManager" ref="org.sakaiproject.tool.api.SessionManager" />
+		<property name="courseManagementService" ref="org.sakaiproject.coursemanagement.api.CourseManagementService" />
+		<property name="courseManagementAdministration" ref="org.sakaiproject.coursemanagement.api.CourseManagementAdministration" />
 		<property name="sqlService" ref="org.sakaiproject.db.api.SqlService"/>
 		<property name="emailService" ref="org.sakaiproject.email.api.EmailService"/>
 	</bean>
