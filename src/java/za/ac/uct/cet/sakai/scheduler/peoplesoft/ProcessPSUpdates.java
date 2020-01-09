@@ -19,6 +19,7 @@ package za.ac.uct.cet.sakai.scheduler.peoplesoft;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -26,9 +27,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.StatefulJob;
@@ -54,6 +52,7 @@ import org.sakaiproject.user.api.UserPermissionException;
 import lombok.Data;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import za.uct.cilt.util.VulaUtil;
 
 
 /**
@@ -111,9 +110,7 @@ public class ProcessPSUpdates implements StatefulJob {
 			userId = userDirectoryService.getUserId(userEId);
 			UserEdit user = userDirectoryService.editUser(userId);
 			ResourceProperties rp = user.getProperties();
-			DateTime dt = new DateTime();
-			DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
-			rp.addProperty("PS_MEMEBERSHIPS_SYNCHED", fmt.print(dt));
+			rp.addProperty("PS_MEMEBERSHIPS_SYNCHED", VulaUtil.getISODate());
 			userDirectoryService.commitEdit(user);
 		} catch (UserNotDefinedException e) {
 			log.warn(e.getMessage(), e);
@@ -337,7 +334,7 @@ public class ProcessPSUpdates implements StatefulJob {
 	}
 
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked" })
 	private UserCourseRegistrations getNextUserCourseRegistrations() {
 		
 		//get the user we limit them to older than 5m to avoid race conditions
@@ -356,19 +353,19 @@ public class ProcessPSUpdates implements StatefulJob {
 					throws SqlReaderFinishedException {
 				UserCourseRegistrations ret = new UserCourseRegistrations(); 
 				List<String> courses = new ArrayList<String>();
-				DateTime updated = null;
+				java.sql.Date updated = null;
 				try {
 					result.beforeFirst();
 					while (result.next()) {
 						String c = result.getString(1);
 						courses.add(c);
-						updated = new DateTime(result.getDate(2));
+						updated = result.getDate(2);
 					}
 				} catch (SQLException e) {
 					log.warn(e.getMessage(), e);
 				}
 				ret.setCourseRegistrations(courses);
-				ret.setLastUpdated(updated);
+				ret.setLastUpdated(Instant.ofEpochMilli(updated.getTime()));
 				ret.setUserId(userid);
 				
 				return ret;
@@ -517,7 +514,7 @@ public class ProcessPSUpdates implements StatefulJob {
 	private class UserCourseRegistrations {
 		private String userId;
 		private List<String> courseRegistrations;
-		private DateTime lastUpdated;
+		private Instant lastUpdated;
 	}
 
 }
