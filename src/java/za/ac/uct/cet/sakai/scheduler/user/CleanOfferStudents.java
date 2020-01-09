@@ -21,9 +21,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -42,6 +39,7 @@ import org.sakaiproject.user.api.UserNotDefinedException;
 import org.sakaiproject.user.api.UserPermissionException;
 
 import lombok.extern.slf4j.Slf4j;
+import za.uct.cilt.util.VulaUtil;
 
 @Slf4j
 public class CleanOfferStudents implements Job{
@@ -113,13 +111,11 @@ public class CleanOfferStudents implements Job{
 
 					//set the inactive date if none
 					ResourceProperties rp = u.getProperties();
-					DateTime dt = new DateTime(u.getModifiedDate());
-					DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
 
 					//do we have an inactive flag?
 					String deactivated = rp.getProperty(PROPERTY_DEACTIVATED);
 					if (deactivated == null) {
-						rp.addProperty(PROPERTY_DEACTIVATED, fmt.print(dt));
+						rp.addProperty(PROPERTY_DEACTIVATED, VulaUtil.getISODate());
 					}
 
 					userDirectoryService.commitEdit(u);

@@ -17,11 +17,12 @@
  **********************************************************************************/
 package za.ac.uct.cet.sakai.scheduler.src;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.joda.time.DateTime;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.StatefulJob;
@@ -57,7 +58,7 @@ public class MaintainSRCSite implements StatefulJob {
 				sakaiSession.setUserEid(ADMIN);
 				
 				//the cut of date
-				DateTime cutOff = new DateTime(2013, 1, 1, 0, 1);
+				LocalDateTime cutOff = LocalDateTime.of(2013, 1, 1, 0, 1);
 				
 				//clear all chat messages before the current year
 				List<ChatChannel> channels = chatManager.getContextChannels(context, false);
@@ -68,7 +69,7 @@ public class MaintainSRCSite implements StatefulJob {
 					Iterator<ChatMessage> it = messages.iterator();
 					while (it.hasNext()) {
 						ChatMessage message = it.next();
-						DateTime posted = new DateTime(message.getMessageDate());
+						LocalDateTime posted = LocalDateTime.ofInstant(message.getMessageDate().toInstant(), ZoneId.systemDefault());
 						if (posted.isBefore(cutOff)) {
 							try {
 								log.info("deleting message posted on: "  + posted.toString());
