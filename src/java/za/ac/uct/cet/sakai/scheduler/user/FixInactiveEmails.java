@@ -19,9 +19,7 @@ package za.ac.uct.cet.sakai.scheduler.user;
 
 import java.util.List;
 
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
+
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -39,6 +37,7 @@ import org.sakaiproject.user.api.UserNotDefinedException;
 import org.sakaiproject.user.api.UserPermissionException;
 
 import lombok.extern.slf4j.Slf4j;
+import za.uct.cilt.util.VulaUtil;
 
 @Slf4j
 public class FixInactiveEmails implements Job{
@@ -95,13 +94,11 @@ public class FixInactiveEmails implements Job{
 				u.setEmail(mail);
 				//set the inactive date if none
 				ResourceProperties rp = u.getProperties();
-				DateTime dt = new DateTime();
-				DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
 				
 				//do we have an inactive flag?
 				String deactivated = rp.getProperty(PROPERTY_DEACTIVATED);
 				if (deactivated == null) {
-					rp.addProperty(PROPERTY_DEACTIVATED, fmt.print(dt));
+					rp.addProperty(PROPERTY_DEACTIVATED, VulaUtil.getISODate());
 				}
 
 				userDirectoryService.commitEdit(u);

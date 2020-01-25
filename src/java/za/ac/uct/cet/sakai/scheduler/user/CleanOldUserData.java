@@ -20,9 +20,6 @@ package za.ac.uct.cet.sakai.scheduler.user;
 import java.text.NumberFormat;
 import java.util.List;
 
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -48,6 +45,7 @@ import org.sakaiproject.user.api.UserNotDefinedException;
 import org.sakaiproject.user.api.UserPermissionException;
 
 import lombok.extern.slf4j.Slf4j;
+import za.uct.cilt.util.VulaUtil;
 
 @Slf4j
 public class CleanOldUserData implements Job{
@@ -97,10 +95,8 @@ public class CleanOldUserData implements Job{
 	    
 	    
 	    
-	    //TODO make this a calendar year
-	    DateTime forQuery = new DateTime().minusYears(1);
-	    DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
-	    String strDate = fmt.print(forQuery);
+	    //TODO make this a calendar year	
+	    String strDate = VulaUtil.getISODate();
 	    String sql = "select user_id from SAKAI_USER_PROPERTY where name = 'SPML_DEACTIVATED' and timestamp(value) < '" + strDate + "' and user_id not in (select user_id from SAKAI_USER_PROPERTY where name='workspace_content_removed')";
 		log.info("sql: " + sql);
 		List<String> users = sqlService.dbRead(sql);
@@ -195,9 +191,7 @@ public class CleanOldUserData implements Job{
 
 	private void setUserFlags(UserEdit user) {
 		ResourceProperties rp = user.getProperties();
-		DateTime dt = new DateTime();
-		DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
-		rp.addProperty(WORKSPACE_CONTENT_REMOVED, fmt.print(dt));
+		rp.addProperty(WORKSPACE_CONTENT_REMOVED, VulaUtil.getISODate());
 		
 	}
 	
