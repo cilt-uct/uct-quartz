@@ -99,12 +99,6 @@
       <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>com.novell.ldap</groupId>
-      <artifactId>jldap</artifactId>
-      <version>2009.10.07</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
       <groupId>org.sakaiproject.accountvalidator</groupId>
       <artifactId>accountvalidator-api</artifactId>
     </dependency>
