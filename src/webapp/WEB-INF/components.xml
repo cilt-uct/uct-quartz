@@ -360,38 +360,6 @@
 	</bean>
 	
 	
-			<!--  check if users are in auth tree -->
-			 
-	<bean id="checkUsersExist"
-		class="org.sakaiproject.component.app.scheduler.jobs.UCTCheckAccounts">
-		<property name="sessionManager">
-			<ref bean="org.sakaiproject.tool.api.SessionManager" />
-		</property>
-		<property name="userDirectoryService" ref="org.sakaiproject.user.api.UserDirectoryService"/>
-		<property name="basePath"><value>o=uct</value></property>
-		<property name="ldapHost"><value>srvslsath001.uct.ac.za srvslsath002.uct.ac.za srvslsadm001.uct.ac.za srvnovnds001.uct.ac.za srvslsnds001.uct.ac.za</value></property>
-		<property name="ldapPort"><value>636</value></property>
-		<property name="courseManagementAdministration" ref="org.sakaiproject.coursemanagement.api.CourseManagementAdministration"/>
-		<property name="courseManagementService" ref="org.sakaiproject.coursemanagement.api.CourseManagementService"/>
-		
-	</bean>
-
-	<bean
-		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerCheckAccounts"
-		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		 init-method="init">
-		<property name="beanId">
-			<value>checkUsersExist</value>
-		</property>
-		<property name="jobName">
-			<value>UCT: Check users are in LDAP</value>
-		</property>
-		<property name="schedulerManager">
-			<ref
-				bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
-		</property>
-	</bean>
-	
 		<!--  Stateful test job -->
 	<bean id="statefulTestJob"
 		class="org.sakaiproject.component.app.scheduler.jobs.UCTTestJob">
