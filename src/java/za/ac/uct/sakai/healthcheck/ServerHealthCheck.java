@@ -54,8 +54,12 @@ public class ServerHealthCheck  {
   @Setter private UserTimeService userTimeService;
   @Setter private SessionManager sessionManager;
 
-  // Free memory lower limit: 500M
-  private static final long MIN_FREE_MEM = 450 * 1024 * 1024L;
+  // Free memory lower limit
+  private long minFreeMem = 750 * 1024 * 1024L;
+
+  // Check interval (minutes)
+  private static final int CHECK_INTERVAL = 1;
+
   private static final String ADMIN = "admin";
 
   private CheckRunner checkRunner;
@@ -64,10 +68,22 @@ public class ServerHealthCheck  {
   * init.
   */
   public void init() {
-    log.info("init()");
+
     if (seconds == null) {
       seconds = 30;
     }
+
+    String freeMemMB = serverConfigurationService.getString("cache.reset.floor");
+    if  ((freeMemMB != null) && !freeMemMB.isEmpty()) {
+       try {
+         minFreeMem = Long.valueOf(freeMemMB) * 1024 * 1024L;
+       } catch (NumberFormatException e) {
+         log.warn("Cannot parse cache.reset.floor value {} as long", freeMemMB);
+       }
+    }
+
+    log.info("init(): cache.reset.floor={} MB", minFreeMem / (1024*1024L));
+
     checkRunner = new CheckRunner(seconds.intValue());
   }
 
@@ -95,7 +111,7 @@ public class ServerHealthCheck  {
     }
     
     public void run() {
-      int checkPeriod = -((5 * 60) * 1000);
+      int checkPeriod = -((CHECK_INTERVAL * 60) * 1000);
       log.debug("next: " + checkPeriod);
       nextCheck = Instant.now();
       while (!stopThread) {
@@ -131,8 +147,8 @@ public class ServerHealthCheck  {
     private void checkMemory() {
         long freeMem = Runtime.getRuntime().freeMemory();
 
-        if (freeMem < MIN_FREE_MEM) {
-            log.warn("Free heap memory {} MB below threshold {} MB: clearing all caches", freeMem / (1024*1024), MIN_FREE_MEM / (1024*1024));
+        if (freeMem < minFreeMem) {
+            log.warn("Free heap memory {} MB below threshold {} MB: clearing all caches", freeMem / (1024*1024), minFreeMem / (1024*1024));
 
             Session sakaiSession = sessionManager.getCurrentSession();
             try {
