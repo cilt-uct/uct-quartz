@@ -42,6 +42,7 @@ import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
+import com.opencsv.exceptions.CsvValidationException;
 
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -113,7 +114,10 @@ public class UCTImportCourses implements Job {
 				}
 			}
 		} catch (IOException e) {
-			log.error("Error reading CSV file " + file);	
+			log.error("Error reading CSV file {}", file);	
+			return;
+		} catch (CsvValidationException e) {
+			log.error("Error reading CSV file {}", file);	
 			return;
 		}
 
