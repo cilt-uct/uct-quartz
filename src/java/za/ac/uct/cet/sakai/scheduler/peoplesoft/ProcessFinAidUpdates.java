@@ -17,6 +17,7 @@
  **********************************************************************************/
 package za.ac.uct.cet.sakai.scheduler.peoplesoft;
 
+import java.time.Year;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -26,6 +27,7 @@ import java.util.Set;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.StatefulJob;
+import org.sakaiproject.component.api.ServerConfigurationService;
 import org.sakaiproject.coursemanagement.api.CourseManagementAdministration;
 import org.sakaiproject.coursemanagement.api.CourseManagementService;
 import org.sakaiproject.coursemanagement.api.Enrollment;
@@ -62,16 +64,19 @@ public class ProcessFinAidUpdates implements StatefulJob {
 	@Setter private CourseManagementAdministration courseManagementAdministration;
 	@Setter private SqlService sqlService;
 	@Setter private EmailService emailService;
+	@Setter private ServerConfigurationService serverConfigurationService;
 	
 	
 	private final String courseCode = "FINAID";
-	private final String term = "2020";
+	private String term;
 
 
 
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 
 		log.info("Updating FinAid users");
+		term = serverConfigurationService.getString("uct_term", Year.now().toString());
+		log.info("UCT Term: {}", term);
 
 		// set the user information into the current session
 		Session sakaiSession = sessionManager.getCurrentSession();
