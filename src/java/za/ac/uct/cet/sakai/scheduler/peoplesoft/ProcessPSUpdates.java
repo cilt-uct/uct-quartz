@@ -282,7 +282,7 @@ public class ProcessPSUpdates implements StatefulJob {
 	 */
 	private boolean doSection(Section section) {
 		String eid = section.getEid();
-		if (eid.endsWith("OFFER")) {
+		if (eid.endsWith("OFFER") || eid.endsWith("PREREG")) {
 			return false;
 		}
 
@@ -321,7 +321,7 @@ public class ProcessPSUpdates implements StatefulJob {
 	 * @return true if the course code is for a date after the launch of vula
 	 */
 	private boolean isAfterVula(String courseCode) {
-		if (courseCode.endsWith("OFFER")) {
+		if (courseCode.endsWith("OFFER") || courseCode.endsWith("PREREG")) {
 			return false;
 		}
 
