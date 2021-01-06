@@ -190,12 +190,10 @@
 			<ref bean="org.sakaiproject.tool.api.SessionManager" />
 		</property>
 		<property name="courseManagementService">
-			<ref
-				bean="org.sakaiproject.coursemanagement.api.CourseManagementService" />
+			<ref bean="org.sakaiproject.coursemanagement.api.CourseManagementService" />
 		</property>
 		<property name="courseManagementAdministration">
-			<ref
-				bean="org.sakaiproject.coursemanagement.api.CourseManagementAdministration" />
+			<ref bean="org.sakaiproject.coursemanagement.api.CourseManagementAdministration" />
 		</property>
 		<property name="filePath">
 			<value>/data/sakai/otherdata/import/</value>
@@ -217,8 +215,40 @@
 				bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
 		</property>
 	</bean>
-	
-	
+
+        <!-- Import program codes-->
+        <bean id="importPrograms"
+                class="org.sakaiproject.component.app.scheduler.jobs.UCTImportPrograms">
+                <property name="sessionManager">
+                        <ref bean="org.sakaiproject.tool.api.SessionManager" />
+                </property>
+                <property name="courseManagementService">
+                        <ref bean="org.sakaiproject.coursemanagement.api.CourseManagementService" />
+                </property>
+                <property name="courseManagementAdministration">
+                        <ref bean="org.sakaiproject.coursemanagement.api.CourseManagementAdministration" />
+                </property>
+                <property name="filePath">
+                        <value>/data/sakai/otherdata/import/</value>
+                </property>
+        </bean>
+
+       <bean
+                id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerImportPrograms"
+                class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+                 init-method="init">
+                <property name="beanId">
+                        <value>importPrograms</value>
+                </property>
+                <property name="jobName">
+                        <value>UCT: Import Program Data</value>
+                </property>
+                <property name="schedulerManager">
+                        <ref
+                                bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+                </property>
+        </bean>
+
 	<!-- Synch Research courses-->
 	<bean id="synchResearchCourses"
 		class="za.ac.uct.cet.sakai.scheduler.courses.SynchResearchCourses">
