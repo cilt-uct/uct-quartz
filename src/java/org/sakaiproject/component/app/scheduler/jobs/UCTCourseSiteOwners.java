@@ -123,7 +123,7 @@ public class UCTCourseSiteOwners implements Job {
 				last = first+remainder;
 			} else {
 				first = i*SITE_BATCH_SIZE;
-				last = first+99;
+				last = first+SITE_BATCH_SIZE-1;
 			}
 
 			log.debug("Getting page" + i + " start: " + first + " last: " + last);

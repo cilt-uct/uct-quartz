@@ -114,7 +114,7 @@ public class ResetContentTypes implements Job {
 				last = first+remainder;
 			} else {
 				first = x*SITE_BATCH_SIZE;
-				last = first+99;
+				last = first+SITE_BATCH_SIZE-1;
 			}
 
 			List<Site> sites = siteService.getSites(SiteService.SelectionType.ANY, null , null, null, SortType.NONE, new PagingPosition(first, last));
