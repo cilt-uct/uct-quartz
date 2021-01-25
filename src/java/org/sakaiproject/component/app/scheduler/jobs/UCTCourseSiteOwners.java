@@ -93,8 +93,6 @@ public class UCTCourseSiteOwners implements Job {
 		AuthzGroup groupCourseOwners = null;
 		AuthzGroup groupProjectOwners = null;
 		try {
-		
-			
 			//get the authz for the site we need to add to 
 			
 			courseOwners = authzGroupService.getAuthzGroup("/site/922248af-9892-4539-0001-172b35ae4981");
@@ -146,15 +144,6 @@ public class UCTCourseSiteOwners implements Job {
 				log.warn(e.getMessage(), e);
 			}
 		}
-
-
-
-
-
-
-
-		//beffore we save we need to clean up the groups of inactive users
-
 	}
 
 	private String iterateThroughAndAddCourseOwners(List<Site> siteList, AuthzGroup courseOwners, AuthzGroup groupCourseOwners, AuthzGroup groupProjectOwners) {
@@ -214,7 +203,6 @@ public class UCTCourseSiteOwners implements Job {
 									} else {
 										log.debug("user is already a member");
 									}
-
 								}
 								if (thisSite.getType().equals("course") && role.equals("Site owner")) {
 									String grole = authzGroupService.getUserRole(thisM.getUserId(),groupCourseOwners.getId());
@@ -227,9 +215,7 @@ public class UCTCourseSiteOwners implements Job {
 										log.debug("user is already a member");
 									}
 								}
-
 							}
-
 						}
 					} else if (!role.equals("Student")) {
 						log.debug("got member " + thisM.getUserEid() + " with role " + role);
@@ -237,7 +223,6 @@ public class UCTCourseSiteOwners implements Job {
 				}
 			}
 		}
-
 		return addedUsers;
 	}
 
