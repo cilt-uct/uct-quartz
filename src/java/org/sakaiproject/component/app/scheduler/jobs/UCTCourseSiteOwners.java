@@ -29,6 +29,7 @@ import org.sakaiproject.authz.api.AuthzGroupService;
 import org.sakaiproject.authz.api.Member;
 import org.sakaiproject.email.api.EmailService;
 import org.sakaiproject.entity.api.ResourceProperties;
+import org.sakaiproject.javax.PagingPosition;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.tool.api.Session;
@@ -36,6 +37,7 @@ import org.sakaiproject.tool.api.SessionManager;
 import org.sakaiproject.user.api.User;
 import org.sakaiproject.user.api.UserDirectoryService;
 import org.sakaiproject.user.api.UserNotDefinedException;
+import org.sakaiproject.site.api.SiteService.SelectionType;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -80,12 +82,12 @@ public class UCTCourseSiteOwners implements Job {
 
 	
 	
-private void addCourseOwners() {
+	private void addCourseOwners() {
 	
-    // set the user information into the current session
-    Session sakaiSession = sessionManager.getCurrentSession();
-    sakaiSession.setUserId(ADMIN);
-    sakaiSession.setUserEid(ADMIN);
+		// set the user information into the current session
+		Session sakaiSession = sessionManager.getCurrentSession();
+		sakaiSession.setUserId(ADMIN);
+		sakaiSession.setUserEid(ADMIN);
     
 		AuthzGroup courseOwners = null;
 		AuthzGroup groupCourseOwners = null;
@@ -108,15 +110,56 @@ private void addCourseOwners() {
 		catch (Exception e) {
 			log.warn(e.getMessage(), e);
 		}
-		
-		
-		
+
+		//get number of sites
+		int numberOfSites = siteService.countSites(SelectionType.ANY, null, null, null);
+		int first = 0;
+		int last = 0;
+		int pages = numberOfSites/100;
+		int remainder = numberOfSites%100;
+
+		for(int i=0; i<=pages; i++) {
+			if(i == pages ) {
+				first = i*100;
+				last = first+remainder;
+			} else {
+				first = i*100;
+				last = first+99;
+			}
+
+			log.debug("Getting page" + i + " start: " + first + " last: " + last);
+			List<Site> siteList = siteService.getSites(SelectionType.ANY, null, null, null,SiteService.SortType.TITLE_ASC, new PagingPosition(first, last));
+			String addedUsers =  iterateThroughAndAddCourseOwners(siteList, courseOwners, groupCourseOwners, groupProjectOwners);
+			courseOwners = cleanUpGroup(courseOwners);
+
+			try {
+				authzGroupService.save(courseOwners);
+				authzGroupService.save(groupCourseOwners);
+				authzGroupService.save(groupProjectOwners);
+				log.debug("added " + addedUsers);
+				if (addedUsers.length() > 0) {
+					emailService.send("help-team@vula.uct.ac.za","help-team@vula.uct.ac.za","Users added to CourseSiteOwners", addedUsers,null,null,null);
+				}
+			}
+			catch (Exception e)
+			{
+				log.warn(e.getMessage(), e);
+			}
+		}
+
+
+
+
+
+
+
+		//beffore we save we need to clean up the groups of inactive users
+
+	}
+
+	private String iterateThroughAndAddCourseOwners(List<Site> siteList, AuthzGroup courseOwners, AuthzGroup groupCourseOwners, AuthzGroup groupProjectOwners) {
 		String addedUsers = "";
-		//first get a list all course sites
-		
-		List<Site> siteList = siteService.getSites( org.sakaiproject.site.api.SiteService.SelectionType.ANY, null, null, null,SiteService.SortType.TITLE_ASC,null);
-		                                   //(org.sakaiproject.site.api.SiteService.SelectionType.UPDATE, null, null, null, SortType.TITLE_ASC, null));
-		log.debug("got a list with " + siteList.size() + " sites");
+
 		for (int i = 0; i < siteList.size();i++) {
 			Site thisSite = (Site)siteList.get(i);
 			log.debug(thisSite.getTitle() + "(" + thisSite.getId() + ")");
@@ -127,9 +170,6 @@ private void addCourseOwners() {
 				while (it.hasNext()){
 					Member thisM = (Member)it.next();
 					String role = thisM.getRole().getId();
-					//LOG.debug("got member " + thisM.getUserEid());
-					//LOG.debug("with roleid " + thisM.getRole().getId());
-					//LOG.debug("with roleid " + role);
 					if (role.equals("Site owner") || role.equals("Lecturer") || role.equals("Support staff")) {
 						log.debug("got member " + thisM.getUserEid());
 						User user = null;
@@ -138,17 +178,17 @@ private void addCourseOwners() {
 							log.debug("got user");
 						}
 						catch (UserNotDefinedException e) {
-						 //no such user
+							//no such user
 							log.debug(e.getMessage(), e);
 						}
 						if (user != null) {
 							String type = user.getType();
 							if (type == null) {
-							  type = "student";
-							 }
-							
+								type = "student";
+							}
+
 							if (!type.equals("guest") && !type.equals("student") && !isInactiveType(type)) {
-							
+
 								//are they a member of the realm?
 								String arole = authzGroupService.getUserRole(thisM.getUserId(),courseOwners.getId());
 								if (arole == null) {
@@ -162,7 +202,7 @@ private void addCourseOwners() {
 										log.debug("user is already a member with active: " + m.isActive());
 									}
 								} else {
-										log.debug("user is already a member");
+									log.debug("user is already a member");
 								}
 								if (thisSite.getType().equals("project") && role.equals("Site owner")) {
 									String grole = authzGroupService.getUserRole(thisM.getUserId(),groupProjectOwners.getId());
@@ -172,9 +212,9 @@ private void addCourseOwners() {
 										groupProjectOwners.addMember(thisM.getUserId(),"Participant",true,false);
 										addedUsers = addedUsers + thisM.getUserEid() + " (" + user.getFirstName() + " " + user.getLastName() + ") \n";
 									} else {
-											log.debug("user is already a member");
+										log.debug("user is already a member");
 									}
-									
+
 								}
 								if (thisSite.getType().equals("course") && role.equals("Site owner")) {
 									String grole = authzGroupService.getUserRole(thisM.getUserId(),groupCourseOwners.getId());
@@ -184,45 +224,23 @@ private void addCourseOwners() {
 										groupCourseOwners.addMember(thisM.getUserId(),"Participant",true,false);
 										addedUsers = addedUsers + thisM.getUserEid() + " (" + user.getFirstName() + " " + user.getLastName() + ") \n";
 									} else {
-											log.debug("user is already a member");
+										log.debug("user is already a member");
 									}
 								}
-								
+
 							}
-							
+
 						}
 					} else if (!role.equals("Student")) {
 						log.debug("got member " + thisM.getUserEid() + " with role " + role);
 					}
 				}
-			} //end if type!=null
-		
-
-			
-		}
-		
-		//beffore we save we need to clean up the groups of inactive users
-		courseOwners = cleanUpGroup(courseOwners);
-		
-		try {
-			authzGroupService.save(courseOwners);
-			authzGroupService.save(groupCourseOwners);
-			authzGroupService.save(groupProjectOwners);
-			log.debug("added " + addedUsers);
-			if (addedUsers.length() > 0) {
-				
-				emailService.send("help-team@vula.uct.ac.za","help-team@vula.uct.ac.za","Users added to CourseSiteOwners",addedUsers,null,null,null);
 			}
 		}
-		catch (Exception e)
-		{
-			log.warn(e.getMessage(), e);
-		}
-		
-		
-		
-		
-}
+
+		return addedUsers;
+	}
+
 private AuthzGroup cleanUpGroup(AuthzGroup group) {
 	Set<Member> members = group.getMembers();
 	Iterator<Member> it = members.iterator();
