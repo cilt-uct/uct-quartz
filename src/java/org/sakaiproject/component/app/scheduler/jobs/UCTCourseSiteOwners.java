@@ -43,9 +43,10 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class UCTCourseSiteOwners implements Job {
-	
+
 	private static final String ADMIN = "admin";
-	
+	private static final int SITE_BATCH_SIZE = 100;
+
 	private AuthzGroupService authzGroupService;
 	public void setAuthzGroupService(AuthzGroupService a) {
 		this.authzGroupService = a;
@@ -113,15 +114,15 @@ public class UCTCourseSiteOwners implements Job {
 		int numberOfSites = siteService.countSites(SelectionType.ANY, null, null, null);
 		int first = 0;
 		int last = 0;
-		int pages = numberOfSites/100;
-		int remainder = numberOfSites%100;
+		int pages = numberOfSites/SITE_BATCH_SIZE;
+		int remainder = numberOfSites%SITE_BATCH_SIZE;
 
 		for(int i=0; i<=pages; i++) {
 			if(i == pages ) {
-				first = i*100;
+				first = i*SITE_BATCH_SIZE;
 				last = first+remainder;
 			} else {
-				first = i*100;
+				first = i*SITE_BATCH_SIZE;
 				last = first+99;
 			}
 

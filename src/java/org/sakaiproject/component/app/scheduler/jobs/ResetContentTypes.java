@@ -51,6 +51,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ResetContentTypes implements Job {
 
+	private static final int SITE_BATCH_SIZE = 100;
 	private SiteService siteService;
 	public void setSiteService(SiteService s) {
 		this.siteService = s;
@@ -104,15 +105,15 @@ public class ResetContentTypes implements Job {
 		int numberOfSites = siteService.countSites(SiteService.SelectionType.ANY, null, null, null);
 		int first = 0;
 		int last = 0;
-		int pages = numberOfSites/100;
-		int remainder = numberOfSites%100;
+		int pages = numberOfSites/SITE_BATCH_SIZE;
+		int remainder = numberOfSites%SITE_BATCH_SIZE;
 
 		for(int x=0; x<=pages; x++) {
 			if(x == pages ) {
-				first = x*100;
+				first = x*SITE_BATCH_SIZE;
 				last = first+remainder;
 			} else {
-				first = x*100;
+				first = x*SITE_BATCH_SIZE;
 				last = first+99;
 			}
 
