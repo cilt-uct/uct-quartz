@@ -37,6 +37,7 @@ import org.sakaiproject.exception.OverQuotaException;
 import org.sakaiproject.exception.PermissionException;
 import org.sakaiproject.exception.ServerOverloadException;
 import org.sakaiproject.exception.TypeException;
+import org.sakaiproject.javax.PagingPosition;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.site.api.SiteService.SortType;
@@ -98,43 +99,60 @@ public class ResetContentTypes implements Job {
 	    Session sakaiSession = sessionManager.getCurrentSession();
 	    sakaiSession.setUserId("admin");
 	    sakaiSession.setUserEid("admin");
-	    List<Site> sites = siteService.getSites(SiteService.SelectionType.ANY, null , null, null, SortType.NONE, null);
-	    for (int i = 0 ; i< sites.size(); i++ ) {
-	    	Site s = (Site)sites.get(i);
-	    	String siteColl = contentHostingService.getSiteCollection(s.getId());
-	    	ContentCollection collection;
-			try {
-				collection = contentHostingService.getCollection(siteColl);
-		    	List<String> members = collection.getMembers();
-		    	for (int q = 0; q < members.size(); q++) {
-		    		String resId = (String)members.get(q);
-		    		log.debug("got resource " + resId);
-		    		if (reset(resId)) {
-		    			ContentResourceEdit res = contentHostingService.editResource(resId);
-		    			String oldType = res.getContentType();
-		    			if ((!oldType.equals(getContentType(resId)) || forceTypes.contains(getExtension(resId))) && !"text/url".equals(oldType)) {
-		    				log.info("content:"  + resId  + " had type: " + res.getContentType());
-		    				res.setContentType(getContentType(resId));
-		    				contentHostingService.commitResource(res, 0);
-		    			} else {
-		    				contentHostingService.cancelResource(res);
-		    			}
-		    		}
-		    	}
-			} catch (IdUnusedException e) {
-				log.warn(e.getMessage(), e);
-			} catch (TypeException e) {
-				log.warn(e.getMessage(), e);
-			} catch (PermissionException e) {
-				log.warn(e.getMessage(), e);
-			} catch (InUseException e) {
-				log.warn(e.getMessage(), e);
-			} catch (OverQuotaException e) {
-				log.warn(e.getMessage(), e);
-			} catch (ServerOverloadException e) {
-				log.warn(e.getMessage(), e);
+
+		//get number of sites
+		int numberOfSites = siteService.countSites(SiteService.SelectionType.ANY, null, null, null);
+		int first = 0;
+		int last = 0;
+		int pages = numberOfSites/100;
+		int remainder = numberOfSites%100;
+
+		for(int x=0; x<=pages; x++) {
+			if(x == pages ) {
+				first = x*100;
+				last = first+remainder;
+			} else {
+				first = x*100;
+				last = first+99;
 			}
 
+			List<Site> sites = siteService.getSites(SiteService.SelectionType.ANY, null , null, null, SortType.NONE, new PagingPosition(first, last));
+			for (int i = 0 ; i< sites.size(); i++ ) {
+				Site s = (Site) sites.get(i);
+				String siteColl = contentHostingService.getSiteCollection(s.getId());
+				ContentCollection collection;
+				try {
+					collection = contentHostingService.getCollection(siteColl);
+					List<String> members = collection.getMembers();
+					for (int q = 0; q < members.size(); q++) {
+						String resId = (String) members.get(q);
+						log.debug("got resource " + resId);
+						if (reset(resId)) {
+							ContentResourceEdit res = contentHostingService.editResource(resId);
+							String oldType = res.getContentType();
+							if ((!oldType.equals(getContentType(resId)) || forceTypes.contains(getExtension(resId))) && !"text/url".equals(oldType)) {
+								log.info("content:" + resId + " had type: " + res.getContentType());
+								res.setContentType(getContentType(resId));
+								contentHostingService.commitResource(res, 0);
+							} else {
+								contentHostingService.cancelResource(res);
+							}
+						}
+					}
+				} catch (IdUnusedException e) {
+					log.warn(e.getMessage(), e);
+				} catch (TypeException e) {
+					log.warn(e.getMessage(), e);
+				} catch (PermissionException e) {
+					log.warn(e.getMessage(), e);
+				} catch (InUseException e) {
+					log.warn(e.getMessage(), e);
+				} catch (OverQuotaException e) {
+					log.warn(e.getMessage(), e);
+				} catch (ServerOverloadException e) {
+					log.warn(e.getMessage(), e);
+				}
+			}
 	    }
 
 	}
