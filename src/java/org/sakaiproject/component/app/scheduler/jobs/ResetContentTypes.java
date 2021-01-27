@@ -37,6 +37,7 @@ import org.sakaiproject.exception.OverQuotaException;
 import org.sakaiproject.exception.PermissionException;
 import org.sakaiproject.exception.ServerOverloadException;
 import org.sakaiproject.exception.TypeException;
+import org.sakaiproject.javax.PagingPosition;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.site.api.SiteService.SortType;
@@ -50,6 +51,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ResetContentTypes implements Job {
 
+	private static final int SITE_BATCH_SIZE = 100;
 	private SiteService siteService;
 	public void setSiteService(SiteService s) {
 		this.siteService = s;
@@ -98,43 +100,60 @@ public class ResetContentTypes implements Job {
 	    Session sakaiSession = sessionManager.getCurrentSession();
 	    sakaiSession.setUserId("admin");
 	    sakaiSession.setUserEid("admin");
-	    List<Site> sites = siteService.getSites(SiteService.SelectionType.ANY, null , null, null, SortType.NONE, null);
-	    for (int i = 0 ; i< sites.size(); i++ ) {
-	    	Site s = (Site)sites.get(i);
-	    	String siteColl = contentHostingService.getSiteCollection(s.getId());
-	    	ContentCollection collection;
-			try {
-				collection = contentHostingService.getCollection(siteColl);
-		    	List<String> members = collection.getMembers();
-		    	for (int q = 0; q < members.size(); q++) {
-		    		String resId = (String)members.get(q);
-		    		log.debug("got resource " + resId);
-		    		if (reset(resId)) {
-		    			ContentResourceEdit res = contentHostingService.editResource(resId);
-		    			String oldType = res.getContentType();
-		    			if ((!oldType.equals(getContentType(resId)) || forceTypes.contains(getExtension(resId))) && !"text/url".equals(oldType)) {
-		    				log.info("content:"  + resId  + " had type: " + res.getContentType());
-		    				res.setContentType(getContentType(resId));
-		    				contentHostingService.commitResource(res, 0);
-		    			} else {
-		    				contentHostingService.cancelResource(res);
-		    			}
-		    		}
-		    	}
-			} catch (IdUnusedException e) {
-				log.warn(e.getMessage(), e);
-			} catch (TypeException e) {
-				log.warn(e.getMessage(), e);
-			} catch (PermissionException e) {
-				log.warn(e.getMessage(), e);
-			} catch (InUseException e) {
-				log.warn(e.getMessage(), e);
-			} catch (OverQuotaException e) {
-				log.warn(e.getMessage(), e);
-			} catch (ServerOverloadException e) {
-				log.warn(e.getMessage(), e);
+
+		//get number of sites
+		int numberOfSites = siteService.countSites(SiteService.SelectionType.ANY, null, null, null);
+		int first = 0;
+		int last = 0;
+		int pages = numberOfSites/SITE_BATCH_SIZE;
+		int remainder = numberOfSites%SITE_BATCH_SIZE;
+
+		for(int x=0; x<=pages; x++) {
+			if(x == pages ) {
+				first = x*SITE_BATCH_SIZE;
+				last = first+remainder;
+			} else {
+				first = x*SITE_BATCH_SIZE;
+				last = first+SITE_BATCH_SIZE-1;
 			}
 
+			List<Site> sites = siteService.getSites(SiteService.SelectionType.ANY, null , null, null, SortType.NONE, new PagingPosition(first, last));
+			for (int i = 0 ; i< sites.size(); i++ ) {
+				Site s = (Site) sites.get(i);
+				String siteColl = contentHostingService.getSiteCollection(s.getId());
+				ContentCollection collection;
+				try {
+					collection = contentHostingService.getCollection(siteColl);
+					List<String> members = collection.getMembers();
+					for (int q = 0; q < members.size(); q++) {
+						String resId = (String) members.get(q);
+						log.debug("got resource " + resId);
+						if (reset(resId)) {
+							ContentResourceEdit res = contentHostingService.editResource(resId);
+							String oldType = res.getContentType();
+							if ((!oldType.equals(getContentType(resId)) || forceTypes.contains(getExtension(resId))) && !"text/url".equals(oldType)) {
+								log.info("content:" + resId + " had type: " + res.getContentType());
+								res.setContentType(getContentType(resId));
+								contentHostingService.commitResource(res, 0);
+							} else {
+								contentHostingService.cancelResource(res);
+							}
+						}
+					}
+				} catch (IdUnusedException e) {
+					log.warn(e.getMessage(), e);
+				} catch (TypeException e) {
+					log.warn(e.getMessage(), e);
+				} catch (PermissionException e) {
+					log.warn(e.getMessage(), e);
+				} catch (InUseException e) {
+					log.warn(e.getMessage(), e);
+				} catch (OverQuotaException e) {
+					log.warn(e.getMessage(), e);
+				} catch (ServerOverloadException e) {
+					log.warn(e.getMessage(), e);
+				}
+			}
 	    }
 
 	}
