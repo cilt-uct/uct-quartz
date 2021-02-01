@@ -103,13 +103,15 @@ public class ResetContentTypes implements Job {
 
 		//get number of sites
 		int numberOfSites = siteService.countSites(SiteService.SelectionType.ANY, null, null, null);
-		int first = 0;
+		int first = 1;
 		int last = 0;
 		int pages = numberOfSites/SITE_BATCH_SIZE;
 		int remainder = numberOfSites%SITE_BATCH_SIZE;
 
 		for(int x=0; x<=pages; x++) {
-			if(x == pages ) {
+			if(x == 0) {
+				last = first+SITE_BATCH_SIZE-1;
+			} else if(x == pages) {
 				first = x*SITE_BATCH_SIZE;
 				last = first+remainder;
 			} else {
