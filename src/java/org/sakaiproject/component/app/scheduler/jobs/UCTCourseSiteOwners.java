@@ -112,13 +112,15 @@ public class UCTCourseSiteOwners implements Job {
 
 		//get number of sites
 		int numberOfSites = siteService.countSites(SelectionType.ANY, null, null, null);
-		int first = 0;
+		int first = 1;
 		int last = 0;
 		int pages = numberOfSites/SITE_BATCH_SIZE;
 		int remainder = numberOfSites%SITE_BATCH_SIZE;
 
 		for(int i=0; i<=pages; i++) {
-			if(i == pages ) {
+			if(i == 0) {
+				last = first+SITE_BATCH_SIZE-1;
+			} else if(i == pages) {
 				first = i*SITE_BATCH_SIZE;
 				last = first+remainder;
 			} else {
