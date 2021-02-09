@@ -18,6 +18,9 @@ package za.ac.uct.sakai.healthcheck;
  **********************************************************************************/
 
 import java.io.IOException;
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadMXBean;
+import java.lang.management.ThreadInfo;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.time.Instant;
@@ -57,8 +60,8 @@ public class ServerHealthCheck  {
   // Free memory lower limit
   private long minFreeMem = 750 * 1024 * 1024L;
 
-  // Check interval (minutes)
-  private static final int CHECK_INTERVAL = 1;
+  // Check interval (seconds)
+  private static final int CHECK_INTERVAL = 30;
 
   private static final String ADMIN = "admin";
 
@@ -111,7 +114,7 @@ public class ServerHealthCheck  {
     }
     
     public void run() {
-      int checkPeriod = -((CHECK_INTERVAL * 60) * 1000);
+      int checkPeriod = -(CHECK_INTERVAL * 1000);
       log.debug("next: " + checkPeriod);
       nextCheck = Instant.now();
       while (!stopThread) {
@@ -148,13 +151,17 @@ public class ServerHealthCheck  {
         long freeMem = Runtime.getRuntime().freeMemory();
 
         if (freeMem < minFreeMem) {
+
             log.warn("Free heap memory {} MB below threshold {} MB: clearing all caches", freeMem / (1024*1024), minFreeMem / (1024*1024));
+
+            log.warn("Low heap memory thread dump:\n{}", crunchifyGenerateThreadDump());
 
             Session sakaiSession = sessionManager.getCurrentSession();
             try {
               sakaiSession.setUserId(ADMIN);
               sakaiSession.setUserEid(ADMIN);
               MemoryServiceLocator.getInstance().resetCachers();
+              log.info("Completed cache reset");
             } finally {
               sakaiSession.setUserId(null);
               sakaiSession.setUserEid(null);
@@ -223,4 +230,30 @@ public class ServerHealthCheck  {
       }
     }
   }
+
+       /**
+        * @author Crunchify.com
+        * 
+        */
+
+    public static String crunchifyGenerateThreadDump() {
+        final StringBuilder dump = new StringBuilder();
+        final ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
+        final ThreadInfo[] threadInfos = threadMXBean.getThreadInfo(threadMXBean.getAllThreadIds(), 100);
+        for (ThreadInfo threadInfo : threadInfos) {
+            dump.append('"');
+            dump.append(threadInfo.getThreadName());
+            dump.append("\" ");
+            final Thread.State state = threadInfo.getThreadState();
+            dump.append("\n   java.lang.Thread.State: ");
+            dump.append(state);
+            final StackTraceElement[] stackTraceElements = threadInfo.getStackTrace();
+            for (final StackTraceElement stackTraceElement : stackTraceElements) {
+                dump.append("\n        at ");
+                dump.append(stackTraceElement);
+            }
+            dump.append("\n\n");
+        }
+        return dump.toString();
+    }
 }
