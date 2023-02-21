@@ -86,22 +86,29 @@ public class ProcessPSUpdates implements StatefulJob {
 	@Setter private UserDirectoryService userDirectoryService;
 
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
+
+		log.info("Starting");
+
 		// set the user information into the current session
 		Session sakaiSession = sessionManager.getCurrentSession();
 		sakaiSession.setUserId(ADMIN);
 		sakaiSession.setUserEid(ADMIN);
+
 		UserCourseRegistrations userCourseRegistrations = getNextUserCourseRegistrations();
 		while (userCourseRegistrations != null) {
+
+			log.info("Updating enrolment set for {}", userCourseRegistrations.getUserId());
 
 			updateCourses(userCourseRegistrations);
 			//TODO we should set a flag on the users properties
 			removeUserDetails(userCourseRegistrations);
+
 			//set the user flag
 			updateUserSynchFlag(userCourseRegistrations.getUserId());
 			userCourseRegistrations = getNextUserCourseRegistrations();
 
 		}
-		log.info("done!");
+		log.info("Completed");
 	}
 
 	private void updateUserSynchFlag(String userEId) {
@@ -240,7 +247,7 @@ public class ProcessPSUpdates implements StatefulJob {
 
 		for (int i = 0; i < drops.size(); i++) {
 			String courseEid = drops.get(i);
-			log.info("removing user from {}", courseEid);
+			log.info("removing {} from {}", userId, courseEid);
 			courseManagementAdministration.removeCourseOfferingMembership(userId, courseEid);
 			courseManagementAdministration.removeSectionMembership(userId, courseEid);
 			courseManagementAdministration.removeEnrollment(userId, courseEid);
@@ -345,8 +352,9 @@ public class ProcessPSUpdates implements StatefulJob {
 	@SuppressWarnings({ "unchecked" })
 	private UserCourseRegistrations getNextUserCourseRegistrations() {
 
-		//get the user we limit them to older than 5m to avoid race conditions
-		String sql = "select userid from SPML_WSDL_IN where queued < date_sub(now(), interval 5 minute) limit 1";
+		// get the next user to process
+		String sql = "select userid from SPML_WSDL_IN order by queued limit 1";
+
 		List<String> userIds = sqlService.dbRead(sql);
 		if (userIds == null || userIds.size() == 0 ) {
 			return null;
@@ -472,8 +480,8 @@ public class ProcessPSUpdates implements StatefulJob {
 				}
 			}
 
+			log.info("adding {} to {}", userId, courseEid);
 
-			log.info("adding this student to {}", courseEid);
 			courseManagementAdministration.addOrUpdateSectionMembership(userId, role, courseEid, "enrolled");
 			courseManagementAdministration.addOrUpdateEnrollment(userId, courseEid, "enrolled", "NA", "0");
 			//now add the user to a section of the same name
