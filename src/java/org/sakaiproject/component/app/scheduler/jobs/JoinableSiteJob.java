@@ -32,7 +32,7 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.sakaiproject.authz.api.Member;
-import org.sakaiproject.emailtemplateservice.service.EmailTemplateService;
+import org.sakaiproject.emailtemplateservice.api.EmailTemplateService;
 import org.sakaiproject.entity.api.EntityPropertyNotDefinedException;
 import org.sakaiproject.entity.api.EntityPropertyTypeException;
 import org.sakaiproject.entity.api.ResourceProperties;
@@ -79,7 +79,6 @@ public class JoinableSiteJob implements Job {
 		this.userDirectoryService = s;
 	}
 
- 
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		//set the user information into the current session
 		Session sakaiSession = sessionManager.getCurrentSession();
@@ -92,7 +91,7 @@ public class JoinableSiteJob implements Job {
 		for (int i = 0 ; i< sites.size(); i++ ) {
 			//iterate through the sites
 			Site s1 = sites.get(i);
-			
+
 			try {
 				Site s = siteService.getSite(s1.getId());
 				log.debug("checking:" + s.getId());
@@ -100,7 +99,7 @@ public class JoinableSiteJob implements Job {
 					log.debug("site is joinable!");
 					ResourceProperties rp = s.getProperties();
 					Long time = Long.valueOf(0);
-					
+
 					//We should ignore this site if property says so
 					try {
 						boolean ignore = rp.getBooleanProperty(PROP_IGNORE);
@@ -112,7 +111,7 @@ public class JoinableSiteJob implements Job {
 						//add ignore flag
 						rp.addProperty(PROP_IGNORE, Boolean.FALSE.toString());
 					} catch (EntityPropertyTypeException e2) {
-						
+
 					}
 
 					try {
@@ -160,7 +159,7 @@ public class JoinableSiteJob implements Job {
 						} else {
 							rp.addProperty(PROP_LAST_CHECK, time.toString());
 						}
-					} 
+					}
 
 					if (SITE_OWNER_ROLE.equalsIgnoreCase(s.getJoinerRole())) {
 						log.warn("site has join role of site owner");
@@ -202,7 +201,6 @@ public class JoinableSiteJob implements Job {
 				log.warn(e2.getMessage(), e2);
 			}
 		}
-
 	}
 
 	private boolean checkThisSite(String id) {
@@ -211,11 +209,9 @@ public class JoinableSiteJob implements Job {
 		//Ignore special sites
 		if (id.startsWith("!"))
 			return false;
-		
-		return true;
-		
-	}
 
+		return true;
+	}
 
 	private boolean siteHasActiveMembers(Site site) {
 		Set<Member> members = site.getMembers();
@@ -247,7 +243,6 @@ public class JoinableSiteJob implements Job {
 			return owner;
 		else
 			return active;
-
 	}
 
 	private void sendOwnerNotification(ResourceProperties rp, Site site) {
@@ -266,7 +261,7 @@ public class JoinableSiteJob implements Job {
 				u = site.getCreatedBy();
 			}
 		}
-		Map<String, String> replacementValues = new HashMap<String, String>();
+		Map<String, Object> replacementValues = new HashMap<>();
 		replacementValues.put("siteTitle", site.getTitle());
 		replacementValues.put("siteJoinRole", site.getJoinerRole());
 		replacementValues.put("siteOwner", u.getDisplayName());
@@ -275,10 +270,6 @@ public class JoinableSiteJob implements Job {
 		userRefs.add(u.getReference());
 
 		emailTemplateService.sendRenderedMessages("joinableSiteReminder", userRefs, replacementValues, "help@vula.uct.ac.za", "Vula help");
-
-
-
-
 	}
 
 }
