@@ -22,6 +22,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.quartz.JobExecutionContext;
@@ -66,17 +67,14 @@ public class ProcessFinAidUpdates implements StatefulJob {
 	@Setter private EmailService emailService;
 	@Setter private ServerConfigurationService serverConfigurationService;
 	
-	
-	private final String courseCode = "FINAID";
+	private final String FINAID_PROVIDER_ID = "FINAID";
 	private String term;
-
-
 
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 
-		log.info("Updating FinAid users");
 		term = serverConfigurationService.getString("uct_term", Year.now().toString());
-		log.info("UCT Term: {}", term);
+
+		log.info("Updating FinAid users: {},{}", FINAID_PROVIDER_ID, term);
 
 		// set the user information into the current session
 		Session sakaiSession = sessionManager.getCurrentSession();
@@ -90,44 +88,11 @@ public class ProcessFinAidUpdates implements StatefulJob {
 			return;
 		}
 		
-		// Add all the users
-		for (int i = 0; i < users.size(); i++) {
-			String userEid = users.get(i);
-			registerUser(userEid);
-		}
+		syncEnrollments(FINAID_PROVIDER_ID, term, users);
 		
-		//we now need to drop students no longer on the list
-		removeDroppedUsers(users);
-
-		//remove the details from the tmp table
+		// remove the details from the tmp table
 		removeUserDetails();
 	}
-
-	//Remove from CM students who have dropped the course
-	private void removeDroppedUsers(List<String> users) {
-		Set<Enrollment> enrolled = courseManagementService.getEnrollments(courseCode + "," + term);
-		Iterator<Enrollment> it = enrolled.iterator();
-		String courseEid = courseCode + "," + term;
-		while (it.hasNext()) {
-			Enrollment thisOne = it.next();
-			String user = thisOne.getUserId();
-			if (!users.contains(user)) {
-				log.info("dropping user {} from {}",user, courseCode);
-				courseManagementAdministration.removeCourseOfferingMembership(user, courseEid);
-				courseManagementAdministration.removeSectionMembership(user, courseEid);
-				courseManagementAdministration.removeEnrollment(user, courseEid);
-			} else {
-				log.debug("user {} is still registered", user);
-			}
-		}
-	}
-
-
-	private void registerUser(String userEid) {
-		String setCategory = "special";
-		addUserToCourse(userEid, courseCode, term, setCategory);
-	}
-
 
 	/**
 	 * Get a list of users from storage
@@ -140,11 +105,9 @@ public class ProcessFinAidUpdates implements StatefulJob {
 		return ret;
 	}
 
-	
 	private void removeUserDetails() {
 		String sql = "delete from FINAID_UPDATED_USERS";
 		sqlService.dbWrite(sql, new Object[]{});
-
 	}
 	
 	/**
@@ -154,24 +117,15 @@ public class ProcessFinAidUpdates implements StatefulJob {
 	 * @param term
 	 * @param setCategory
 	 */
-	private void addUserToCourse(String userId, String courseCode, String term, String setCategory) {
+	private void syncEnrollments(String courseCode, String term, List<String> users) {
 
-		log.debug("addUserToCourse({}, {}, {}, {})", userId, courseCode, term, setCategory);
+		String courseEid = courseCode + "," + term;
+		String setCategory = "special";
+		String role = "Student";
+		String setId = courseCode.substring(0,3);
+		setCategory = "Department";
 		
 		try {
-
-			courseCode = courseCode.toUpperCase().trim();
-			
-			if (courseCode == null || courseCode.length() == 0) {
-				return;
-			}
-			
-			//Get the role based on the type of object this is
-			String role = "Student";
-			String setId = courseCode.substring(0,3);
-			setCategory = "Department";
-			
-			String courseEid = courseCode + "," + term;
 			
 			//do we have a academic session?
 			if (!courseManagementService.isAcademicSessionDefined(term)) {
@@ -240,32 +194,60 @@ public class ProcessFinAidUpdates implements StatefulJob {
 				}
 			}
 
-
-			log.info("Adding student {} to {}", userId, courseEid);
-			courseManagementAdministration.addOrUpdateSectionMembership(userId, role, courseEid, "enrolled");
-			courseManagementAdministration.addOrUpdateEnrollment(userId, courseEid, "enrolled", "NA", "0");
-			//now add the user to a section of the same name
-			//TODO this looks like duplicate LOGic
-			
-			try {
-				courseManagementService.getSection(courseEid);
-			} 
-			catch (IdNotFoundException id) {
-				//create the CO
-				//lets create the 2007 academic year :-)
-				//create enrolmentset
-				courseManagementAdministration.createEnrollmentSet(courseEid, courseEid, "description", "category", "defaultEnrollmentCredits", courseEid, null);
-				log.info("creating Section for {} in year {}", courseCode, term);
-				getCanonicalCourse(courseEid);
-				courseManagementAdministration.createSection(courseEid, courseEid, "someDescription","course",null,courseEid,courseEid);
+			// Get the existing membership
+			Set<Enrollment> enrolled = courseManagementService.getEnrollments(courseEid);
+			Set<String> enrolledEids = new HashSet<String>();
+			for (Enrollment en : enrolled) {
+				if (!en.isDropped()) {
+					enrolledEids.add(en.getUserId());
+				}
 			}
-			courseManagementAdministration.addOrUpdateSectionMembership(userId, role, courseEid, "enrolled");
+
+			log.info("Existing enrollments in {}: {}", courseEid, enrolledEids.size());
+			log.info("New enrollment set size for {}: {}", courseEid, users.size());
+
+			int added = 0;
+			// Enroll students from the new list who aren't members
+			for (String userEid : users) {
+				if (!enrolledEids.contains(userEid)) {
+					// enroll
+					added++;
+					log.info("Adding student eid {} to {}", userEid, courseEid);
+					courseManagementAdministration.addOrUpdateSectionMembership(userEid, role, courseEid, "enrolled");
+					courseManagementAdministration.addOrUpdateEnrollment(userEid, courseEid, "enrolled", "NA", "0");
+
+					//now add the user to a section of the same name
+					try {
+						courseManagementService.getSection(courseEid);
+					} catch (IdNotFoundException id) {
+						courseManagementAdministration.createEnrollmentSet(courseEid, courseEid, "description", "category", "defaultEnrollmentCredits", courseEid, null);
+						log.info("creating Section for {} in year {}", courseCode, term);
+						getCanonicalCourse(courseEid);
+						courseManagementAdministration.createSection(courseEid, courseEid, "someDescription","course",null,courseEid,courseEid);
+					}
+
+					courseManagementAdministration.addOrUpdateSectionMembership(userEid, role, courseEid, "enrolled");
+				}
+			}
+
+			int removed = 0;
+			// Remove students who are members but not in the new list
+			for (String userEid : enrolledEids) {
+				if (!users.contains(userEid)) {
+					removed++;
+					log.info("dropping student eid {} from {}", userEid, courseEid);
+					courseManagementAdministration.removeCourseOfferingMembership(userEid, courseEid);
+					courseManagementAdministration.removeSectionMembership(userEid, courseEid);
+					courseManagementAdministration.removeEnrollment(userEid, courseEid);
+				}
+			}
+
+			log.info("Done: {} added, {} removed", added, removed);
+
 		}
 		catch (Exception e) {
 			log.warn(e.getMessage(), e);
-
 		}
-
 	}
 
 	private void getCanonicalCourse(String courseEid) {
