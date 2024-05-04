@@ -562,7 +562,7 @@
             <ref bean="org.sakaiproject.user.api.UserDirectoryService" />
         </property>
         <property name="emailTemplateService">
-            <ref bean="org.sakaiproject.emailtemplateservice.service.EmailTemplateService" />
+            <ref bean="org.sakaiproject.emailtemplateservice.api.EmailTemplateService" />
         </property>
     </bean>
 
@@ -655,37 +655,6 @@
     </bean>
 
 
-    <!-- Send out the once of sms notification -->
-    <bean id="smsNotify"
-        class="org.sakaiproject.component.app.scheduler.jobs.NotifyUsersSMS">
-        <property name="sessionManager">
-            <ref bean="org.sakaiproject.tool.api.SessionManager" />
-        </property>
-        <property name="userDirectoryService">
-            <ref bean="org.sakaiproject.user.api.UserDirectoryService" />
-        </property>
-        <property name="sakaiPersonManager"
-            ref="org.sakaiproject.api.common.edu.person.SakaiPersonManager" />
-        <property name="emailTemplateService"
-            ref="org.sakaiproject.emailtemplateservice.service.EmailTemplateService" />
-    </bean>
-    <bean
-        id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerNotifySMS"
-        class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-         init-method="init">
-        <property name="beanId">
-            <value>smsNotify</value>
-        </property>
-        <property name="jobName">
-            <value>UCT: Notify SMS users</value>
-        </property>
-        <property name="schedulerManager">
-            <ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
-        </property>
-    </bean>
-
-
-
         <!--  Add tool to worksite home -->
     <bean id="addToolUserSiteHome"
         class="org.sakaiproject.component.app.scheduler.jobs.AddToolToMyWorkspaceHome">
@@ -710,34 +679,6 @@
         </property>
         <property name="jobName">
             <value>UCT: Add tool to user Site Home</value>
-        </property>
-        <property name="schedulerManager">
-            <ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
-        </property>
-    </bean>
-
-    <!-- Populate the normalized number filed in Profile -->
-    <bean id="profileNormalized"
-        class="org.sakaiproject.component.app.scheduler.jobs.PopulateNormalizedMobile">
-        <property name="sessionManager">
-            <ref bean="org.sakaiproject.tool.api.SessionManager" />
-        </property>
-        <property name="userDirectoryService">
-            <ref bean="org.sakaiproject.user.api.UserDirectoryService" />
-        </property>
-        <property name="sakaiPersonManager"
-            ref="org.sakaiproject.api.common.edu.person.SakaiPersonManager" />
-        <property name="numberRoutingHelper" ref="org.sakaiproject.sms.logic.external.NumberRoutingHelper"/>
-    </bean>
-    <bean
-        id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.schedulerProfileNormalize"
-        class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-         init-method="init">
-        <property name="beanId">
-            <value>profileNormalized</value>
-        </property>
-        <property name="jobName">
-            <value>UCT: Populate the Normalized cell no</value>
         </property>
         <property name="schedulerManager">
             <ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
