@@ -97,10 +97,10 @@ public class ProcessPSUpdates implements StatefulJob {
 		UserCourseRegistrations userCourseRegistrations = getNextUserCourseRegistrations();
 		while (userCourseRegistrations != null) {
 
-			log.info("Updating enrolment set for {}", userCourseRegistrations.getUserId());
+			log.info("Updating enrolment set for {}: {} courses",
+				userCourseRegistrations.getUserId(), userCourseRegistrations.getCourseRegistrations().size());
 
 			updateCourses(userCourseRegistrations);
-			//TODO we should set a flag on the users properties
 			removeUserDetails(userCourseRegistrations);
 
 			//set the user flag
@@ -140,7 +140,6 @@ public class ProcessPSUpdates implements StatefulJob {
 	private void removeUserDetails(UserCourseRegistrations userCourseRegistrations) {
 		String sql = "delete from SPML_WSDL_IN where userid=?";
 		sqlService.dbWrite(sql, new Object[]{userCourseRegistrations.getUserId()});
-
 	}
 
 
@@ -155,7 +154,7 @@ public class ProcessPSUpdates implements StatefulJob {
 		List<String> incomingList = userCourseRegistrations.getCourseRegistrations();
 		List<String> incomingListFixed = new ArrayList<String>();
 		log.debug("initial incoming list: {}", incomingList.size());
-		//if the student has no course reg there will be 1 course with the ied "null)
+		//if the student has no course reg there will be 1 course with the eid "null)
 		if (!hasNoCourses(incomingList)) {
 			for (int i = 0; i < incomingList.size(); i++) {
 				String courseCode = incomingList.get(i);
@@ -350,6 +349,7 @@ public class ProcessPSUpdates implements StatefulJob {
 
 
 	@SuppressWarnings({ "unchecked" })
+	// Get userId and list of enrolled courses
 	private UserCourseRegistrations getNextUserCourseRegistrations() {
 
 		// get the next user to process
@@ -361,34 +361,22 @@ public class ProcessPSUpdates implements StatefulJob {
 		}
 		final String userid = userIds.get(0).toLowerCase();
 
-		String sql2 = "SELECT courseEid, MAX(queued) from SPML_WSDL_IN WHERE userid = ? GROUP BY courseEid";
+		log.debug("getNextUserCourseRegistrations(): userids size {}, first userid {}", userIds.size(), userid);
 
-		List<UserCourseRegistrations> ucrList = (List<UserCourseRegistrations>)sqlService.dbRead(sql2, new Object[]{userid}, new SqlReader() {
+		UserCourseRegistrations ret = new UserCourseRegistrations();
+		List<String> courses = new ArrayList<String>();
+		ret.setUserId(userid);
+		ret.setCourseRegistrations(courses);
 
-			public Object readSqlResultRecord(ResultSet result)
-					throws SqlReaderFinishedException {
-				UserCourseRegistrations ret = new UserCourseRegistrations();
-				List<String> courses = new ArrayList<String>();
-				java.sql.Date updated = null;
-				try {
-					result.beforeFirst();
-					while (result.next()) {
-						String c = result.getString(1);
-						courses.add(c);
-						updated = result.getDate(2);
-					}
-				} catch (SQLException e) {
-					log.warn(e.getMessage(), e);
-				}
-				ret.setCourseRegistrations(courses);
-				ret.setLastUpdated(Instant.ofEpochMilli(updated.getTime()));
-				ret.setUserId(userid);
+		String sql2 = "SELECT DISTINCT courseEid from SPML_WSDL_IN WHERE userid = ? ORDER BY courseEid";
+		List<String> courseEids = sqlService.dbRead(sql2, new Object[]{userid}, null);
 
-				return ret;
-			}
-		});
-		UserCourseRegistrations ucr = ucrList.get(0);
-		return ucr;
+		for (String c : courseEids) {
+			log.debug("Userid {} Course EID: {}", userid, c);
+			courses.add(c);
+		}
+
+		return ret;
 	}
 
 
@@ -528,9 +516,10 @@ public class ProcessPSUpdates implements StatefulJob {
 	 */
 	@Data
 	private class UserCourseRegistrations {
+		// User EID
 		private String userId;
+		// List of course enrolments
 		private List<String> courseRegistrations;
-		private Instant lastUpdated;
 	}
 
 }
